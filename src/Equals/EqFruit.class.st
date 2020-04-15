@@ -1,5 +1,5 @@
 Class {
-	#name : #Fruit,
+	#name : #EqFruit,
 	#superclass : #Object,
 	#traits : 'TEquality',
 	#classTraits : 'TEquality classTrait',
@@ -10,40 +10,40 @@ Class {
 }
 
 { #category : #comparing }
-Fruit >> = anObject [ 
+EqFruit >> = anObject [ 
 	self species = anObject species ifFalse: [^false].
 	^self valuesToCompareForEquality = anObject valuesToCompareForEquality
 ]
 
 { #category : #staging }
-Fruit >> beRipe [
+EqFruit >> beRipe [
 	stage := #ripe
 ]
 
 { #category : #staging }
-Fruit >> beRotten [
+EqFruit >> beRotten [
 	stage := #rotten
 ]
 
 { #category : #staging }
-Fruit >> beUnripe [
+EqFruit >> beUnripe [
 	stage := #unripe
 ]
 
 { #category : #accessing }
-Fruit >> color [
+EqFruit >> color [
 	^self subclassResponsibility
 ]
 
 { #category : #comparing }
-Fruit >> hash [
+EqFruit >> hash [
 	^self valuesToCompareForEquality inject: self species hash into: [:hash :comparisonValue|
 		(hash bitXor: comparisonValue hash) hashMultiply]
 
 ]
 
 { #category : #'initialize - release' }
-Fruit >> initialize [
+EqFruit >> initialize [
 	super initialize.
 	self beUnripe
 ]

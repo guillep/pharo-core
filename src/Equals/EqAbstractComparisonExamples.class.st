@@ -1,11 +1,11 @@
 Class {
-	#name : #Comparisons,
+	#name : #EqAbstractComparisonExamples,
 	#superclass : #Object,
 	#category : #'Equals-Examples'
 }
 
 { #category : #displaying }
-Comparisons class >> display: aBoolean [
+EqAbstractComparisonExamples class >> display: aBoolean [
 	| displayColor displayLabel |
 	displayLabel := aBoolean ifTrue: [ 'Equal' ] ifFalse: [ 'Different' ].
 	displayColor := aBoolean ifTrue: [ Color green ] ifFalse: [ Color yellow ].

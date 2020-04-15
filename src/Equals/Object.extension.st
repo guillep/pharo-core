@@ -6,13 +6,13 @@ Object class >> allInstVarNamesForEqualityComparison [
 ]
 
 { #category : #'*Equals' }
-Object >> instVarNamesForEqualityComparison [
-	^self class allInstVarNamesForEqualityComparison
+Object class >> instVarNamesForEqualityComparison [
+	^self instVarNames
 ]
 
 { #category : #'*Equals' }
-Object class >> instVarNamesForEqualityComparison [
-	^self instVarNames
+Object >> instVarNamesForEqualityComparison [
+	^self class allInstVarNamesForEqualityComparison
 ]
 
 { #category : #'*Equals' }

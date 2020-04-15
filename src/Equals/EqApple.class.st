@@ -1,6 +1,6 @@
 Class {
-	#name : #Apple,
-	#superclass : #Fruit,
+	#name : #EqApple,
+	#superclass : #EqFruit,
 	#instVars : [
 		'color'
 	],
@@ -8,18 +8,18 @@ Class {
 }
 
 { #category : #'instance creation' }
-Apple class >> color: aColor [
+EqApple class >> color: aColor [
 	^self new
 		color: aColor;
 		yourself
 ]
 
 { #category : #accessing }
-Apple >> color [
+EqApple >> color [
 	^ color
 ]
 
 { #category : #accessing }
-Apple >> color: anObject [
+EqApple >> color: anObject [
 	color := anObject
 ]

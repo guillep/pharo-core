@@ -1,5 +1,5 @@
 Class {
-	#name : #Person,
+	#name : #EqPerson,
 	#superclass : #Object,
 	#traits : 'TEquality',
 	#classTraits : 'TEquality classTrait',
@@ -11,12 +11,12 @@ Class {
 }
 
 { #category : #comparing }
-Person class >> instVarNamesForEqualityComparison [
+EqPerson class >> instVarNamesForEqualityComparison [
 	^#(age)
 ]
 
 { #category : #'instance-creation' }
-Person class >> name: aString age: positiveInt [
+EqPerson class >> name: aString age: positiveInt [
 	^self new
 		name: aString;
 		age: positiveInt;
@@ -24,34 +24,34 @@ Person class >> name: aString age: positiveInt [
 ]
 
 { #category : #comparing }
-Person >> = anObject [ 
+EqPerson >> = anObject [ 
 	self species = anObject species ifFalse: [^false].
 	^self valuesToCompareForEquality = anObject valuesToCompareForEquality
 ]
 
 { #category : #accessing }
-Person >> age [
+EqPerson >> age [
 	^ age
 ]
 
 { #category : #accessing }
-Person >> age: anObject [
+EqPerson >> age: anObject [
 	age := anObject
 ]
 
 { #category : #comparing }
-Person >> hash [
+EqPerson >> hash [
 	^self valuesToCompareForEquality inject: self species hash into: [:hash :comparisonValue|
 		(hash bitXor: comparisonValue hash) hashMultiply]
 
 ]
 
 { #category : #accessing }
-Person >> name [
+EqPerson >> name [
 	^ name
 ]
 
 { #category : #accessing }
-Person >> name: anObject [
+EqPerson >> name: anObject [
 	name := anObject
 ]

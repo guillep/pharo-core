@@ -1,10 +1,10 @@
 Class {
-	#name : #Banana,
-	#superclass : #Fruit,
+	#name : #EqBanana,
+	#superclass : #EqFruit,
 	#category : #'Equals-Examples'
 }
 
 { #category : #accessing }
-Banana >> color [
+EqBanana >> color [
 	^Color yellow
 ]
