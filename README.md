@@ -21,12 +21,12 @@ This repository contains only sources of the Pharo image. The virtual machine so
 This repository is being built on a [Jenkins server](https://ci.inria.fr/pharo-ci-jenkins2) and uploaded to [files.pharo.org](https://files.pharo.org).
 
 - [Latest build - 64bit](http://files.pharo.org/image/80/latest-64.zip)
-- [Latest build - 32bit](http://files.pharo.org/image/80/latest.zip) 
+- [Latest build - 32bit](http://files.pharo.org/image/80/latest.zip)
 
 The minimal image contains the basic Pharo packages without the graphical user interface. It is useful as a base for server-side applications deployment.
 
 - [Minimal image latest build - 64bit](http://files.pharo.org/image/80/latest-minimal-64.zip)
-- [Minimal image latest build - 32bit](http://files.pharo.org/image/80/latest-minimal-32.zip) 
+- [Minimal image latest build - 32bit](http://files.pharo.org/image/80/latest-minimal-32.zip)
 
 
 ## Bootstrapping Pharo from sources
@@ -45,8 +45,30 @@ Additional information on the stages of the bootstrap and how to snapshot during
 
 __Tip:__ You can set `BOOTSTRAP_REPOSITORY` and `BOOTSTRAP_CACHE` environment variables to do the bootstrap outside of the source repository.
 
-__Note:__ If you are on a branch that doesn't follow the expected naming convention ('`PharoX.Y`'), then the script will pick an appropriate default (such as `Pharo7.0`). To build Pharo8.0 from a custom branch, you need to set `BRANCH_NAME=Pharo8.0` before the bootstrap script is run. 
+__Note:__ If you are on a branch that doesn't follow the expected naming convention ('`PharoX.Y`'), then the script will pick an appropriate default (such as `Pharo7.0`). To build Pharo8.0 from a custom branch, you need to set `BRANCH_NAME=Pharo8.0` before the bootstrap script is run.
 
+### Bootstrapping with docker
+
+You can also use docker if you prefer to control the bootstrapping environment completely. In the root directory of this project cloned from git, do
+
+```
+docker run --rm -it -v $(pwd)/:/src --workdir /src ubuntu:20.04 bash
+```
+
+In this container, you'll have to do some setup.
+
+Bootstrapping requires the use of a 32-bit Smalltalk VM, hence we need 32-bit libraries
+
+```
+dpkg --add-architecture i386
+apt update
+```
+
+You'll need these libraries/programs for the bootstrapping process
+
+```
+apt install -y build-essential git wget zip unzip libc6:i386 zlib1g:i386 libfreetype6:i386
+```
 
 ## File format
 
