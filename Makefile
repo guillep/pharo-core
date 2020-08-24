@@ -1,149 +1,206 @@
-BOOTSTRAP_ARCH = 32
-BUILD_NUMBER = 1
+.PHONY: bootstrap_tools target_vm clean bootstrap
 
-ifeq ($(BOOTSTRAP_ARCH),32)
-	SEEK=24
-else
-	SEEK=40
-endif
+# -----------------------------------------------------
+#   Arguments that can be specified for build process
+# -----------------------------------------------------
+# The output directory for everything to do with this build
+BUILD_DIR ?= $(PWD)/build
+# The directory bootstrapping tools
+BOOTSTRAP_TOOLS_DIR ?= $(BUILD_DIR)/bootstrap-tools
+# The target architecture of this build (architecture of virtual machine to download)
+TARGET_ARCH ?= 64
+# The target VM type of this build
+#   Possible VM types are vm, vmT (Threaded heartbeat) and vmI (Timer heartbeat), see https://get.pharo.org for more information
+TARGET_VM_TYPE ?= vm
+# Any flags you want to pass to the build process
+#   Will be used like: ./pharo Pharo.image $BUILD_IMAGE_FLAGS ...
+BUILD_IMAGE_FLAGS ?= --no-default-preferences
+# TODO not sure what this is for
+BUILD_NUMBER ?= 1337
+# This is of the form Pharo9.0, and is used to prefix the files built
+# TODO can we simplify this?
+PHARO_NAME_PREFIX ?= Pharo$(target_version)-PR
+PHARO_COMMIT_HASH ?= g$(shell git rev-parse --verify HEAD)
+BOOTSTRAP_CACHE_DIR ?= $(BUILD_DIR)/bootstrap-cache
+BOOTSTRAP_ST_CACHE_DIR ?= $(BOOTSTRAP_CACHE_DIR)/st-cache
 
-bootstrap = ./pharo bootstrapImage.image
+# -----------------------------------------------------
+#   Detect and populate variables
+# -----------------------------------------------------
+target_version = $(shell head -n1 VERSION)
 
-PREFIX=Pharo7.0
-GIT_COMMIT_HASH=$(shell git show -s --format=%h)
-SUFFIX=$(BOOTSTRAP_ARCH)bit-$(GIT_COMMIT_HASH)
-
-VM=./bootstrap-cache/vm/pharo
-
-BOOTSTRAP_ARCHIVE_IMAGE_PATH=bootstrap-cache/$(PREFIX)-bootstrap-$(SUFFIX).image
-
-BOOTSTRAP_IMAGE_NAME=bootstrap
-
-COMPILER_IMAGE_NAME=$(PREFIX)-compiler-$(SUFFIX)
-COMPILER_IMAGE_PATH=bootstrap-cache/$(COMPILER_IMAGE_NAME).image
-
-TRAITS_IMAGE_NAME=$(PREFIX)-traits-$(SUFFIX)
-TRAITS_IMAGE_PATH=bootstrap-cache/$(TRAITS_IMAGE_NAME).image
-
-CORE_IMAGE_NAME=$(PREFIX)-core-$(SUFFIX)
-CORE_IMAGE_PATH=bootstrap-cache/$(CORE_IMAGE_NAME).image
-
-MC_BOOTSTRAP_IMAGE_NAME=$(PREFIX)-monticello_bootstrap-$(SUFFIX)
-MC_BOOTSTRAP_IMAGE_PATH=bootstrap-cache/$(MC_BOOTSTRAP_IMAGE_NAME).image
-
-MC_IMAGE_NAME=$(PREFIX)-monticello-$(SUFFIX)
-MC_IMAGE_PATH=bootstrap-cache/$(MC_IMAGE_NAME).image
-
-METACELLO_IMAGE_NAME=$(PREFIX)-metacello-$(SUFFIX)
-METACELLO_IMAGE_PATH=bootstrap-cache/$(METACELLO_IMAGE_NAME).image
-
-PHARO_IMAGE_NAME=$(PREFIX)-$(SUFFIX)
-PHARO_IMAGE_PATH=bootstrap-cache/$(PHARO_IMAGE_NAME).image
-
-$(PHARO_IMAGE_PATH): $(METACELLO_IMAGE_PATH)
-	@echo "[Pharo] Reloading rest of packages"
-	$(VM) "$(METACELLO_IMAGE_PATH)" save "$(PHARO_IMAGE_NAME)"
-	# fix the display size in the image header (position 40 [zero based], 24 for 32-bit image)
-	# in older versions we must use octal representation
-	printf "\231\002\320\003" > displaySize.bin
-	dd if="displaySize.bin" of="$(PHARO_IMAGE_PATH)" bs=1 seek=$(SEEK) count=4 conv=notrunc
-	$(VM) "$(PHARO_IMAGE_PATH)" eval --save "Smalltalk vm parameterAt: 45 put: (Smalltalk vm parameterAt: 44) * 4"
-	$(VM) "$(PHARO_IMAGE_PATH)" eval --save "Metacello new baseline: 'Tonel';repository: 'github://pharo-vcs/tonel:v1.0.5';onWarning: [ :e | Error signal: e messageText in: e signalerContext ]; load: 'core'"
-	$(VM) "$(PHARO_IMAGE_PATH)" eval --save "Metacello new baseline: 'IDE';repository: 'tonel://src';onWarning: [ :e | Error signal: e messageText in: e signalerContext ]; load"
-	$(VM) "$(PHARO_IMAGE_PATH)" eval --save "FFIMethodRegistry resetAll. PharoSourcesCondenser condenseNewSources. Smalltalk garbageCollect."
-	#$(VM) "$(PHARO_IMAGE_PATH)" clean --release
-	#@echo "[Pharo] Configure resulting image"
-	#$(VM) "$(PHARO_IMAGE_PATH)" st bootstrap/scripts/04-configure-resulting-image/fixPackageVersions.st --save --quit
-	#$(VM) "$(PHARO_IMAGE_PATH)" save "Pharo"
-	#zip "bootstrap-cache/$(PHARO_IMAGE_NAME).zip" bootstrap-cache/$(PHARO_IMAGE_NAME).*
-
-#Bootstrap Metacello
-$(METACELLO_IMAGE_PATH): $(MC_IMAGE_PATH)
-	@echo "[Metacello] Bootstrapping Metacello"
-	$(VM) "$(MC_IMAGE_PATH)" save $(METACELLO_IMAGE_NAME)
-	cd bootstrap-cache && ./vm/pharo "$(METACELLO_IMAGE_NAME).image" st ../bootstrap/scripts/03-metacello-bootstrap/01-loadMetacello.st --save --quit
-	zip "bootstrap-cache/$(METACELLO_IMAGE_NAME).zip" bootstrap-cache/$(METACELLO_IMAGE_NAME).*
-
-#Bootstrap Monticello Part 2: Networking Packages and Remote Repositories
-$(MC_IMAGE_PATH): $(MC_BOOTSTRAP_IMAGE_PATH)
-	@echo "[Monticello] Loading Networking Packages and Remote Repositories"
-	$(VM) "$(MC_BOOTSTRAP_IMAGE_PATH)" save $(MC_IMAGE_NAME)
-	cd bootstrap-cache && ./vm/pharo "$(MC_IMAGE_NAME).image" st ../bootstrap/scripts/02-monticello-bootstrap/03-bootstrapMonticelloRemote.st --save --quit
-	zip "bootstrap-cache/$(MC_IMAGE_NAME).zip" bootstrap-cache/$(MC_IMAGE_NAME).*
-
-#Bootstrap Monticello Part 1: Core and Local repositories
-$(MC_BOOTSTRAP_IMAGE_PATH): $(CORE_IMAGE_PATH) bootstrap-cache/PharoV60.sources
-	@echo "[Monticello] Bootstrap Monticello Core and Local repositories"
-	$(VM) "$(CORE_IMAGE_PATH)" save $(MC_BOOTSTRAP_IMAGE_NAME)
-	$(VM) "$(MC_BOOTSTRAP_IMAGE_PATH)" st bootstrap-cache/st-cache/Monticello.st --save --quit
-	$(VM) "$(MC_BOOTSTRAP_IMAGE_PATH)" st bootstrap/scripts/02-monticello-bootstrap/01-fixLocalMonticello.st --save --quit
-	cd bootstrap-cache && ./vm/pharo "$(MC_BOOTSTRAP_IMAGE_NAME).image" st ../bootstrap/scripts/02-monticello-bootstrap/02-bootstrapMonticello.st --save --quit
-	$(VM) "$(MC_BOOTSTRAP_IMAGE_PATH)" eval --save "TraitsBootstrap fixSourceCodeOfTraits "
-	zip "bootstrap-cache/$(MC_BOOTSTRAP_IMAGE_NAME).zip" bootstrap-cache/$(MC_BOOTSTRAP_IMAGE_NAME).*
+# -----------------------------------------------------
+#   Simplifying variables
+# -----------------------------------------------------
+download = wget --quiet -O $@
+# Contents of bootstrapImage.zip that we are interested in
+bootstrap_image_components = Pharo.image Pharo.changes Pharo7.0-32bit-343f470.sources
+vm_components = pharo pharo-ui pharo-vm
+target_vm_components = $(addprefix $(BUILD_DIR)/,$(vm_components))
+target_vm_image_exec = $(BUILD_DIR)/pharo --headless $@ $(BUILD_IMAGE_FLAGS)
+save_from_dependency_image = $(BUILD_DIR)/pharo --headless $< $(BUILD_IMAGE_FLAGS) save $(basename $@)
 
 
-#Bootstrap Initialization: Class and RPackage initialization
-$(CORE_IMAGE_PATH): $(TRAITS_IMAGE_PATH)
-	@echo "[Core] Class and RPackage initialization - REMOVE ME"
-	$(VM) "$(TRAITS_IMAGE_PATH)" save $(CORE_IMAGE_NAME)
-	zip "bootstrap-cache/$(CORE_IMAGE_NAME).zip" "$(CORE_IMAGE_PATH)"
+# -----------------------------------------------------
+#   Various stages of building Pharo
+# -----------------------------------------------------
 
-#Traits Initialization
-$(TRAITS_IMAGE_PATH): $(COMPILER_IMAGE_PATH)
-	@echo "[Core] Trait initialization"
-	$(VM) "$(COMPILER_IMAGE_PATH)" save $(TRAITS_IMAGE_NAME)
-	$(VM) "$(TRAITS_IMAGE_PATH)" loadHermes bootstrap-cache/TraitsV2.hermes --save
-	$(VM) "$(TRAITS_IMAGE_PATH)" loadHermes bootstrap-cache/Kernel-Traits.hermes bootstrap-cache/AST-Core-Traits.hermes bootstrap-cache/Collections-Abstract-Traits.hermes bootstrap-cache/Transcript-Core-Traits.hermes bootstrap-cache/SUnit-Core-Traits.hermes bootstrap-cache/CodeImport-Traits.hermes bootstrap-cache/RPackage-Traits.hermes bootstrap-cache/OpalCompiler-Traits.hermes bootstrap-cache/Slot-Traits.hermes bootstrap-cache/CodeExport-Traits.hermes bootstrap-cache/System-Sources-Traits.hermes bootstrap-cache/System-Support-Traits.hermes bootstrap-cache/TraitsV2-Compatibility.hermes --save
-	zip "bootstrap-cache/$(TRAITS_IMAGE_NAME).zip" "$(TRAITS_IMAGE_PATH)"
+bootstrap: $(BUILD_DIR)/step-11-patch-display-size/bootstrap.image
 
-# Installing compiler through Hermes 
-$(COMPILER_IMAGE_PATH): bootstrap-cache/bootstrap.image bootstrap-cache/vm
-	@echo "Prepare Bootstrap files"
-	cp "bootstrap-cache/bootstrap.image" "$(COMPILER_IMAGE_PATH)"
-	$(VM) "$(COMPILER_IMAGE_PATH)" # I have to run once the image so the next time it starts the CommandLineHandler.
-	$(VM) "$(COMPILER_IMAGE_PATH)" loadHermes bootstrap-cache/Hermes-Extensions.hermes --save
-	$(VM) "$(COMPILER_IMAGE_PATH)" loadHermes bootstrap-cache/Multilingual-Encodings.hermes bootstrap-cache/Multilingual-TextConversion.hermes bootstrap-cache/Multilingual-Languages.hermes --save --no-fail-on-undeclared
-	$(VM) "$(COMPILER_IMAGE_PATH)" loadHermes bootstrap-cache/InitializePackagesCommandLineHandler.hermes --save
-	@echo "[Compiler] Installing compiler through Hermes"
-	$(VM) "$(COMPILER_IMAGE_PATH)" loadHermes bootstrap-cache/Collections-Atomic.hermes bootstrap-cache/Collections-Arithmetic.hermes bootstrap-cache/AST-Core.hermes bootstrap-cache/Jobs.hermes --save --no-fail-on-undeclared
-	$(VM) "$(COMPILER_IMAGE_PATH)" initializePackages --protocols=bootstrap-cache/protocolsKernel.txt --packages=bootstrap-cache/packagesKernel.txt --save
-	$(VM) "$(COMPILER_IMAGE_PATH)" loadHermes bootstrap-cache/OpalCompiler-Core.hermes bootstrap-cache/CodeExport.hermes bootstrap-cache/CodeImport.hermes bootstrap-cache/CodeImportCommandLineHandlers.hermes --save --no-fail-on-undeclared
-	$(VM) "$(COMPILER_IMAGE_PATH)" eval --save "CompilationContext initialize. OCASTTranslator initialize." 
-	$(VM) "$(COMPILER_IMAGE_PATH)" st ./bootstrap/scripts/01-initialization/01-init.st --no-source --save --quit
-	$(VM) "$(COMPILER_IMAGE_PATH)" st bootstrap/scripts/01-initialization/03-initUnicode.st --no-source --save --quit "resources/unicode/"
-	$(VM) "$(COMPILER_IMAGE_PATH)" st bootstrap-cache/st-cache/DeprecatedFileStream.st bootstrap-cache/st-cache/FileSystem.st --no-source --quit --save
-	$(VM) "$(COMPILER_IMAGE_PATH)" eval --save "SourceFileArray initialize"
-	zip "bootstrap-cache/$(COMPILER_IMAGE_NAME).zip" "$(COMPILER_IMAGE_PATH)"
+$(addprefix $(BUILD_DIR)/step-01-raw/,$(bootstrap_image_components)): $(BOOTSTRAP_TOOLS_DIR)/bootstrapImage.zip
+	@echo -e '\n    [+] Extracting image used to bootstrap this build\n'
+	@mkdir -p $(dir $@)
+	unzip -o $< $(notdir $@) -d $(dir $@)
+	@touch $@
 
-bootstrap-cache/PharoV60.sources:
-	cd bootstrap-cache && wget http://files.pharo.org/sources/PharoV60.sources
+$(addprefix $(BUILD_DIR)/step-02-prepare-image/,$(bootstrap_image_components)): $(addprefix $(BUILD_DIR)/step-01-raw/,$(bootstrap_image_components)) $(addprefix $(BOOTSTRAP_TOOLS_DIR)/,$(vm_components))
+	@echo -e '\n    [+] Copying image components to $(basename $(dir $@)) and then modifying in place\n'
+	@mkdir -p $(dir $@)
+	cp -r $(filter $(BUILD_DIR)/step-01-raw/%,$^) $(dir $@)
+	$(BOOTSTRAP_TOOLS_DIR)/pharo $(dir $@)Pharo.image $(BUILD_IMAGE_FLAGS) ./bootstrap/scripts/prepare_image.st --save --quit
 
-bootstrap-cache/vm: bootstrap/scripts/download_vm.sh
-	cd bootstrap-cache && rm -rf vm && ../bootstrap/scripts/download_vm.sh
+# This step creates a bunch of hermes files in $(BUILD_DIR)/bootstrap-cache and then does some bootstrapping
+# TODO check if we can just call `PBBootstrap fromCommandLine prepareBootstrap` instead of `PBBootstrap fromCommandLine bootstrap`
+$(addprefix $(BUILD_DIR)/step-03-bootstrap/,$(bootstrap_image_components)): $(addprefix $(BUILD_DIR)/step-02-prepare-image/,$(bootstrap_image_components)) $(addprefix $(BOOTSTRAP_TOOLS_DIR)/,$(vm_components))
+	@echo -e '\n    [+] Bootstrapping $(basename $(dir $@))\n'
+	@mkdir -p $(dir $@)
+	cp -r $(filter $(BUILD_DIR)/step-02-prepare-image/%,$^) $(dir $@)
+	BOOTSTRAP_CACHE=$(BOOTSTRAP_CACHE_DIR) $(BOOTSTRAP_TOOLS_DIR)/pharo $(dir $@)Pharo.image $(BUILD_IMAGE_FLAGS) ./bootstrap/scripts/bootstrap.st --ARCH=${TARGET_ARCH} --BUILD_NUMBER=${BUILD_NUMBER} --VERSION_INFO="${PHARO_NAME_PREFIX}-${PHARO_COMMIT_HASH}" --save --quit
 
-bootstrap-cache/bootstrap.image: bootstrapImage.image bootstrap-cache/hermes
-	$(bootstrap) ./bootstrap/scripts/bootstrap.st --ARCH=$(BOOTSTRAP_ARCH) --BUILD_NUMBER=$(BUILD_NUMBER) --quit
-	cp "bootstrap-cache/bootstrap.image" "$(BOOTSTRAP_ARCHIVE_IMAGE_PATH)"
-	zip "$(BOOTSTRAP_ARCHIVE_IMAGE_NAME).zip" "$(BOOTSTRAP_ARCHIVE_IMAGE_PATH)"
+$(BUILD_DIR)/step-04-bootstrap/bootstrap.image: $(addprefix $(BUILD_DIR)/step-03-bootstrap/,$(bootstrap_image_components)) $(target_vm_components)
+	@echo -e '\n    [+] Bootstrapping $(basename $(dir $@))\n'
+	@mkdir -p $(dir $@)
+	cp $(BUILD_DIR)/bootstrap-cache/bootstrap.image $@
+	@# Run it once so the next time it starts the CommandLineHandler
+	$(BUILD_DIR)/pharo --headless $@
 
-bootstrap-cache/hermes: bootstrapImage.image
-	mkdir -p bootstrap-cache
-	$(bootstrap) ./bootstrap/scripts/generateKernelHermesFiles.st --quit
-	$(bootstrap) ./bootstrap/scripts/generateSUnitHermesFiles.st --quit
-	$(bootstrap) ./bootstrap/scripts/generateTraitsHermesFiles.st --quit
-	touch bootstrap-cache/hermes
+$(BUILD_DIR)/step-05-bootstrap-kernel/bootstrap.image: $(BUILD_DIR)/step-04-bootstrap/bootstrap.image $(target_vm_components) # TODO add deps on hermes files
+	@echo -e '\n    [+] Bootstrapping $(basename $(dir $@))\n'
+	@mkdir -p $(dir $@)
+	cp -r $(dir $<)bootstrap.image $(dir $@)bootstrap.image
+	$(target_vm_image_exec) loadHermes $(BOOTSTRAP_CACHE_DIR)/Hermes-Extensions.hermes --save
+	$(target_vm_image_exec) loadHermes $(addprefix $(BOOTSTRAP_CACHE_DIR)/,Math-Operations-Extensions.hermes Debugging-Core.hermes Kernel-Chronology-Extras.hermes Multilingual-Encodings.hermes Multilingual-TextConversion.hermes Multilingual-Languages.hermes ReflectionMirrors-Primitives.hermes) --save --no-fail-on-undeclared
+
+	$(target_vm_image_exec) loadHermes $(BOOTSTRAP_CACHE_DIR)/InitializePackagesCommandLineHandler.hermes --save
+	$(target_vm_image_exec) loadHermes $(addprefix $(BOOTSTRAP_CACHE_DIR)/,Collections-Atomic.hermes AST-Core.hermes Collections-Arithmetic.hermes Jobs.hermes System-SourcesCondenser.hermes) --save --no-fail-on-undeclared
+	$(target_vm_image_exec) initializePackages --protocols=$(BOOTSTRAP_CACHE_DIR)/protocolsKernel.txt --packages=$(BOOTSTRAP_CACHE_DIR)/packagesKernel.txt --save
+
+$(BUILD_DIR)/step-06-bootstrap-compiler/bootstrap.image: $(BUILD_DIR)/step-05-bootstrap-kernel/bootstrap.image $(target_vm_components) # TODO add deps on hermes files
+	@echo -e '\n    [+] Bootstrapping $(basename $(dir $@))\n'
+	@mkdir -p $(dir $@)
+	cp -r $(dir $<)bootstrap.image $(dir $@)bootstrap.image
+
+	$(target_vm_image_exec) loadHermes $(addprefix $(BOOTSTRAP_CACHE_DIR)/,OpalCompiler-Core.hermes CodeExport.hermes CodeImport.hermes CodeImportCommandLineHandlers.hermes) --save --no-fail-on-undeclared
+	$(target_vm_image_exec) eval --save "OpalCompiler register. CompilationContext initialize. OCASTTranslator initialize."
+	$(target_vm_image_exec) st ./bootstrap/scripts/01-initialization/01-init.st --no-source --save --quit
+
+	@# Initializing Unicode
+	$(target_vm_image_exec) st ./bootstrap/scripts/01-initialization/03-initUnicode.st --no-source --save --quit ./resources/unicode/
+
+	$(target_vm_image_exec) loadHermes $(addprefix $(BOOTSTRAP_CACHE_DIR)/,DeprecatedFileStream.hermes FileSystem-Core.hermes FileSystem-Disk.hermes) --save --no-fail-on-undeclared
+	$(target_vm_image_exec) eval --save "PharoBootstrapInitialization initializeFileSystem"
+	$(target_vm_image_exec) eval --save "SourceFileArray initialize"
+
+$(BUILD_DIR)/step-07-bootstrap-core/bootstrap.image: $(BUILD_DIR)/step-06-bootstrap-compiler/bootstrap.image $(target_vm_components) $(BUILD_DIR)/step-07-bootstrap-core/PharoV60.sources # TODO add deps on hermes files
+	@echo -e '\n    [+] Bootstrapping $(basename $(dir $@))\n'
+	@mkdir -p $(dir $@)
+	cp -r $(dir $<)bootstrap.image $(dir $@)bootstrap.image
+
+	$(target_vm_image_exec) loadHermes $(BOOTSTRAP_CACHE_DIR)/TraitsV2.hermes --save
+	$(target_vm_image_exec) loadHermes $(addprefix $(BOOTSTRAP_CACHE_DIR)/,Kernel-Traits.hermes AST-Core-Traits.hermes Collections-Abstract-Traits.hermes Transcript-Core-Traits.hermes CodeImport-Traits.hermes CodeExport-Traits.hermes TraitsV2-Compatibility.hermes) --save
+
+$(BUILD_DIR)/step-08-bootstrap-monticello/bootstrap.image: $(BUILD_DIR)/step-07-bootstrap-core/bootstrap.image $(target_vm_components) $(BUILD_DIR)/step-07-bootstrap-core/PharoV60.sources # TODO add deps on hermes files
+	@echo -e '\n    [+] Bootstrapping $(basename $(dir $@))\n'
+	@mkdir -p $(dir $@)
+
+	$(save_from_dependency_image)
+	@# TODO this was originally open old image, save new image. Is copying the same thing?
+	@# cp -r $(dir $<)bootstrap.image $(dir $@)bootstrap.image
+	cp $(BUILD_DIR)/step-07-bootstrap-core/PharoV60.sources $(dir $@)PharoV60.sources
+
+	$(target_vm_image_exec) st $(BOOTSTRAP_ST_CACHE_DIR)/Monticello.st --save --quit
+	$(target_vm_image_exec) st ./bootstrap/scripts/02-monticello-bootstrap/01-fixLocalMonticello.st --save --quit
+
+	$(target_vm_image_exec) st ./bootstrap/scripts/02-monticello-bootstrap/02-bootstrapMonticello.st --BOOTSTRAP_PACKAGE_CACHE_DIR=$(BOOTSTRAP_CACHE_DIR)/pharo-local/package-cache --save --quit
+
+	$(target_vm_image_exec) eval --save "TraitsBootstrap fixSourceCodeOfTraits"
+
+$(BUILD_DIR)/step-09-bootstrap-monticello-networking/bootstrap.image: $(BUILD_DIR)/step-08-bootstrap-monticello/bootstrap.image $(target_vm_components) $(BUILD_DIR)/step-07-bootstrap-core/PharoV60.sources # TODO add deps on hermes files
+	@echo -e '\n    [+] Bootstrapping $(basename $(dir $@))\n'
+	@mkdir -p $(dir $@)
+	$(save_from_dependency_image)
+	@# TODO this was originally open old image, save new image. Is copying the same thing?
+	@# cp -r $(dir $<)bootstrap.image $(dir $@)bootstrap.image
+
+	cp $(BUILD_DIR)/step-07-bootstrap-core/PharoV60.sources $(dir $@)PharoV60.sources
+
+	$(target_vm_image_exec) st ./bootstrap/scripts/02-monticello-bootstrap/03-bootstrapMonticelloRemote.st --BOOTSTRAP_PACKAGE_CACHE_DIR=$(BOOTSTRAP_CACHE_DIR)/pharo-local/package-cache --save --quit
+
+$(BUILD_DIR)/step-10-bootstrap-metacello/bootstrap.image: $(BUILD_DIR)/step-09-bootstrap-monticello-networking/bootstrap.image $(target_vm_components) $(BUILD_DIR)/step-07-bootstrap-core/PharoV60.sources # TODO add deps on hermes files
+	@echo -e '\n    [+] Bootstrapping $(basename $(dir $@))\n'
+	@mkdir -p $(dir $@)
+	$(save_from_dependency_image)
+	@# cp -r $(dir $<)bootstrap.image $(dir $@)bootstrap.image
+	@# TODO cp $(BUILD_DIR)/step-07-bootstrap-core/PharoV60.sources $(dir $@)PharoV60.sources
+
+	$(target_vm_image_exec) st ./bootstrap/scripts/03-metacello-bootstrap/01-loadMetacello.st --save --quit
+	$(target_vm_image_exec) eval --save "Metacello new baseline: 'Tonel';repository: 'github://pharo-vcs/tonel:v1.0.16';onWarning: [ :e | Error signal: e messageText in: e signalerContext ]; load: 'core'"
 
 
-bootstrapImage.image:	Pharo.image pharo-vm
-	./pharo Pharo.image save bootstrapImage
-	$(bootstrap) ./bootstrap/scripts/prepare_image.st --save --quit
+$(BUILD_DIR)/step-11-patch-display-size/bootstrap.image: $(BUILD_DIR)/step-10-bootstrap-metacello/bootstrap.image $(target_vm_components) # TODO add deps on hermes files
+	@echo -e '\n    [+] Bootstrapping $(basename $(dir $@))\n'
+	@mkdir -p $(dir $@)
+	cp -r $(dir $<)bootstrap.image $(dir $@)bootstrap.image
 
-Pharo.image:
-	wget https://github.com/guillep/PharoBootstrap/releases/download/v1.4.1/bootstrapImage.zip
-	unzip bootstrapImage.zip
+	@# Fix the display size in the image header (position 40 [zero based], 24 for 32-bit image) in older versions we must use octal representation
+	printf "\231\002\320\003" > $(BUILD_DIR)/step-12-patch-display-size/displaySize.bin
 
-pharo-vm:
-	wget -O - get.pharo.org/vm61 | bash
-	
+	@# If TARGET_ARCH is 32, the offset is 24; if TARGET_ARCH is 64, the offset is 40;
+	dd if=$(BUILD_DIR)/step-12-patch-display-size/displaySize.bin of=$@ bs=1 seek=$(subst 64,40,$(subst 32,24,$(TARGET_ARCH))) count=4 conv=notrunc
+
+# -----------------------------------------------------
+#   Download the target VM (for use with built image)
+# -----------------------------------------------------
+target_vm: $(target_vm_components)
+
+$(target_vm_components):
+	@echo -e '\n    [+] Downloading the $(TARGET_ARCH)-bit Smalltalk virtual machine for use with built image\n'
+	@mkdir -p $(dir $@)
+	@rm -rf $@
+	@# If TARGET_ARCH is 32, the subst will remove 32 to return /
+	wget --quiet -O- https://get.pharo.org/$(subst 32,,$(TARGET_ARCH)/)$(TARGET_VM_TYPE)70 | (cd $(BUILD_DIR); bash > /dev/null 2>&1)
+	@touch $@
+
+# -----------------------------------------------------
+#   Download bootstrapping tools
+# -----------------------------------------------------
+# We don't need $(BOOTSTRAP_TOOLS_DIR)/pharo-ui for the build since we're not using the UI for building
+bootstrap_tools: $(addprefix $(BUILD_DIR)/bootstrap-tools/,bootstrapImage.zip PharoV60sources icon-packs/idea11.zip) $(addprefix $(BOOTSTRAP_TOOLS_DIR)/,pharo pharo-vm)
+
+$(addprefix $(BOOTSTRAP_TOOLS_DIR)/,$(vm_components)):
+	@echo -e '\n    [+] Downloading the 64-bit Smalltalk virtual machine to be used for bootstrapping\n'
+	@mkdir -p $(dir $@)
+	@rm -rf $@
+	wget --quiet -O- https://get.pharo.org/vm70 | (cd $(BOOTSTRAP_TOOLS_DIR); bash > /dev/null 2>&1)
+	@touch $@
+
+$(BOOTSTRAP_TOOLS_DIR)/bootstrapImage.zip:
+	@echo -e '\n    [+] Downloading image used to bootstrap this build\n'
+	@mkdir -p $(dir $@)
+	$(download) https://github.com/carolahp/PharoBootstrap/releases/download/v1.7.0/bootstrapImage.zip
+	@touch $@
+
+$(BUILD_DIR)/step-07-bootstrap-core/PharoV60.sources:
+	@echo -e '\n    [+] Downloading old sources file for source condensation step\n'
+	@mkdir -p $(dir $@)
+	$(download) http://files.pharo.org/sources/PharoV60.sources
+	@touch $@
+
+$(BOOTSTRAP_TOOLS_DIR)/icon-packs/idea11.zip:
+	@echo -e '\n    [+] Downloading icons for Pharo\n'
+	@mkdir -p $(dir $@)
+	$(download) https://github.com/pharo-project/pharo-icon-packs/archive/v1.0.0-idea11.zip
+	@touch $@
+
 clean:
-	rm -rf bootstrap-cache pharo pharo-ui pharo-vm Pharo.* bootstrapImage.* pharo-local
+	rm -rf $(BUILD_DIR)
