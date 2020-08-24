@@ -10,7 +10,7 @@ mcPackages := #(
  'Zodiac-Core'
  ).
 
-(MonticelloBootstrap inDirectory: (MCCacheRepository uniqueInstance directory))
+(MonticelloBootstrap inDirectory: (CommandLineArguments new optionAt: 'BOOTSTRAP_PACKAGE_CACHE_DIR' ifAbsent: [ MCCacheRepository uniqueInstance directory ]) asFileReference)
   loadPackagesNamed: mcPackages.
 
 InternetConfiguration initialize.
