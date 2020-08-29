@@ -41,15 +41,15 @@ PBBootstrap class >> fromCommandLine [
 		ifPresent: [ :read | Number readFrom: read ifFail: [ -1 ] ]
 		ifAbsent: [ -1 ].
 	versionInfo := options optionAt: 'VERSION_INFO' ifAbsent: [ self error: 'Must provide VERSION_INFO in the form of a git describe --long' ].
-	
-	('Architecture: ' , architecture) logCr.
-	('BuildNumber: ' , buildNumber) logCr.
-	('VersionInfo: ' , versionInfo) logCr. 
-	
+
+        Transcript show: '    [+] Bootstrapping for a ' , architecture , '-bit architecture'; cr.
+        Transcript show: '    [+] Build number: ' , buildNumber; cr.
+        Transcript show: '    [+] VersionInfo: ' , versionInfo; cr.
+
 	versionInfo := (PBVersionInfo fromLongGitDescribe: versionInfo)
 		buildNumber: buildNumber;
 		yourself.
-	
+
 	^ super new
 		architecture: architecture;
 		versionInfo: versionInfo;
