@@ -60,7 +60,6 @@ $(addprefix $(BUILD_DIR)/step-02-prepare-image/,$(bootstrap_image_components)): 
 	$(BOOTSTRAP_TOOLS_DIR)/pharo $(dir $@)Pharo.image $(BUILD_IMAGE_FLAGS) ./bootstrap/scripts/prepare_image.st --save --quit
 
 # This step creates a bunch of hermes files in $(BUILD_DIR)/bootstrap-cache and then does some bootstrapping
-# TODO check if we can just call `PBBootstrap fromCommandLine prepareBootstrap` instead of `PBBootstrap fromCommandLine bootstrap`
 $(addprefix $(BUILD_DIR)/step-03-bootstrap/,$(bootstrap_image_components)): $(addprefix $(BUILD_DIR)/step-02-prepare-image/,$(bootstrap_image_components)) $(addprefix $(BOOTSTRAP_TOOLS_DIR)/,$(vm_components))
 	@echo -e '\n    [+] Bootstrapping $(basename $(dir $@))\n'
 	@mkdir -p $(dir $@)
