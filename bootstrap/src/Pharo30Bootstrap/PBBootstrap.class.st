@@ -41,15 +41,15 @@ PBBootstrap class >> fromCommandLine [
 		ifPresent: [ :read | Number readFrom: read ifFail: [ -1 ] ]
 		ifAbsent: [ -1 ].
 	versionInfo := options optionAt: 'VERSION_INFO' ifAbsent: [ self error: 'Must provide VERSION_INFO in the form of a git describe --long' ].
-	
-	('Architecture: ' , architecture) logCr.
-	('BuildNumber: ' , buildNumber) logCr.
-	('VersionInfo: ' , versionInfo) logCr. 
-	
+
+        Transcript show: '    [+] Bootstrapping for a ' , architecture , '-bit architecture'; cr.
+        Transcript show: '    [+] Build number: ' , buildNumber; cr.
+        Transcript show: '    [+] VersionInfo: ' , versionInfo; cr.
+
 	versionInfo := (PBVersionInfo fromLongGitDescribe: versionInfo)
 		buildNumber: buildNumber;
 		yourself.
-	
+
 	^ super new
 		architecture: architecture;
 		versionInfo: versionInfo;
@@ -65,7 +65,7 @@ PBBootstrap class >> new [
 
 { #category : #'instance creation' }
 PBBootstrap class >> repositoryLocation [
-
+	"Returns the location of the repository that we want to bootstrap, which is usually the working directory. Can be overridden if BOOTSTRAP_REPOSITORY is specified"
 	^ (Smalltalk os environment
 		at: 'BOOTSTRAP_REPOSITORY'
 		ifAbsent: [ '.' ]) asFileReference
@@ -78,39 +78,44 @@ PBBootstrap >> allPackagesForHermes [
 ]
 
 { #category : #accessing }
-PBBootstrap >> architecture: aString [ 
-	
+PBBootstrap >> architecture: aString [
+
 	architecture := aString
 ]
 
 { #category : #bootstrapping }
-PBBootstrap >> bootstrap [ 
+PBBootstrap >> bootstrap [
 
-	PBStepStartedSignal log: 'Starting  Process.'.
+	PBStepStartedSignal log: 'Starting Process.'.
 
+        Transcript show: '    [+] Preparing bootstrap'; cr.
 	self prepareBootstrap.
-	[self createImage ] on:AssertionFailure do: [ :e | e resume ].
+
+        Transcript show: '    [+] Creating image on which bootstrapping will take place'; cr.
+	[ self createImage ] on: AssertionFailure do: [ :e | e resume ].
+
+        Transcript show: '    [+] Initializing image for bootstrapping'; cr.
 	self initializeImage.
-		
+
 	PBStepFinishedSignal log: 'Process ended.'
-	
+
 ]
 
 { #category : #accessing }
 PBBootstrap >> bootstrapCacheDirectory [
-	
+
 	^ (Smalltalk os environment at: 'BOOTSTRAP_CACHE' ifAbsent: ['bootstrap-cache']) asFileReference ensureCreateDirectory
 ]
 
 { #category : #accessing }
 PBBootstrap >> buildNumber [
-	
+
 	^ buildNumber
 ]
 
 { #category : #accessing }
 PBBootstrap >> buildNumber: aBuildNumber [
-	
+
 	buildNumber := aBuildNumber
 ]
 
