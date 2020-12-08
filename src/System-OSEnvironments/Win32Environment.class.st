@@ -19,8 +19,9 @@ Class {
 }
 
 { #category : #testing }
-Win32Environment class >> isDefaultFor: aPlatform [ 
-	^ aPlatform isWin32
+Win32Environment class >> isDefaultFor: aPlatform [
+
+	^ aPlatform isWin32 or: [ aPlatform isWin64 ]
 ]
 
 { #category : #accessing }

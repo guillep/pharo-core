@@ -29,7 +29,7 @@ KoreanEnvironment class >> supportedLanguages [
 { #category : #'subclass responsibilities' }
 KoreanEnvironment class >> systemConverterClass [
 	| encoding |
-	Smalltalk os isWin32 
+	Smalltalk os isWindows 
 		ifTrue: [^EUCKRTextConverter].
 	Smalltalk os isMacOS
 		ifTrue: [^UTF8TextConverter].

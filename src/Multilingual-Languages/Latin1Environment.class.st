@@ -38,7 +38,7 @@ Latin1Environment class >> supportedLanguages [
 
 { #category : #'subclass responsibilities' }
 Latin1Environment class >> systemConverterClass [
-	Smalltalk os isWin32
+	Smalltalk os isWindows
 		ifTrue: [^ UTF8TextConverter].
  	Smalltalk os isMacOSX
 		ifTrue: [ ^ UTF8TextConverter ].

@@ -178,16 +178,6 @@ LanguageEnvironment class >> localeChanged [
 ]
 
 { #category : #accessing }
-LanguageEnvironment class >> localeIdClass [
-	"A minimal (headless) image has LanguageEnvironment but not LocaleID!
-	 See https://github.com/pharo-project/pharo/issues/3844"
-
-	^self environment 
-		at: #LocaleID 
-		ifAbsent: [self error: 'LocaleID is not present in this image!'].
-]
-
-{ #category : #accessing }
 LanguageEnvironment class >> localeID: localeID [
 
 	self knownEnvironments
@@ -198,6 +188,16 @@ LanguageEnvironment class >> localeID: localeID [
 	self resetKnownEnvironments.
 	"Try again with freshly initialized cache"
 	^ self localeID: localeID
+]
+
+{ #category : #accessing }
+LanguageEnvironment class >> localeIdClass [
+	"A minimal (headless) image has LanguageEnvironment but not LocaleID!
+	 See https://github.com/pharo-project/pharo/issues/3844"
+
+	^self environment 
+		at: #LocaleID 
+		ifAbsent: [self error: 'LocaleID is not present in this image!'].
 ]
 
 { #category : #initialization }

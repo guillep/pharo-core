@@ -38,7 +38,7 @@ Latin2Environment class >> supportedLanguages [
 { #category : #'subclass responsibilities' }
 Latin2Environment class >> systemConverterClass [
 
-	Smalltalk os isWin32 
+	Smalltalk os isWindows 
 		ifTrue: [^CP1250TextConverter ].
 
 	^ ISO88592TextConverter.

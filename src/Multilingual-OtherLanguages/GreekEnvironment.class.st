@@ -31,7 +31,7 @@ GreekEnvironment class >> supportedLanguages [
 { #category : #'subclass responsibilities' }
 GreekEnvironment class >> systemConverterClass [
 
-	Smalltalk os isWin32
+	Smalltalk os isWindows
 		ifTrue: [^CP1253TextConverter ].
 	^ ISO88597TextConverter.
 

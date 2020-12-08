@@ -63,7 +63,7 @@ JapaneseEnvironment class >> supportedLanguages [
 JapaneseEnvironment class >> systemConverterClass [
 	| encoding |
 
-	Smalltalk os isWin32 
+	Smalltalk os isWindows 
 		ifTrue: [^ShiftJISTextConverter].
 	Smalltalk os isMacOS
 		ifTrue: [^UTF8TextConverter].

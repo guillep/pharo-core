@@ -11,6 +11,7 @@ OSPlatformTest >> testAPI [
 		isMacOS;
 		isMacOSX;
 		isWin32;
+		isWin64;
 		isWindows;
 		isUnix;
 		isLinux;
