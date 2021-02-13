@@ -380,7 +380,7 @@ Process >> on: exception do: handlerAction [
 	newRoot := [
 			[root insertSender: thisContext.
 			currentContext jump] on: exception do: handlerAction.
-		Processor terminateActive] asContext.
+		Processor terminateRealActive] asContext.
 
 	self isActiveProcess 
 		ifTrue: [ newRoot jump ]

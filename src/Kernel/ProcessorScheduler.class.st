@@ -313,6 +313,31 @@ ProcessorScheduler >> terminateActive [
 	activeProcess effectiveProcess terminate
 ]
 
+{ #category : #'process state change' }
+ProcessorScheduler >> terminateRealActive [
+	"IMPORTANT: Do not step over this method in the debugger (normally you will never do it)
+	because it will terminate the UIProcess of the debugger instead of the process under debugger.
+	
+	It terminates the active process that is really currently running despite on any effective process installed. 	
+	It is very critical to ignore the simulation trick of the debugger (the effective process) during normal completion of the process. This method ensures that every process is able to complete. 
+	Previously #terminateActive was used for the process completion. But #terminateActive targets the effective process which debugger sets for correct stepping over processor calls. Debugger resets this value at the end of stepping but there are huge amount of cases where it is impossible to do or due to the bugs in the debugger implementation.
+	The consequences of unreset effective process is inability of the process to finish the execution. Following scenario happens in that case: 
+	- last instruction of the process```Processor terminateActive``` does not terminate the real active process
+	- #terminateActive continutes execution to the nil sender
+	- the VM sends #cannotReturn: message to the context which is supposed to raise an error and open the debugger
+	- none of these mechanizms are able to stop/suspend the process because it is still in same bad state (where active=effective)
+	- #cannotReturn: does not stop and it returns to the nil sender 
+	- the VM sends again #cannotReturn: message. 
+	- image hangs due to this infinite recursion triggering new debugger requests at every step.
+	
+	In other words the effective process trick is very dangerous mechanizm and critical system operations must avoid it. 
+	Therefore this method. It is used only as the last instruction for the process termination. See #newProcess for example: 
+			[ self value, Processor terminateRealActive ]
+	"
+
+	activeProcess doTerminationFromYourself
+]
+
 { #category : #'priority names' }
 ProcessorScheduler >> timingPriority [
 	"Answer the priority at which the system processes keeping track of real 
