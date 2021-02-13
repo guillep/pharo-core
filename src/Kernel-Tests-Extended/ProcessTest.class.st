@@ -8,6 +8,29 @@ Class {
 }
 
 { #category : #tests }
+ProcessTest >> testActiveProcessFromProcesor [
+	
+	| processFromProcessor activeProcess |
+	activeProcess := [ processFromProcessor := Processor activeProcess ] forkAt: Processor activePriority + 1.
+	
+	self assert: processFromProcessor identicalTo: activeProcess
+]
+
+{ #category : #tests }
+ProcessTest >> testActiveProcessFromProcesorShouldUseInstalledEffectiveProcess [
+	
+	| processFromProcessor activeProcess effectiveProcess |
+	effectiveProcess := [ 10 seconds wait ] forkAt: Processor activePriority + 1.
+	activeProcess := [ processFromProcessor := Processor activeProcess ] newProcess.
+	activeProcess 
+		priority: Processor activePriority + 1;
+		effectiveProcess: effectiveProcess;
+		resume.
+	
+	self assert: processFromProcessor identicalTo: effectiveProcess
+]
+
+{ #category : #tests }
 ProcessTest >> testFork [
 
 	| hasBlockRun block return checkAssert |
@@ -395,7 +418,7 @@ ProcessTest >> testNormalProcessCompletionWithLeftEffectiveProcess [
 	| effectiveProcess activeProcess |
 	effectiveProcess := [ 10 seconds wait ] forkAt: Processor activePriority + 1.
 	activeProcess := [ Processor activeProcess suspend. ] forkAt: Processor activePriority + 1.
-	activeProcess instVarNamed: #effectiveProcess put: effectiveProcess.
+	activeProcess effectiveProcess: effectiveProcess.
 	
 	activeProcess resume.
 	
@@ -413,13 +436,36 @@ ProcessTest >> testNormalProcessWithArgsCompletionWithLeftEffectiveProcess [
 	activeProcess 
 		priority: Processor activePriority + 1; 
 		resume.
-	activeProcess instVarNamed: #effectiveProcess put: effectiveProcess.
+	activeProcess effectiveProcess: effectiveProcess.
 	
 	activeProcess resume.
 	
 	self assert: activeProcess isTerminated.
 	self deny: effectiveProcess isTerminated.
 	effectiveProcess terminate
+]
+
+{ #category : #tests }
+ProcessTest >> testRealActiveProcessFromProcesor [
+	
+	| processFromProcessor activeProcess |
+	activeProcess := [ processFromProcessor := Processor realActiveProcess ] forkAt: Processor activePriority + 1.
+	
+	self assert: processFromProcessor identicalTo: activeProcess
+]
+
+{ #category : #tests }
+ProcessTest >> testRealActiveProcessFromProcesorShouldIgnoreInstalledEffectiveProcess [
+	
+	| processFromProcessor activeProcess effectiveProcess |
+	effectiveProcess := [ 10 seconds wait ] forkAt: Processor activePriority + 1.
+	activeProcess := [ processFromProcessor := Processor realActiveProcess ] newProcess.
+	activeProcess 
+		priority: Processor activePriority + 1;
+		effectiveProcess: effectiveProcess;
+		resume.
+	
+	self assert: processFromProcessor identicalTo: activeProcess
 ]
 
 { #category : #tests }

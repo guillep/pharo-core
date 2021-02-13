@@ -218,6 +218,8 @@ Process >> doTerminationFromAnotherProcess [
 	It assumes that self is not the active process
 	and the termination is requested from another process"
 	| ctxt oldList |
+	self isTerminating ifTrue: [ ^ ProcessAlreadyTerminating signal ].
+	terminating := true.
 	"Always suspend the process first so it doesn't accidentally get woken up"
 	oldList := self suspend.
 	suspendedContext ifNil: [^self].
@@ -252,7 +254,8 @@ Process >> doTerminationFromAnotherProcess [
 Process >> doTerminationFromYourself [ 
 	"Stop this process forever from the process itself. 
 	Unwind to execute pending ensure:/ifCurtailed: blocks before terminating.
-	It assumes that self is the active process. "		
+	It assumes that self is the active process. "
+	terminating := true.
 	thisContext unwindForTermination.
 	self suspend
 ]
@@ -265,6 +268,11 @@ Process >> effectiveProcess [
 	 debugged process as the effectiveProcess of the process executing the code, preserving process
 	 identity."
 	^effectiveProcess ifNil: [self] 
+]
+
+{ #category : #accessing }
+Process >> effectiveProcess: aProcess [ 
+	effectiveProcess := aProcess
 ]
 
 { #category : #private }
@@ -713,10 +721,6 @@ Process >> suspendingList [
 { #category : #'changing process state' }
 Process >> terminate [ 
 	"Stop the process that the receiver represents forever.  Unwind to execute pending ensure:/ifCurtailed: blocks before terminating."
-	terminating := self isTerminating
-		ifTrue: [ ^ ProcessAlreadyTerminating signal ]
-		ifFalse: [ true ].
-
 	self isActiveProcess 
 		ifTrue: [ self doTerminationFromYourself ]
 		ifFalse: [ self doTerminationFromAnotherProcess]

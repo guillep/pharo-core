@@ -117,12 +117,13 @@ ProcessorScheduler class >> startUp [
 ProcessorScheduler >> activePriority [
 	"Answer the priority level of the currently running Process."
 
-	^activeProcess effectiveProcess priority
+	^self activeProcess priority
 ]
 
 { #category : #accessing }
 ProcessorScheduler >> activeProcess [
-	"Answer the currently running Process."
+	"Answers the currently running Process
+	which is maybe just pretending to be the active process (like during code simulation in debugger)"
 
 	^activeProcess effectiveProcess
 ]
@@ -224,6 +225,14 @@ ProcessorScheduler >> printOn: aStream [
 	aStream nextPutAll: #Processor
 ]
 
+{ #category : #accessing }
+ProcessorScheduler >> realActiveProcess [
+	"Answers the real currently running Process (ignoring any effective process installed).
+	Method should not be used by users. It is only for specific low level places of the system like a normal process termination or debugger requests"
+
+	^activeProcess
+]
+
 { #category : #removing }
 ProcessorScheduler >> remove: aProcess ifAbsent: aBlock [ 
 	"Remove aProcess from the list on which it is waiting for the processor 
@@ -310,13 +319,14 @@ ProcessorScheduler >> tallyCPUUsageFor: seconds every: msec [
 ProcessorScheduler >> terminateActive [
 	"Terminate the process that is currently running."
 
-	activeProcess effectiveProcess terminate
+	self activeProcess terminate
 ]
 
 { #category : #'process state change' }
 ProcessorScheduler >> terminateRealActive [
 	"IMPORTANT: Do not step over this method in the debugger (normally you will never do it)
 	because it will terminate the UIProcess of the debugger instead of the process under debugger.
+	Method should not be used by users. It is only for specific low level places of the system like a normal process termination.
 	
 	It terminates the active process that is really currently running despite on any effective process installed. 	
 	It is very critical to ignore the simulation trick of the debugger (the effective process) during normal completion of the process. This method ensures that every process is able to complete. 
