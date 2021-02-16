@@ -405,6 +405,15 @@ Context >> bottomContext [
 	^ self findContextSuchThat: [ :context | context sender isNil]
 ]
 
+{ #category : #testing }
+Context >> canBeSteppedSafely [
+ 	"Method indicates that the stepping over receiver should be avoided as it may lead to the bad consequences. Right now it is only about the termination of the real active process. But it can be extended in future for more cases to help the debugger to prevent/stop the simulation of critical methods.
+	Here it is 'Processor terminateRealActive'. 
+	The stepping over it will terminate the process of the sender instead of the simulated one
+	(UI procss of the debugger for example)." 
+	^(self selector == #terminateRealActive and: [ self receiver == Processor ]) not
+]
+
 { #category : #'private-exceptions' }
 Context >> canHandleSignal: exception [
 	"Sent to handler (on:do:) contexts only.  If my exception class (first arg) handles exception then return true, otherwise forward this message to the next handler context.  If none left, return false (see nil>>canHandleSignal:)"
@@ -976,6 +985,18 @@ Context >> isDead [
 	"Has self finished"
 
 	^ pc isNil
+]
+
+{ #category : #testing }
+Context >> isEndOfProcessTermination [ 
+	"The normal completion of any process always ends at Process>>doTerminationFromYourself method
+	(see #newProcess and #terminateRealActive).
+	The last instruction is the call to #suspend primitive methodprocessors 
+	which finally removes the process from the scheduler.
+	Such precise criteria of the terminated process state is used here" 
+	self selector == #doTerminationFromYourself ifFalse: [ ^false ].
+	(self receiver isKindOf: Process) ifFalse: [ ^false ].	
+	^pc + 1 = self endPC
 ]
 
 { #category : #testing }

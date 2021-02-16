@@ -150,6 +150,13 @@ Process >> calleeOf: aContext [
 		ifNil: [self error: 'aContext not in process chain']
 ]
 
+{ #category : #testing }
+Process >> canBeStepped [
+	self isTerminated ifTrue: [ ^false ].
+	
+	^suspendedContext canBeSteppedSafely 
+]
+
 { #category : #'changing suspended state' }
 Process >> complete: aContext [
 	"Run self until aContext is popped or an unhandled error is raised.  Return self's new top context, unless an unhandled error was raised then return the signal context (rather than open a debugger)."

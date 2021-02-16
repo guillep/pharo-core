@@ -7,6 +7,13 @@ Class {
 	#category : #'Kernel-Tests-Extended-Processes'
 }
 
+{ #category : #running }
+ProcessTest >> setUp [ 
+	super setUp.
+	
+	self executionProcessMonitor disable
+]
+
 { #category : #tests }
 ProcessTest >> testActiveProcessFromProcesor [
 	
@@ -236,6 +243,52 @@ ProcessTest >> testIsNotSuspendedWhenItIsTerminated [
 ]
 
 { #category : #tests }
+ProcessTest >> testIsNotTerminatedWhenItIsInsideLastTerminationMethod [
+	
+	| process processBody |
+	processBody := [ #test ].
+	process := processBody newProcess.
+	
+	[process step.
+	self deny: process isTerminated.
+	process suspendedContext isBottomContext] whileTrue. 
+	
+	[process step.
+	process suspendedContext isBottomContext] whileFalse: [ 
+		self deny: process isTerminated ].
+	
+	[process step.
+	self deny: process isTerminated.
+	process suspendedContext isBottomContext ] whileTrue.
+	self assert: process suspendedContext selector equals: #terminateRealActive.
+	self deny: process isTerminated
+]
+
+{ #category : #tests }
+ProcessTest >> testIsNotTerminatedWhenItIsJustStartedByEnteringMainBlock [
+	
+	| process processBody |
+	processBody := [ #test ].
+	process := processBody newProcess.
+	
+	[process step.
+	self deny: process isTerminated] 
+		doWhileTrue: [ process suspendedContext isBottomContext ].
+		
+	self assert: process suspendedContext closure identicalTo: processBody.
+	self deny: process isTerminated
+]
+
+{ #category : #tests }
+ProcessTest >> testIsNotTerminatedWhenItIsNotStarted [
+	
+	| process |
+	process := [  ] newProcess.
+	
+	self deny: process isTerminated
+]
+
+{ #category : #tests }
 ProcessTest >> testIsSelfEvaluating [
 	self assert: Processor printString equals: 'Processor'
 ]
@@ -246,6 +299,26 @@ ProcessTest >> testIsSuspendedWhenItIsNotStartedYet [
 	| process |
 	process := [  ] newProcess.
 	self assert: process isSuspended
+]
+
+{ #category : #tests }
+ProcessTest >> testIsTerminatedAfterManualTermination [
+	
+	| process |
+	process := [ 10 seconds wait ] forkAt: Processor activePriority + 1.
+	self deny: process isTerminated.
+	
+	process terminate.
+	self assert: process isTerminated
+]
+
+{ #category : #tests }
+ProcessTest >> testIsTerminatedAfterSelfTermination [
+	
+	| process |
+	process := [  ] forkAt: Processor activePriority + 1.
+	
+	self assert: process isTerminated
 ]
 
 { #category : #'tests - termination' }
