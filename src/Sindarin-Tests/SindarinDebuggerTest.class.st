@@ -366,7 +366,10 @@ SindarinDebuggerTest >> testIsExecutionFinished [
 	scdbg
 		stepOver;
 		step;
-		step.
+		step;
+		stepOver;
+		step;
+		stepOver.
 	"Reached `Processor terminateRealActive` method.
 	It is a special termination method which is considered as the end for simulation and should not be stepped" 
 	self assert: scdbg isExecutionFinished
