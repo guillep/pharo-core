@@ -350,7 +350,6 @@ ProcessorScheduler >> terminateRealActive [
 	- Execution tries to return from cannotReturn: method to the nil sender.
 	- VM sends again #cannotReturn: message. 
 	- Image hangs due to this infinite recursion triggering new debugger at every step.
-	- Interrupt (cmd+dot) does not help by same reason. The Debugger will suspend the wrong process.
 	
 	In other words the effective process trick is very dangerous mechanizm and critical system operations must avoid it. 
 	Therefore this method. It is used only as the last instruction for the process termination. See #newProcess for example: 
