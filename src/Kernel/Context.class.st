@@ -982,9 +982,9 @@ Context >> isDead [
 Context >> isEndOfProcessTermination [ 
 	"The normal completion of any process always ends at Process>>doTerminationFromYourself method
 	(see #newProcess and #terminateRealActive).
-	The last instruction is the call to #suspend primitive methodprocessors 
+	The last instruction is the call to #suspend primitive method 
 	which finally removes the process from the scheduler.
-	Such precise criteria of the terminated process state is used here" 
+	This precise criteria of the terminated process is used here" 
 	self selector == #doTerminationFromYourself ifFalse: [ ^false ].
 	(self receiver isKindOf: Process) ifFalse: [ ^false ].	
 	^pc + 1 = self endPC
