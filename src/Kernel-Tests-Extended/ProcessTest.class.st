@@ -260,7 +260,8 @@ ProcessTest >> testIsNotTerminatedWhenItIsInsideLastTerminationMethod [
 	[process step.
 	self deny: process isTerminated.
 	process suspendedContext isBottomContext ] whileTrue.
-	self assert: process suspendedContext selector equals: #terminateRealActive.
+	"Notice that stepping delegates terminateRealActive to terminateActive"
+	self assert: process suspendedContext selector equals: #terminateActive. 
 	self deny: process isTerminated
 ]
 
