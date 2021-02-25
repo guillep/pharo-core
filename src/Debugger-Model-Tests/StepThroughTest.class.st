@@ -12,7 +12,7 @@ StepThroughTest >> evalBlockThenReturnOne: aBlock [
 
 { #category : #helper }
 StepThroughTest >> stepA1 [
-	self evalBlockThenReturnOne: [ self stepA2 ].
+	self evalBlockThenReturnOne: [ self stepA2 ]
 ]
 
 { #category : #helper }
@@ -99,4 +99,14 @@ StepThroughTest >> testStepThroughDoesTheSameThingAsStepOverWhenNoBlockIsInvolve
 	self assert: node isMessage.
 	self assert: node receiver isSelfVariable.
 	self assert: node selector equals: #stepB3.
+]
+
+{ #category : #tests }
+StepThroughTest >> testStepThroughUntilTermination [ 
+	"Stepping over a message node brings the execution to the next node in the same method."
+	self settingUpSessionAndProcessAndContextForBlock: [ self stepA1 ].
+
+	[ session interruptedProcess isTerminated ] whileFalse: [ session stepThrough ].
+
+	self assert: session interruptedProcess isTerminated
 ]

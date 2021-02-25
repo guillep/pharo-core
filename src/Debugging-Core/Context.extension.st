@@ -284,7 +284,7 @@ Context >> stepToHome: aContext [
 				  ctxt.
 				  error } ].
 
-		home == ctxt home ] whileFalse: [ 
+		home == ctxt home or: [(ctxt hasSender: home) not]] whileFalse: [ 
 			home isDead ifTrue: [ 
 				^ { 
 					  ctxt.
@@ -303,7 +303,7 @@ Context >> stepToSendOrReturn [
 	returning a value to the receiver (that is, until switching contexts)."
 
 	| context |
-	[ self isDead or: [ self willSend or: [  self willReturn or: [ self willStore or: [self willCreateBlock ] ] ] ] ]
+	[ self isDead or: [ self isEndOfProcessTermination or: [ self willSend or: [  self willReturn or: [ self willStore or: [self willCreateBlock ] ] ] ] ]]
 		whileFalse: [
 			context := self step.
 			context == self ifFalse: [

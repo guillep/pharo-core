@@ -205,16 +205,13 @@ SindarinDebugger >> deactivateAutoRefreshOfAttachedGraphicalDebugger [
 { #category : #start }
 SindarinDebugger >> debug: aBlock [
 	blockToDebug := aBlock.
-	process := aBlock newProcess
-		name: 'ExecutionDebuggedByScriptableDebugger'.
-
-	"process on: Exception do: [:ex | DebuggedExecutionSignalledAnException signalWithException: ex. ex resume ]."
+	process := aBlock newProcess name: 'ExecutionDebuggedByScriptableDebugger'.
 	sindarinSession := SindarinDebugSession
 		newWithName: 'ScriptableDebuggerDebugSession'
 		forProcess: process.
 	sindarinSession deactivateEventTriggering.
-	[ self selector = #newProcess ] whileFalse: [ self step ].	"Step the process to get out of the on:do: context added at the bottom of its stack"
-	[ self selector = #newProcess ] whileTrue: [ self step ].	"Step the process so that it leaves BlockClosure>>#newProcess and enters the block for which a process was created"
+	"Step the process until it enters the block for which a process was created"
+	[ self context closure == blockToDebug ] whileFalse: [ self step ]
 ]
 
 { #category : #accessing }
@@ -270,7 +267,7 @@ SindarinDebugger >> isAboutToSignalException [
 SindarinDebugger >> isExecutionFinished [
 	"Returns whether the debugged execution is finished"
 
-	^ process isTerminating
+	^ process isTerminated
 ]
 
 { #category : #stackAccessHelpers }
@@ -619,10 +616,8 @@ SindarinDebugger >> stepOver [
 	| startContext |
 	startContext := self context.
 	self step.
-	[ self context == startContext
-		or: [ startContext sender isNil
-				or: [ startContext hasSender: self context ] ] ]
-		whileFalse: [ self step ]
+	[ self context hasSender: startContext ]
+		whileTrue: [ self step ] 
 ]
 
 { #category : #'stepping - steps' }
@@ -651,8 +646,7 @@ SindarinDebugger >> stepToMethodEntry [
 { #category : #'stepping - steps' }
 SindarinDebugger >> stepToReturn [
 
-	[ 
-	self context willReturn or: [ self hasSignalledUnhandledException ] ] 
+	[ self context willReturn or: [ self hasSignalledUnhandledException ] ] 
 		whileFalse: [ self debugSession stepOver ]
 ]
 
