@@ -334,9 +334,7 @@ Process >> isSuspended [
 Process >> isTerminated [
 	self isActiveProcess ifTrue: [ ^ false ].	
 	
-	^suspendedContext isNil 
-		or: [ suspendedContext isDead "context becomes dead inside #terminate method by nil pc" 
-			or: [ suspendedContext isEndOfProcessTermination ]]
+	^suspendedContext isNil or: [ suspendedContext isDead ] 
 ]
 
 { #category : #testing }

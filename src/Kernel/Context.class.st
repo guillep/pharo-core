@@ -981,9 +981,11 @@ Context >> isContext [
 
 { #category : #testing }
 Context >> isDead [
-	"Has self finished"
+	"Context is dead when
+	- it is self finished (returned to sender) 
+	- it is at the last instruction of process termination (it is unwinded and process is suspended)"
 
-	^ pc isNil
+	^ pc isNil or: [  self isEndOfProcessTermination ]
 ]
 
 { #category : #testing }
@@ -995,7 +997,7 @@ Context >> isEndOfProcessTermination [
 	This precise criteria of the terminated process is used here" 
 	method selector == #doTerminationFromYourself ifFalse: [ ^false ].
 	method methodClass == Process ifFalse: [ ^false ].	
-	^pc + 1 = self endPC
+	^pc = (self endPC - 1)
 ]
 
 { #category : #testing }
