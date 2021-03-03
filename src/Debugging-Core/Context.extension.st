@@ -284,8 +284,8 @@ Context >> stepToHome: aContext [
 				  ctxt.
 				  error } ].
 
-		home == ctxt home or: [(ctxt hasSender: home) not]] whileFalse: [ 
-			home isDead ifTrue: [ 
+		home == ctxt home ] whileFalse: [ 
+			(home isDead or: [ ctxt isEndOfProcessTermination ]) ifTrue: [ 
 				^ { 
 					  ctxt.
 					  nil } ] ].
