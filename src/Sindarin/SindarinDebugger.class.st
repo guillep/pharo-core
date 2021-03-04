@@ -616,8 +616,10 @@ SindarinDebugger >> stepOver [
 	| startContext |
 	startContext := self context.
 	self step.
-	[ self context hasSender: startContext ]
-		whileTrue: [ self step ] 
+	[ self context == startContext
+		or: [ (startContext isDead or: [ self context isDead ])
+				or: [ startContext hasSender: self context ]]]
+		whileFalse: [ self step ]
 ]
 
 { #category : #'stepping - steps' }
