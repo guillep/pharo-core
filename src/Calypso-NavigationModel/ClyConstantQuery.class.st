@@ -70,7 +70,7 @@ ClyConstantQuery >> buildResult: aQueryResult [
 
 { #category : #execution }
 ClyConstantQuery >> checkEmptyResult [
-	^resultItems notEmpty
+	^resultItems isEmpty
 ]
 
 { #category : #execution }

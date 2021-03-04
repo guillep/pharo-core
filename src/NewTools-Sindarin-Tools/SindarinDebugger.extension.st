@@ -1,13 +1,13 @@
 Extension { #name : #SindarinDebugger }
 
 { #category : #'*NewTools-Sindarin-Tools' }
-SindarinDebugger >> debuggerExtensionKey [
-	^self class debuggerExtensionKey
+SindarinDebugger class >> debuggerExtensionKey [
+	^ #sindarin
 ]
 
 { #category : #'*NewTools-Sindarin-Tools' }
-SindarinDebugger class >> debuggerExtensionKey [
-	^ #sindarin
+SindarinDebugger >> debuggerExtensionKey [
+	^self class debuggerExtensionKey
 ]
 
 { #category : #'*NewTools-Sindarin-Tools' }

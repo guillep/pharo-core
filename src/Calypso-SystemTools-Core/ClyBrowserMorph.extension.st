@@ -1,18 +1,6 @@
 Extension { #name : #ClyBrowserMorph }
 
 { #category : #'*Calypso-SystemTools-Core' }
-ClyBrowserMorph >> allowSilentlyRemoveMethods: methods whichHaveSenders: senders [
-
-	| singleSender sendersCount |
-	sendersCount := senders size.
-	sendersCount = 0 ifTrue: [ ^true].
-	methods size = 1 & (sendersCount = 1) ifFalse: [^false].
-	 
-	singleSender := senders itemAt: 1.
-	^singleSender == methods first
-]
-
-{ #category : #'*Calypso-SystemTools-Core' }
 ClyBrowserMorph >> confirmEmptySystemQuery: aQuery [
 	
 	| showResult result |
@@ -65,24 +53,6 @@ ClyBrowserMorph >> confirmUnusedClasses: classes [
 ]
 
 { #category : #'*Calypso-SystemTools-Core' }
-ClyBrowserMorph >> confirmUnusedClassesExceptInheritance: classes [
-	
-	| refQuery noUsers answer users |
-	
-	refQuery := ClyClassReferencesQuery toAny: classes from: self systemScope.	
-	"we need to exclude both the class and instance side of the class"
-	noUsers := self confirmEmptySystemQuery: refQuery excluding: (classes flatCollect: [ :each | { each . each classSide } ]).
-	
-	users := (classes flatCollect: [:each | each users]) copyWithoutAll: classes.
-	users ifNotEmpty: [ 
-		noUsers := false.
-		answer := UIManager default confirm: 'There are users of trait. Show them?'. 
-		answer ifTrue: [ self spawnQueryBrowserOn: (ClyConstantQuery returning: users) ]].
-	
-	^noUsers
-]
-
-{ #category : #'*Calypso-SystemTools-Core' }
 ClyBrowserMorph >> confirmUnusedVariables: variables [
 	
 	| refQuery |
@@ -112,25 +82,51 @@ ClyBrowserMorph >> isMethodSelected: aMethod [
 ]
 
 { #category : #'*Calypso-SystemTools-Core' }
-ClyBrowserMorph >> requestRemoveMethodStrategyFor: methods [
-	| selectors result strategies caption  senders senderCount plural |
-	
-	selectors := (methods collect: [ :each | each selector ] as: IdentitySet) asArray.	
-	
-	senders := (ClyMessageSendersQuery ofAny: selectors from: self systemScope) execute.
-	(self allowSilentlyRemoveMethods: methods whichHaveSenders: senders)
-		ifTrue: [ ^SycSilentlyRemoveMethodStrategy new ].
+ClyBrowserMorph >> requestRemoveClassStrategyFor: classes [
 
-	strategies := SycRemoveMethodStrategy createAllForBrowser: self.
-	senderCount := senders size.
-	plural := '' asPluralBasedOn: senderCount.
-	
-	caption := selectors size > 1 
-		ifTrue: [ 'There are {1} sender{2}' format: {senderCount. plural}]
-		ifFalse: ['The message #{1} has {2} sender{3}' format: {selectors anyOne. senderCount. plural}].	
-			
-	result := UIManager default 
-		chooseFrom: (strategies collect: [:each | each userRequestString]) values: strategies title: caption.
-		
-	^result ifNil: [ SycNotRemoveMethodStrategy new ]
+	| result strategies title |
+	strategies := SycRemoveClassStrategy
+		              createAllForClasses: classes
+		              browser: self.
+
+	strategies size = 1 ifTrue: [ ^ strategies anyOne ].
+
+	title := classes size = 1
+		         ifTrue: [ 'Class has references, subclasses, or users' ]
+		         ifFalse: [ 'Classes have references, subclasses, or users' ].
+
+	result := UIManager default
+		          chooseFrom:
+		          (strategies collect: [ :each | each userRequestString ])
+		          values: strategies
+		          title: title.
+
+	^ result ifNil: [ SycNotRemoveClassStrategy new ]
+]
+
+{ #category : #'*Calypso-SystemTools-Core' }
+ClyBrowserMorph >> requestRemoveMethodStrategyFor: methods [
+
+	| selectors result strategies title |
+	selectors := (methods
+		              collect: [ :each | each selector ]
+		              as: IdentitySet) asArray.
+
+	strategies := SycRemoveMethodStrategy
+		              createAllForMethods: methods
+		              browser: self.
+	strategies size = 1 ifTrue: [ ^ strategies anyOne ].
+
+	title := selectors size > 1
+		         ifTrue: [ 'Methods have senders' ]
+		         ifFalse: [ 
+		         'Method #{1} has sender{s' format: { selectors anyOne } ].
+
+	result := UIManager default
+		          chooseFrom:
+		          (strategies collect: [ :each | each userRequestString ])
+		          values: strategies
+		          title: title.
+
+	^ result ifNil: [ SycNotRemoveMethodStrategy new ]
 ]

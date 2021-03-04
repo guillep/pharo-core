@@ -39,6 +39,13 @@ ClyQueryResultTestCase >> setUp [
 ]
 
 { #category : #tests }
+ClyQueryResultTestCase >> testCheckingForEmpty [
+	self
+		assert: queryResult isEmpty;
+		deny: queryResult notEmpty
+]
+
+{ #category : #tests }
 ClyQueryResultTestCase >> testComparisonWithAnotherKindOfResult [
 	self deny: queryResult equals: ClyQueryResult new
 ]
@@ -97,14 +104,6 @@ ClyQueryResultTestCase >> testItemsChangedNotificationShouldResetItems [
 	
 	self deny: queryResult isBuilt.
 	self assert: queryResult items isNil
-]
-
-{ #category : #tests }
-ClyQueryResultTestCase >> testItemsInitialization [
-	
-	queryResult initializeItems.
-	
-	self assert: queryResult items notNil
 ]
 
 { #category : #tests }

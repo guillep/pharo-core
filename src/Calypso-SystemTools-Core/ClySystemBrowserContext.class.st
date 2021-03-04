@@ -54,11 +54,6 @@ ClySystemBrowserContext >> confirmUnusedClasses: variables [
 ]
 
 { #category : #'user requests' }
-ClySystemBrowserContext >> confirmUnusedClassesExceptInheritance: variables [
-	^tool confirmUnusedClassesExceptInheritance: variables
-]
-
-{ #category : #'user requests' }
 ClySystemBrowserContext >> confirmUnusedVariables: variables [
 	^tool confirmUnusedVariables: variables
 ]
@@ -186,6 +181,11 @@ ClySystemBrowserContext >> requestMultipleVariables: queryTitle from: classes [
 		requestMultipleObjects: queryTitle 
 		from: ClyAllInstanceVariablesQuery sorted
 		inScope: (ClyClassScope ofAll: classes) withInheritedScope
+]
+
+{ #category : #'user requests' }
+ClySystemBrowserContext >> requestRemoveClassStrategyFor: classes [
+	^tool requestRemoveClassStrategyFor: classes
 ]
 
 { #category : #'user requests' }
