@@ -416,6 +416,11 @@ ClyQueryResult >> needsRebuild [
 	^needsRebuild 
 ]
 
+{ #category : #testing }
+ClyQueryResult >> notEmpty [
+	^self isEmpty not
+]
+
 { #category : #'system changes' }
 ClyQueryResult >> notifyChanges [
 

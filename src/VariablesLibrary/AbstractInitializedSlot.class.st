@@ -14,6 +14,12 @@ Class {
 	#category : #'VariablesLibrary-Slots'
 }
 
+{ #category : #testing }
+AbstractInitializedSlot class >> isAbstract [
+
+	^ self == AbstractInitializedSlot
+]
+
 { #category : #comparing }
 AbstractInitializedSlot >> = other [
 	^ super = other and: [default = other default]

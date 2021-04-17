@@ -807,6 +807,17 @@ CompiledMethodTest >> testSendsSelector [
 	self deny: ((CompiledCode >> #sendsSelector:) sendsSelector: #doBreakfastForMe)
 ]
 
+{ #category : #'tests - testing' }
+CompiledMethodTest >> testUsesUndeclareds [
+	| method |
+	method := self class compiler compile: 'x ^x'.
+	self deny: method usesUndeclareds.
+	method := self class compiler compile: 'z ^z'.
+	self assert: method usesUndeclareds.
+	method := self class compiler compile: 'msg self in: [ :anObject | var1 := 1 ]'.
+	self assert: method usesUndeclareds.
+]
+
 { #category : #'tests - evaluating' }
 CompiledMethodTest >> testValueWithReceiverArguments [
 	

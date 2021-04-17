@@ -63,7 +63,7 @@ CDFluidClassDefinitionParser >> handleClassAndSuperclassOf: aNode [
 		ifTrue: [ 
 			self handleSuperclassNode: aNode receiver receiver.
 			self handleClassName: aNode receiver arguments first ]
-		ifFalse: [ self handleClassName: aNode receiver receiver ].
+		ifFalse: [ self handleMetaclassName: aNode ].
 ]
 
 { #category : #'handling  nodes' }
@@ -175,6 +175,8 @@ CDFluidClassDefinitionParser >> parseSelectorPart: aString withArgument: aNode [
 		ifTrue: [  ^self handleTag: aNode ].
 	aString =	 #uses:
 		ifTrue: [ ^ self handleTraitUsesFromNode: aNode ].
+	aString =	 #trait:
+		ifTrue: [ ^ self handleTraitUsesFromNode: aNode ].
 	aString =	 #sharedPools:
 		ifTrue: [ ^ self handleSharedPoolsFromNode: aNode ].
 	
@@ -223,7 +225,7 @@ CDFluidClassDefinitionParser >> visitMessageNode: aRBMessageNode [
 
 	self handleClassAndSuperclassOf: aRBMessageNode.
 	
-	
+	aRBMessageNode arguments ifEmpty: [ ^ self ].
 	aRBMessageNode selectorParts
 		with: aRBMessageNode arguments
 		do: [ :selectorPart :argument |

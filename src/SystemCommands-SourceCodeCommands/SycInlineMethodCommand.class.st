@@ -32,5 +32,5 @@ SycInlineMethodCommand >> execute [
 		inMethod: method selector
 		forClass: method origin.
 	
-	self executeRefactoring: refactoring.
+	self executeRefactoring: refactoring. 
 ]

@@ -100,15 +100,16 @@ RBInlineMethodTest >> testInlineMethod1 [
 
 { #category : #tests }
 RBInlineMethodTest >> testInlineMethod2 [
-	| refactoring |
+	| refactoring methodName |
+	methodName := ('caller', '1') asSymbol.
 	refactoring := RBInlineMethodRefactoring
 		inline: (40 to: 120)
-		inMethod: #caller1
+		inMethod: methodName
 		forClass: RBRefactoryTestDataApp.
 	self setupInlineExpressionFor: refactoring toReturn: false.
 	self executeRefactoring: refactoring.
 
-	self assert: ((refactoring model classNamed: #RBRefactoryTestDataApp) parseTreeFor: #caller1) equals: (self parseMethod: 'caller1 
+	self assert: ((refactoring model classNamed: #RBRefactoryTestDataApp) parseTreeFor: methodName) equals: (self parseMethod: 'caller1 
 								| anObject each1 anObject1 | 
 								anObject := 5.
 								anObject1 := anObject + 1.
@@ -121,15 +122,16 @@ RBInlineMethodTest >> testInlineMethod2 [
 
 { #category : #tests }
 RBInlineMethodTest >> testInlineMethod3 [
-	| refactoring |
+	| refactoring methodName |
+	methodName := ('caller', '2') asSymbol.
 	refactoring := RBInlineMethodRefactoring
 		inline: (58 to: 73)
-		inMethod: #caller2
+		inMethod: methodName
 		forClass: RBRefactoryTestDataApp.
 	self setupInlineExpressionFor: refactoring toReturn: false.
 	self executeRefactoring: refactoring.
 
-	self assert: ((refactoring model classNamed: #RBRefactoryTestDataApp) parseTreeFor: #caller2) equals: (self parseMethod: 'caller2
+	self assert: ((refactoring model classNamed: #RBRefactoryTestDataApp) parseTreeFor: methodName) equals: (self parseMethod: 'caller2
 								^(1 to: 10) inject: 1 into: [:sum :each | sum * ((1 to: 10) inject: each into: [:sum1 :each1 | sum1 + each1])]	')
 ]
 

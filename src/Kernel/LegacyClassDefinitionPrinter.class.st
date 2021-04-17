@@ -71,6 +71,17 @@ LegacyClassDefinitionPrinter >> metaclassDefinitionString [
 			store: forClass instanceVariablesString ]
 ]
 
+{ #category : #template }
+LegacyClassDefinitionPrinter >> testClassDefinitionTemplateInPackage: aString [
+
+	^ String streamContents: [ :s |
+			s nextPutAll: 'TestCase subclass: #MyTest' ; crtab.
+			s nextPutAll: 'instanceVariableNames: '''' '; crtab. 
+			s nextPutAll: 'classVariableNames: '''''; crtab.
+			s nextPutAll: 'poolDictionaries: '''''; crtab.
+			s nextPutAll: 'category ''', aString, '''' ]
+]
+
 { #category : #'public API' }
 LegacyClassDefinitionPrinter >> traitDefinitionString [
 

@@ -17,7 +17,7 @@ Class {
 	#instVars : [
 		'content'
 	],
-	#category : #'AST-Core-Nodes'
+	#category : #'AST-Core-Nodes - ErrorNodes'
 }
 
 { #category : #'as yet unclassified' }

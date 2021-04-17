@@ -15,6 +15,13 @@ Class {
 }
 
 { #category : #examples }
+FBDExamples class >> superCallInBlock [
+
+	^ [ super yourself ] value
+
+]
+
+{ #category : #examples }
 FBDExamples >> doubleRemoteAnidatedBlocks [
 
 	| val last |	

@@ -23,7 +23,7 @@ SpMorphicComponentListAdapter >> addKeyBindingsTo: aWidget [
 { #category : #factory }
 SpMorphicComponentListAdapter >> buildWidget [
 
-	widget := FTTableMorph new
+	widget := SpFTTableMorph new
 		beRowNotHomogeneous;
 		dataSource: self newDataSource;
 		setMultipleSelection: self presenter isMultipleSelection;

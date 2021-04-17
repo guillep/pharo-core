@@ -436,7 +436,7 @@ TabMorph >> buildBorderVertices [
 { #category : #private }
 TabMorph >> buildLabel: text withIcon: icon [
 	
-	^ (TabLabelItem tab: self)
+	^ (TabLabelItemMorph tab: self)
 		morph:	text asMorph;
 		icon: (AlphaImageMorph new image: icon);
 		yourself
@@ -601,7 +601,7 @@ TabMorph >> initialize [
 
 	self changeProportionalLayout.
 
-	state := TabEnabled tab: self.
+	state := TabEnabledState tab: self.
 	closeable := true.
 	label := self buildLabel: 'tab' withIcon: self defaultIcon.
 	closeIcon := AlphaImageMorph withForm: self class closeIcon scaledByDisplayScaleFactor.

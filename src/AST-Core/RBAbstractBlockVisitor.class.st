@@ -12,6 +12,12 @@ Class {
 	#category : #'AST-Core-Visitors'
 }
 
+{ #category : #testing }
+RBAbstractBlockVisitor class >> isAbstract [
+
+	^ self == RBAbstractBlockVisitor
+]
+
 { #category : #enumerating }
 RBAbstractBlockVisitor class >> visit: aTree anySatisfy: aBlock [
 	self

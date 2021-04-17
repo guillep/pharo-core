@@ -658,7 +658,7 @@ HaloMorph >> borderStyle [
 	
 	^(target notNil and: [self showBoundsInHalo and: [target isWorldMorph not]])
 		ifTrue: [super borderStyle]
-		ifFalse: [SimpleBorder width: 0 color: Color transparent]
+		ifFalse: [SimpleBorderStyle width: 0 color: Color transparent]
 ]
 
 { #category : #updating }
@@ -972,7 +972,7 @@ HaloMorph >> initialize [
 	super initialize.
 
 	growingOrRotating := false.
-	self borderStyle: (SimpleBorder width: 2 color: self theme menuSelectionColor)
+	self borderStyle: (SimpleBorderStyle width: 2 color: self theme menuSelectionColor)
 ]
 
 { #category : #accessing }

@@ -15,10 +15,7 @@ Class {
 		'id'
 	],
 	#classVars : [
-		'ClipboardInterpreterClass',
-		'Current',
 		'FileNameConverter',
-		'InputInterpreterClass',
 		'KnownEnvironments',
 		'SystemConverter'
 	],

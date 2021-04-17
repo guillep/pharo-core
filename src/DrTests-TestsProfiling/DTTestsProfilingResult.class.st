@@ -28,7 +28,7 @@ DTTestsProfilingResult >> buildTreeForUI [
 						select:
 							[ :testCaseToTimeTaken | testCaseToTimeTaken testResult errors isNotEmpty ])
 						collect: [ :testCaseToTimeTaken | 
-							DTTreeLeaf new
+							DTTreeLeafNode new
 								content: testCaseToTimeTaken;
 								yourself ]);
 				yourself).
@@ -39,7 +39,7 @@ DTTestsProfilingResult >> buildTreeForUI [
 						select:
 							[ :testCaseToTimeTaken | testCaseToTimeTaken testResult failures isNotEmpty ])
 						collect: [ :testCaseToTimeTaken | 
-							DTTreeLeaf new
+							DTTreeLeafNode new
 								content: testCaseToTimeTaken;
 								yourself ]);
 				yourself).
@@ -50,7 +50,7 @@ DTTestsProfilingResult >> buildTreeForUI [
 						select:
 							[ :testCaseToTimeTaken | testCaseToTimeTaken testResult skipped isNotEmpty ])
 						collect: [ :testCaseToTimeTaken | 
-							DTTreeLeaf new
+							DTTreeLeafNode new
 								content: testCaseToTimeTaken;
 								yourself ]);
 				yourself).
@@ -61,7 +61,7 @@ DTTestsProfilingResult >> buildTreeForUI [
 						select:
 							[ :testProfilerResult | testProfilerResult testResult passed isNotEmpty ])
 						collect: [ :testCaseToTimeTaken | 
-							DTTreeLeaf new
+							DTTreeLeafNode new
 								content: testCaseToTimeTaken;
 								yourself ]);
 				yourself)};
@@ -75,7 +75,7 @@ DTTestsProfilingResult >> buildTreeGroupedByClass [
 		subResults: ((self testResults groupedBy: [ :d | d testCase class ]) associations collect: [ :assoc |
 			self buildTreeNode
 					name: assoc key name;
-					subResults: (assoc value collect: [ :t | DTTreeLeaf content: t ]);
+					subResults: (assoc value collect: [ :t | DTTreeLeafNode content: t ]);
 					yourself ]);
 		yourself
 ]

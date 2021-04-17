@@ -20,6 +20,12 @@ Class {
 }
 
 { #category : #testing }
+RBReplaceRule class >> isAbstract [
+
+	^ self == RBReplaceRule
+]
+
+{ #category : #testing }
 RBReplaceRule >> canMatch: aProgramNode [ 
 	^verificationBlock value: aProgramNode
 ]

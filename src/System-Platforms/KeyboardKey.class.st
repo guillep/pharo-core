@@ -1089,6 +1089,19 @@ KeyboardKey class >> windowsVirtualKeyTable [
 	^WindowsVirtualKeyTable
 ]
 
+{ #category : #comparing }
+KeyboardKey >> = other [
+
+	^ self species = other species
+		and: [ self value = other value ]
+]
+
+{ #category : #comparing }
+KeyboardKey >> hash [
+
+	^ self species hash bitXor: self value hash
+]
+
 { #category : #testing }
 KeyboardKey >> isArrowDown [
 

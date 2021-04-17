@@ -12,5 +12,5 @@ MCPackageManager class >> gtInspectorManagersIn: composite [
 		title: 'Managers';
 		display: [ self allManagers sorted: [ :x :y | x packageName < y packageName ] ];
 		format: #packageName;
-		filterOn: [ :text :each | each gtDisplayString includesSubstring: text caseSensitive: false ]
+		filterOn: [ :text :each | each displayString includesSubstring: text caseSensitive: false ]
 ]

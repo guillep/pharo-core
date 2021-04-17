@@ -17,7 +17,7 @@ OSWindowJoystickExampleEventHandler class >> axisMaxValue [
 	^ 32767
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OSWindowJoystickExampleEventHandler >> axisDeadZoneThreshold [
 	^ self class axisDeadZoneThreshold
 ]

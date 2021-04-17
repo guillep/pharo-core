@@ -4,7 +4,7 @@ Extension { #name : #SycRemoveMethodCommand }
 SycRemoveMethodCommand class >> methodMenuActivation [
 	<classAnnotation>
 	
-	^CmdContextMenuActivation byRootGroupItemOrder: 10000 for: ClyMethod asCalypsoItemContext 
+	^ CmdContextMenuActivation byRootGroupItemOrder: 10000 for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #'*Calypso-SystemTools-Core' }

@@ -225,7 +225,7 @@ ClyBrowserToolMorph >> applyDecorations [
 ClyBrowserToolMorph >> attachToSystem [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ClyBrowserToolMorph >> backgroundColor [
 	
 	^ containerTab backgroundColor

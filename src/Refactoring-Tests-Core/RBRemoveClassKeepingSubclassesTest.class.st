@@ -6,7 +6,7 @@ Class {
 
 { #category : #tests }
 RBRemoveClassKeepingSubclassesTest >> testRemoveClassWithReferencesRaisesRBRefactoringError [
-	self shouldFail: (RBRemoveClassRefactoring classNames: #(#RBBasicLintRuleTestData ))
+	self shouldFail: (RBRemoveClassKeepingSubclassesRefactoring classNames: #(#RBBasicLintRuleTestData ))
 ]
 
 { #category : #tests }

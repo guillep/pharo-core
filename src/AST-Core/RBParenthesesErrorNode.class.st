@@ -9,7 +9,7 @@ or the closure : ( parentheses node .
 Class {
 	#name : #RBParenthesesErrorNode,
 	#superclass : #RBEnglobingErrorNode,
-	#category : #'AST-Core-Nodes'
+	#category : #'AST-Core-Nodes - ErrorNodes'
 }
 
 { #category : #construction }

@@ -21,10 +21,8 @@ Class {
 SycAddMessageArgumentCommand class >> methodContextMenuActivation [
 	<classAnnotation>
 	
-	^CmdContextMenuActivation 
-		byItemOf: ClyMoreRefactorsMenuGroup 
-		order: 30 
-		for: ClyMethod asCalypsoItemContext
+	^ SycMethodMenuActivation
+		byRootGroupItemOrder: 30 for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #accessing }
@@ -44,6 +42,7 @@ SycAddMessageArgumentCommand >> createRefactoring [
 		originalMessage argumentNames indexOf: e ifAbsent: [ 0 ]
 	].
 	^RBAddParameterRefactoring
+		model: model
 		addParameterToMethod: originalMessage selector
 		in: (SycMessageOriginHack of: originalMessage) "look at SycMessageOriginHack comment"
 		newSelector: newSelector selector

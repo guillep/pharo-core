@@ -15,3 +15,12 @@ Class {
 RBTemporaryNode >> acceptVisitor: aProgramNodeVisitor [
 	^ aProgramNodeVisitor visitTemporaryNode: self
 ]
+
+{ #category : #generated }
+RBTemporaryNode >> isTemp [
+
+	self
+		deprecated: 'Use #isTempVariable instead'
+		transformWith: '`@rec isTemp' -> '`@rec isTempVariable'.
+	^ self isTempVariable
+]

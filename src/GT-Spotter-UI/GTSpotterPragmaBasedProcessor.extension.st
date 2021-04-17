@@ -4,5 +4,5 @@ Extension { #name : #GTSpotterPragmaBasedProcessor }
 GTSpotterPragmaBasedProcessor >> render: anObject [
 	^ GTSpotterItemBrick new
 		icon: (nil);
-		text: (anObject gtDisplayString)
+		text: (anObject displayString)
 ]

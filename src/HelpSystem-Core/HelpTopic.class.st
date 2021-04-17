@@ -135,6 +135,11 @@ HelpTopic >> defaultTitle [
 	
 ]
 
+{ #category : #printing }
+HelpTopic >> displayStringOn: stream [
+	^ stream nextPutAll: self title
+]
+
 { #category : #testing }
 HelpTopic >> hasSubtopics [ 
 	"Returns true if the receiver has subtopics, false otherwise"

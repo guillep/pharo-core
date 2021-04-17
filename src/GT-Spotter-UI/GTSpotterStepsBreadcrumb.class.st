@@ -155,7 +155,7 @@ GTSpotterStepsBreadcrumb >> onStepAdded: ann [
 	
 	self spotterModel steps size <= 1 ifTrue: [
 		^ self push: (GTSpotterStepBreadcrumbItem new
-						text: self spotterModel steps first origin gtDisplayString;
+						text: self spotterModel steps first origin displayString;
 						stepModel: self spotterModel steps first) ].
 	
 	step := ann stepModel.
@@ -169,7 +169,7 @@ GTSpotterStepsBreadcrumb >> onStepAdded: ann [
 			ifTrue: [ (previousStep selected renderingProcessor render: selectedCandidate) labelBrick text ]
 			ifFalse: [ (origin isKindOf: Collection)
 				ifTrue: [ step processors first title ]
-				ifFalse: [ origin gtDisplayString] ]))
+				ifFalse: [ origin displayString] ]))
 ]
 
 { #category : #'events-processing' }

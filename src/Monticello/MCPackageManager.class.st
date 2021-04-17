@@ -252,6 +252,11 @@ MCPackageManager >> announcer [
 	^self class announcer
 ]
 
+{ #category : #printing }
+MCPackageManager >> displayStringOn: stream [
+	stream nextPutAll: self package name
+]
+
 { #category : #initialization }
 MCPackageManager >> initialize [
 	super initialize.

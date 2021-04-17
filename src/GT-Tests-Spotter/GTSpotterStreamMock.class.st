@@ -7,7 +7,7 @@ Class {
 	#category : #'GT-Tests-Spotter'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #adding }
 GTSpotterStreamMock >> addObject: anObject inProcessor: aProcessor [
 	objects add: anObject
 ]

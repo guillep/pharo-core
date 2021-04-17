@@ -35,9 +35,10 @@ RBInlineAllMethodTest >> testInlineMethodWithMultipleArgs [
 
 { #category : #tests }
 RBInlineAllMethodTest >> testInlineMethodWithMultipleSendersInMethod [
-	| refactoring |
+	| refactoring methodName |
+	methodName := ('caller', '2') asSymbol.
 	refactoring := RBInlineAllSendersRefactoring 
-		sendersOf: #caller2
+		sendersOf: methodName
 		in: RBRefactoryTestDataApp.
 	self executeRefactoring: refactoring.
 	self assert: ((refactoring model classNamed: #RBRefactoryTestDataApp) parseTreeFor: #inlineLast) equals: (self parseMethod: 'inlineLast

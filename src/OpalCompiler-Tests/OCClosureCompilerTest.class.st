@@ -7,7 +7,7 @@ Class {
 	#category : #'OpalCompiler-Tests-FromOld'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OCClosureCompilerTest class >> compilerClass [
 	^OpalCompiler
 ]

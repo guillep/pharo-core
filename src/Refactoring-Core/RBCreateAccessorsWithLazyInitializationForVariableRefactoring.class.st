@@ -4,6 +4,26 @@ I am a refactoring for creating accessors with lazy initialization for variables
 I am used by a couple of other refactorings creating new variables and accessors.
 
 My precondition is that the variable name is defined for this class.
+
+Example
+--------
+Script
+```
+(RBCreateAccessorsWithLazyInitializationForVariableRefactoring 
+	variable: 'foo1' 
+	class: RBLintRuleTestData 
+	classVariable: false 
+	defaultValue: '123') execute
+```
+
+After refactoring we get:
+```
+RBLintRuleTestData >> foo1 
+	^ foo1 ifNil: [foo1 := 123]
+	
+RBLintRuleTestData >> foo1: anObject
+	foo1 := anObject
+```
 "
 Class {
 	#name : #RBCreateAccessorsWithLazyInitializationForVariableRefactoring,

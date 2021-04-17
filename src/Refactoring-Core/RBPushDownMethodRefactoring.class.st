@@ -31,7 +31,6 @@ RBPushDownMethodRefactoring class >> pushDown: selectorCollection from: aClass [
 RBPushDownMethodRefactoring >> preconditions [
 
 	| condition |
-	self requestSelectors.
 	condition := selectors
 		             inject: self emptyCondition
 		             into: [ :cond :each | 
@@ -61,14 +60,8 @@ RBPushDownMethodRefactoring >> pushDown: aSelector [
 
 { #category : #initialization }
 RBPushDownMethodRefactoring >> pushDown: selectorCollection from: aClass [ 
-	self setOption: #selectorsFromView toUse: [ :ref | ].
 	class := self classObjectFor: aClass.
 	selectors := selectorCollection
-]
-
-{ #category : #transforming }
-RBPushDownMethodRefactoring >> requestSelectors [
-	^(self options at: #selectorsFromView) value: self
 ]
 
 { #category : #transforming }

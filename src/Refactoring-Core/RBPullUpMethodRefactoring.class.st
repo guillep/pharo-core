@@ -96,10 +96,13 @@ RBPullUpMethodRefactoring >> checkInstVarsFor: aSelector [
 	class instanceVariableNames do: 
 			[:each | 
 			((class whichSelectorsReferToInstanceVariable: each) includes: aSelector) ifTrue: 
-					[self
-						refactoringError: ('<1p> refers to <2s> which is defined in <3p>' expandMacrosWith: aSelector
+					[ (self confirm: ('<1p> refers to #<2s> which is defined in <3p>. Do you want push up variable #<2s> also?' expandMacrosWith: aSelector
 								with: each
-								with: class)]]
+								with: class)) 
+						ifTrue: [ self pushUpVariable: each ]
+						ifFalse: [ self refactoringError: 'You are about to push your method without the instance variable it uses. 
+						It will bring the system is an inconsistent state. But this may be what you want.
+						So do you want to push up anyway?' ] ]]
 ]
 
 { #category : #preconditions }
@@ -196,7 +199,7 @@ RBPullUpMethodRefactoring >> copyDownMethod: aSelector [
 						with: superclassDefiner)].
 	self 
 		refactoringWarning: 'Do you want to copy down the superclass method to the classes that don''t define ' 
-				, aSelector.
+				, aSelector, '?'.
 	refactoring := RBExpandReferencedPoolsRefactoring 
 				model: self model
 				forMethod: (superclassDefiner parseTreeFor: aSelector)
@@ -256,6 +259,16 @@ RBPullUpMethodRefactoring >> pullUp: selectorCollection from: aClass to: aSuperC
 { #category : #transforming }
 RBPullUpMethodRefactoring >> pullUpMethods [
 	selectors do: [:each | self pullUp: each]
+]
+
+{ #category : #preconditions }
+RBPullUpMethodRefactoring >> pushUpVariable: aVariable [
+	| refactoring |
+	refactoring :=  RBPullUpInstanceVariableRefactoring 
+			model: self model
+			variable: aVariable
+			class: targetSuperclass.
+	self performCompositeRefactoring: refactoring.
 ]
 
 { #category : #transforming }

@@ -59,6 +59,17 @@ SpTablePresenter class >> exampleWithDecoratedString [
 ]
 
 { #category : #'*Spec2-Examples' }
+SpTablePresenter class >> exampleWithSortableColumnHeaders [
+
+	^ self new
+		showColumnHeaders;
+		addColumn: (SpStringTableColumn title: 'Number' evaluated: #yourself) beSortable;
+		addColumn: (SpStringTableColumn title: 'Hex' evaluated: #hex) beSortable;
+		items: (1 to: 16) asArray;
+		openWithSpec
+]
+
+{ #category : #'*Spec2-Examples' }
 SpTablePresenter class >> exampleWithoutColumnHeaders [
 	<sampleInstance>
 	| example |
@@ -70,4 +81,24 @@ SpTablePresenter class >> exampleWithoutColumnHeaders [
 		hideColumnHeaders;
 		openWithSpec.
 	^ example
+]
+
+{ #category : #'*Spec2-Examples' }
+SpTablePresenter class >> exampleWriteableTable [
+	"The selector names are NOT stored, but serves merely to have something one can edit"
+	| items |
+	
+	items := String methods.
+	^ self new
+		addColumn: (SpStringTableColumn new 
+			title: 'Editable selector name';
+			evaluated: [ :m | m selector ];
+			displayBold: [ :m | m selector isKeyword ];
+			beEditable ;
+			onAcceptEdition: [ :m :t | Transcript nextPutAll: t;cr;endEntry ];
+			yourself);
+		addColumn: (SpStringTableColumn title: 'Size' evaluated: #size) beSortable;
+		showColumnHeaders;
+		items: items;
+		openWithSpec
 ]

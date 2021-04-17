@@ -17,6 +17,8 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : #SycChangeMessageSignatureCommand,
 	#superclass : #CmdCommand,
+	#traits : 'TRefactoringCommandSupport',
+	#classTraits : 'TRefactoringCommandSupport classTrait',
 	#instVars : [
 		'originalMessage'
 	],
@@ -74,7 +76,7 @@ SycChangeMessageSignatureCommand >> originalMessage: anObject [
 { #category : #execution }
 SycChangeMessageSignatureCommand >> prepareFullExecutionInContext: aToolContext [
 	super prepareFullExecutionInContext: aToolContext.
-
+	self setUpModelFromContext: aToolContext.
 	originalMessage := aToolContext lastSelectedMessage
 ]
 

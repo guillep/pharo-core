@@ -14,6 +14,12 @@ FBDDecompilerTest >> checkCorrectDecompilation: aSelector [
 ]
 
 { #category : #verification }
+FBDDecompilerTest >> checkCorrectDecompilationClassSide: aSelector [
+
+	self checkCorrectMethodDecompilation: (self getMethodClassSide: aSelector)
+]
+
+{ #category : #verification }
 FBDDecompilerTest >> checkCorrectMethodDecompilation: originalMethod [
 
 	| newMethod |
@@ -64,6 +70,12 @@ FBDDecompilerTest >> exampleClass [
 FBDDecompilerTest >> getMethod: selector [
 
 	^ self exampleClass >> selector
+]
+
+{ #category : #private }
+FBDDecompilerTest >> getMethodClassSide: selector [
+
+	^ self exampleClass class >> selector
 ]
 
 { #category : #tests }
@@ -804,6 +816,12 @@ FBDDecompilerTest >> testSuper [
 FBDDecompilerTest >> testSuperCallInBlock [
 
 	self checkCorrectDecompilation: #superCallInBlock
+]
+
+{ #category : #tests }
+FBDDecompilerTest >> testSuperCallInBlockClassSide [
+
+	self checkCorrectDecompilationClassSide: #superCallInBlock
 ]
 
 { #category : #tests }

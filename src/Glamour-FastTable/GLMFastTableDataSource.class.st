@@ -22,7 +22,7 @@ Class {
 	#category : #'Glamour-FastTable-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 GLMFastTableDataSource >> dataFromPresentationItem: anItem [
 	^ anItem
 ]

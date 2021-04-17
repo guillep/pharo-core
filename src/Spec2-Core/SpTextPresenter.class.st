@@ -120,14 +120,6 @@ SpTextPresenter >> cursorPosition [
 	^ self withAdapterDo: [ :anAdapter | anAdapter cursorPosition ]
 ]
 
-{ #category : #api }
-SpTextPresenter >> cursorPositionIndex: index [
-	"Set cursor position index. 
-	 This method will place the cursor in the text index position requested."
-
-	^ self withAdapterDo: [ :anAdapter | anAdapter cursorPositionIndex: index ]
-]
-
 { #category : #commands }
 SpTextPresenter >> doTextCopy [
 

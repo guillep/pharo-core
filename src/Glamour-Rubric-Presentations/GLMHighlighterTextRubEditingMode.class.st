@@ -18,13 +18,6 @@ Class {
 }
 
 { #category : #'instance creation' }
-GLMHighlighterTextRubEditingMode class >> withParserStyler: aParser [
-
-	^ self new stylerDecorator: (GLMHighlighterTextStylerDecorator
-			withParserStyler: aParser)
-]
-
-{ #category : #'instance creation' }
 GLMHighlighterTextRubEditingMode class >> withStylerDecorator: aDecorator [
 
 	^ self new stylerDecorator: aDecorator

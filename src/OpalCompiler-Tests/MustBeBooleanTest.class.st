@@ -33,10 +33,7 @@ MustBeBooleanTest >> testIfTrueEffect [
 	fakeBool := MyBooleanObject new.
 	temp := 1.
 	fakeBool ifTrue: [ temp := 5 + 3 + 1 ].
-	self assert: temp equals: 9.
-	
-	fakeBool ifTrue: [ [  ] ].
-	"fakeBool ifTrue: [ 1+ 2. [ :a | a ] value: 5. 7 ]."
+	self assert: temp equals: 9
 ]
 
 { #category : #tests }
@@ -46,6 +43,18 @@ MustBeBooleanTest >> testIfTrueValue [
 	self assert: (MyBooleanObject new ifTrue: [ 1 + 2 ]) equals: '3 sent from my boolean object'.
 	myBooleanObject := MyBooleanObject new.
 	self assert: (myBooleanObject ifTrue: [ 1 + 2 ]) equals: '3 sent from my boolean object'.
+]
+
+{ #category : #tests }
+MustBeBooleanTest >> testIfTrueValueLiteral [
+	| myBooleanObject result |
+	myBooleanObject := MyBooleanObject new.
+	"check the case where the block just returna a literal"
+	result := myBooleanObject
+		ifTrue: [ 5 ].
+	self assert: result equals: '5 sent from my boolean object'.
+	"now do it with the expression evaluate for effect"
+	self should: [self class compiler evaluate: '1 ifTrue: [ 5 ]. 1'] raise: MessageNotUnderstood.
 ]
 
 { #category : #tests }

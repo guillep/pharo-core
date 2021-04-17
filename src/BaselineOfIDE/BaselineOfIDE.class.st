@@ -200,7 +200,8 @@ BaselineOfIDE >> baseline: spec [
 					'Debugger' 
 					'SystemReporter'
 					'ChangeSorter'
-					'Methods') ].
+					'Methods'
+					'Spotter') ].
 			
 		spec baseline: 'Microdown' with: [ spec 
 				repository: self packageRepositoryURL ].
@@ -208,7 +209,7 @@ BaselineOfIDE >> baseline: spec [
 		spec 
   			baseline: 'Roassal3' 
   			with: [ spec 
-				repository: 'github://ObjectProfile/Roassal3:v0.9.5/src';
+				repository: 'github://ObjectProfile/Roassal3:v0.9.7b/src';
     				loads: #( 'Core' 'Tests') ].
 
 		spec 
@@ -225,13 +226,31 @@ BaselineOfIDE >> baseline: spec [
 
 { #category : #actions }
 BaselineOfIDE >> loadIceberg [
+	| pharoPluginClass |
+	
 	Metacello new
 		baseline: 'Iceberg';
-		repository: 'github://pharo-vcs/iceberg:v2.0.3';
+		repository: 'github://pharo-vcs/iceberg:dev-2.0';
 		onConflictUseLoaded;
 		load.
 	(Smalltalk classNamed: #Iceberg) enableMetacelloIntegration: true.
-	(Smalltalk classNamed: #IcePharoPlugin) addPharoProjectToIceberg.
+	
+	pharoPluginClass := Smalltalk classNamed: #IcePharoPlugin.
+	pharoPluginClass  addPharoProjectToIceberg.
+	
+	(Smalltalk classNamed: #BaselineOfSpec2) ifNotNil: [ :aClass | 
+		pharoPluginClass
+			addProjectNamed: 'pharo-spec2' 
+			commit: aClass releaseCommit 
+			baselines: #(BaselineOfSpec2) ].
+		
+	(Smalltalk classNamed: #BaselineOfNewTools) ifNotNil: [ :aClass | 
+		pharoPluginClass 
+			addProjectNamed: 'pharo-newtools' 
+			commit: aClass releaseCommit 
+			baselines: #(BaselineOfNewTools) ].
+		
+	pharoPluginClass addIcebergProjectToIceberg
 ]
 
 { #category : #actions }

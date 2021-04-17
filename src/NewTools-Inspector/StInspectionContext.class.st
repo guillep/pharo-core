@@ -120,14 +120,23 @@ StInspectionContext >> methodSelectorNeedsBuilder [
 	^ self methodSelector last = $:
 ]
 
+{ #category : #'private factory' }
+StInspectionContext >> newInspectionPresenter [
+
+	^ self methodSelectorNeedsBuilder 
+		ifTrue: [ 
+			self inspectedObject 
+				inspectorPerform: self methodSelector 
+				with: self newPresenterBuilder ]
+		ifFalse: [ 
+			self inspectedObject inspectorPerform: self methodSelector ]
+]
+
 { #category : #factory }
 StInspectionContext >> newInspectionView [
 	| presenter |
 
-	presenter := self methodSelectorNeedsBuilder 
-		ifTrue: [ self inspectedObject perform: self methodSelector with: self newPresenterBuilder ]
-		ifFalse: [ self inspectedObject perform: self methodSelector ].
-	 
+	presenter := self newInspectionPresenter.
 	^ presenter asInspection
 		context: self;
 		yourself

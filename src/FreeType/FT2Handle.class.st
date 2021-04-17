@@ -4,11 +4,6 @@ handle holds a (typically 32-bit) pointer to an externally managed object.
 Class {
 	#name : #FT2Handle,
 	#superclass : #FFIExternalObject,
-	#classVars : [
-		'DestroyMutex',
-		'Registry',
-		'Session'
-	],
 	#pools : [
 		'FT2Constants'
 	],

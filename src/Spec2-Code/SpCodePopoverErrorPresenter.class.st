@@ -51,11 +51,9 @@ SpCodePopoverErrorPresenter >> initializePresenters [
 
 	self initializeText.
 
-	layout := SpBoxLayout newLeftToRight
-		add: text;
+	layout := SpBoxLayout newTopToBottom
+		add: text expand: false;
 		yourself.
-
-	text eventHandler whenFocusLostDo: [ self dismiss ].
 
 	self flag: #TODO. "This is uber bad. Keybindings needs to come from application configuration"
 	text

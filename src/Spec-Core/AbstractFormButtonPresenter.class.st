@@ -44,7 +44,7 @@ AbstractFormButtonPresenter >> click [
 	self toggleState
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #legacy }
 AbstractFormButtonPresenter >> deactivationAction: aBlock [
 	"<api: #block getter: #desactivationAction registration: #whenDeactivationActionChanged:>"
 	"This method is used to set the action to perform when I am deactivated"
@@ -152,14 +152,14 @@ AbstractFormButtonPresenter >> whenChangedDo: aBlock [
 	stateHolder whenChangedDo: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #legacy }
 AbstractFormButtonPresenter >> whenDeactivatedDo: aBlock [
 	"This method is used to propagate the event that I have been deactivated"
 	
 	stateHolder whenChangedDo: [:bool | bool ifFalse: aBlock ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #legacy }
 AbstractFormButtonPresenter >> whenDeactivationActionChanged: aBlock [
 	"A block performed when the deactivation action changed"
 	actionWhenDeactivatedHolder whenChangedDo:  aBlock 

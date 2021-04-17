@@ -6,5 +6,5 @@ RPackageTag >> gtInspectorDefinedClassesIn: composite [
 	composite list
 		title: 'Classes';
 		display: #classes;
-		format: #gtDisplayString
+		format: #displayString
 ]

@@ -30,7 +30,7 @@ ClyCriticalTextSegmentMorph >> addItemToMenu: aMenu [
 		do: [ :action | 
 			listItem
 				addMorphBack:
-					(IconicButton new
+					(IconicButtonMorph new
 						target: action;
 						labelGraphic: action icon;
 						actionSelector: #actOnCritic:ofEntity:;

@@ -4,6 +4,13 @@ Class {
 	#category : #BaselineOfSpec2
 }
 
+{ #category : #accessing }
+BaselineOfSpec2 class >> releaseCommit [
+	"The commit corresponding to current release (to be used on bootstrap process)"
+
+	^ '9aea5f563964c7da36778d5386703da5c860e7d0'
+]
+
 { #category : #baseline }
 BaselineOfSpec2 >> baseline: spec [
 	<baseline>

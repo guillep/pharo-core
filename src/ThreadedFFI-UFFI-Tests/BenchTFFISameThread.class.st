@@ -13,7 +13,7 @@ BenchTFFISameThread >> calloutAPIClass [
 	^ TFCalloutAPI
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 BenchTFFISameThread >> doCallWith: aFloat another: aDouble [
 
 	^ self ffiCall: #(float sumAFloatAndADouble(float aFloat, double aDouble))
@@ -25,9 +25,9 @@ BenchTFFISameThread >> ffiLibrary [
 	^ TFTestLibraryUsingSameThreadRunner uniqueInstance
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #running }
 BenchTFFISameThread >> runCall [
-
+	<script: 'self new runCall'>
 	| return | 
 
 	^ [ return := self doCallWith: 1.0 another: 2.0.

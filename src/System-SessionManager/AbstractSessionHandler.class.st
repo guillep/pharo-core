@@ -9,6 +9,12 @@ Class {
 	#category : #'System-SessionManager-Handlers'
 }
 
+{ #category : #testing }
+AbstractSessionHandler class >> isAbstract [ 
+	
+	^self == AbstractSessionHandler
+]
+
 { #category : #accessing }
 AbstractSessionHandler >> handledId [
 	self subclassResponsibility

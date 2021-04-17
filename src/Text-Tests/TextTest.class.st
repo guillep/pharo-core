@@ -193,7 +193,7 @@ TextTest >> testGtDisplayOn [
 	| hello exp res |
 	hello := 'Hello Pharo' asText.
 	exp := String streamContents: [:s | hello printOn: s].
-	res := String streamContents: [:s | hello gtDisplayOn: s].
+	res := String streamContents: [:s | hello displayStringOn: s].
 	self assert: res equals: exp.
 ]
 

@@ -96,10 +96,10 @@ EpLogBrowserPresenter >> addMenuItemsForSelectedItemsIn: aMenu [
 	aMenu addGroup: [ :aGroup | 
 		aGroup addItem: [ :anItem | 
 			anItem
-				name: 'File Out';
+				name: 'Write Ombu file';
 				description: 'Write selected entries to an Ombu file';
 				icon: (self iconNamed: #smallSaveAsIcon);
-				action: [ self fileOutSelection ] ] ].
+				action: [ self ombuFileSaveSelection ] ] ].
 
 ]
 
@@ -312,15 +312,6 @@ EpLogBrowserPresenter >> eventsMenuActions [
 		$c command }.
 	}
 
-]
-
-{ #category : #'menu - operations' }
-EpLogBrowserPresenter >> fileOutSelection [
-
-	| entries |
-	entries := self selectedEntryItems collect: [ :each | each entry ].
-	
-	EpOmbuExporter askFileNameAndFileOut: entries in: FileLocator workingDirectory.
 ]
 
 { #category : #'menu - filters' }
@@ -665,6 +656,15 @@ EpLogBrowserPresenter >> newItemForEntryReference: entryReference [
 		entry: entry;
 		triggerItems: triggers;
 		yourself
+]
+
+{ #category : #'menu - operations' }
+EpLogBrowserPresenter >> ombuFileSaveSelection [
+
+	| entries |
+	entries := self selectedEntryItems collect: [ :each | each entry ].
+	
+	EpOmbuExporter askFileNameAndFileOut: entries in: FileLocator workingDirectory.
 ]
 
 { #category : #'menu - operations' }

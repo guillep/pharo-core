@@ -11,7 +11,6 @@ Class {
 		'cache'
 	],
 	#classVars : [
-		'ErrorRecursion',
 		'FilterCommonMessageSends',
 		'LogDebuggerStackToFile',
 		'LogFileName'
@@ -99,12 +98,6 @@ GTGenericStackDebugger class >> filterNilSelectors [
 { #category : #'accessing - ancient preference selectors' }
 GTGenericStackDebugger class >> filterNilSelectors: aBoolean [ 
 	self flag: 'just for backward compatibility'
-]
-
-{ #category : #accessing }
-GTGenericStackDebugger class >> helpClass [
-
-	^ GTDebuggerHelp
 ]
 
 { #category : #'settings api' }

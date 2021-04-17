@@ -46,8 +46,7 @@ Trait class >> configureBuilder: builder withName: aName traitComposition: aTrai
 		sharedPools: '';
 		category: aPackageName;
 		traitComposition: aTraitCompositionOrCollection asTraitComposition;
-		classTraitComposition: aTraitCompositionOrCollection asTraitComposition classComposition;
-		classSlots: #()
+		classTraitComposition: aTraitCompositionOrCollection asTraitComposition classComposition
 ]
 
 { #category : #'old pharo 8 syntax' }
@@ -72,6 +71,11 @@ Trait class >> named: aSymbol package: aString [
 		uses: {}
 		package: aString
 		env: self environment
+]
+
+{ #category : #'old pharo 8 syntax' }
+Trait class >> named: aSymbol trait: aCompositionOrArray [
+	^ self named: aSymbol trait: aCompositionOrArray package: 'Unclassified'
 ]
 
 { #category : #'old pharo 8 syntax' }

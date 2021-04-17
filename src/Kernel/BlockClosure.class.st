@@ -911,8 +911,9 @@ BlockClosure >> valueWithEnoughArguments: anArray [
 ]
 
 { #category : #evaluating }
-BlockClosure >> valueWithExit [ 
-	  self value: [ ^nil ]
+BlockClosure >> valueWithExit [
+
+	^ self value: [ ^ nil ]
 ]
 
 { #category : #evaluating }

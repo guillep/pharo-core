@@ -53,20 +53,20 @@ SpOverlayLayoutAdapterTest >> testLayoutWithOverlayIsNotEmpty [
 
 { #category : #tests }
 SpOverlayLayoutAdapterTest >> testOverlaysAreAddedInOrder [
+	| first |
 
-	| second |
 	layout addOverlay: SpButtonPresenter new.
-	layout addOverlay: (second := SpButtonPresenter new).
-	self assert: self adapter children last equals: second adapter widget
+	layout addOverlay: (first := SpButtonPresenter new).
+	self assert: self adapter children first equals: first adapter widget
 ]
 
 { #category : #tests }
-SpOverlayLayoutAdapterTest >> testOverlaysAreAfterMainChild [
+SpOverlayLayoutAdapterTest >> testOverlaysAreBeforeMainChild [
 
 	| overlay |
 	layout child: SpButtonPresenter new.
 	layout addOverlay: (overlay := SpButtonPresenter new).
-	self assert: self adapter children last equals: overlay adapter widget
+	self assert: self adapter children first equals: overlay adapter widget
 ]
 
 { #category : #tests }

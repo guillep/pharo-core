@@ -36,7 +36,7 @@ SpMorphicTreeTableAdapter >> iconOfRowMorphAt: anInteger [
 SpMorphicTreeTableAdapter >> isRowMorphExpandableAt: anInteger [
 	"Return true if the row at the index has an expandable icon. This is specific to FastTable."
 
-	^ (self iconOfRowMorphAt: anInteger) isKindOf: IconicButton
+	^ (self iconOfRowMorphAt: anInteger) isKindOf: IconicButtonMorph
 ]
 
 { #category : #'*Spec2-Morphic-Backend-Tests' }

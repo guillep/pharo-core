@@ -66,7 +66,7 @@ T2FluidClassDefinitionPrinterTest >> testCompactTraitFullTemplate [
 T2FluidClassDefinitionPrinterTest >> testComplexTrait [
 
 	self assert: (self forClass: MOPTestClassD) equals: 'Object << #MOPTestClassD
-	uses: Trait2 @ {#c3->#c2};
+	trait: Trait2 @ {#c3->#c2};
 	tag: ''Traits-MOP'';
 	package: ''Tests''' 
 ]
@@ -125,7 +125,7 @@ T2FluidClassDefinitionPrinterTest >> testFullTraitTemplate [
 
 	self 
 		assert: (FluidClassDefinitionPrinter new traitDefinitionTemplateInPackage: 'TraitsV2') equals: 'Trait << #TMyTrait
-	uses: {};
+	trait: TEmpty;
 	slots: {};
 	tag: '''' ;
 	package: ''TraitsV2'''
@@ -184,8 +184,8 @@ T2FluidClassDefinitionPrinterTest >> testTSlot [
 { #category : #'tests - traits' }
 T2FluidClassDefinitionPrinterTest >> testTUses [
 
-	self assert: (Trait << #TTUses uses: TBehavior; package: 'Fake') build definitionString equals:  'Trait << #TTUses
-	uses: TBehavior;
+	self assert: (Trait << #TTUses trait: TBehavior; package: 'Fake') build definitionString equals:  'Trait << #TTUses
+	trait: TBehavior;
 	package: ''_UnpackagedPackage'''
 ]
 
@@ -193,7 +193,7 @@ T2FluidClassDefinitionPrinterTest >> testTUses [
 T2FluidClassDefinitionPrinterTest >> testTrait [
 	
 	self assert: (self forClass: RubScrolledTextModel) equals: 'Object << #RubScrolledTextModel
-	uses: TViewModel;
+	trait: TViewModel;
 	slots: { #hasUnacceptedEdits . #announcer . #text . #primarySelectionInterval . #interactionModel };
 	tag: ''Editing-Widgets'';
 	package: ''Rubric''' 
@@ -212,7 +212,7 @@ T2FluidClassDefinitionPrinterTest >> testTrait3AndTag [
 	self 
 		assert: (self forClass: Trait3) 
 		equals: 'Trait << #Trait3
-	uses: Trait2;
+	trait: Trait2;
 	tag: ''Traits-MOP'';
 	package: ''Tests''' 
 ]

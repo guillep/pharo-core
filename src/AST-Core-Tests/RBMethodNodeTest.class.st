@@ -136,6 +136,14 @@ RBMethodNodeTest >> testCommentsParent [
 		equals: #testCommentsParent.
 ]
 
+{ #category : #tests }
+RBMethodNodeTest >> testHasArguments [
+
+	| ast |
+	ast := self parseMethod: 'foo: arg'.
+	self assert: ast hasArguments
+]
+
 { #category : #'testing-comments' }
 RBMethodNodeTest >> testHasComments [
 
@@ -178,6 +186,18 @@ RBMethodNodeTest >> testMethodClass [
 	"if we create an AST, the class should be nil"
 	ast := RBMethodNode selector: #tt body: RBSelectorNode new. 
 	self assert: ast methodClass equals: nil
+]
+
+{ #category : #'testing-comments' }
+RBMethodNodeTest >> testMethodWithCommentsAndEmptyStatements [
+
+	| tree |
+	tree := self parseMethod: 'foo: abd bar: cde  
+		"this is comment".
+		"this is another comment"'.
+
+	self assert: tree comments first contents equals: 'this is comment'.
+	self assert: tree body comments first contents equals: 'this is another comment'
 ]
 
 { #category : #tests }

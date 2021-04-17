@@ -21,16 +21,14 @@ ReTempVarOverridesInstVarRule class >> uniqueIdentifierName [
 
 { #category : #running }
 ReTempVarOverridesInstVarRule >> check: aMethod forCritiquesDo: aCriticBlock [
-	| ivarNames problemTemps|
-	ivarNames := aMethod methodClass instVarNames.
-	ivarNames ifEmpty: [ ^ self ].
-	
-	problemTemps := ((aMethod ast arguments, aMethod ast temporaries)
-		select: [ :node |ivarNames includes: node name]).
-	problemTemps do: [ :node |
-		aCriticBlock cull: (self critiqueFor: aMethod about: node) ] 
-		
 
+	| problemTemps |
+	problemTemps := aMethod ast variableDefinitionNodes 
+		 collect: [ :node | node variable ]
+		 thenSelect: [ :var | var isShadowing ].
+	problemTemps do: [ :var | 
+		aCriticBlock cull:
+			(self critiqueFor: aMethod about: var definingNode) ]
 ]
 
 { #category : #'running-helpers' }
@@ -51,5 +49,5 @@ ReTempVarOverridesInstVarRule >> group [
 
 { #category : #accessing }
 ReTempVarOverridesInstVarRule >> name [
-	^ 'Instance variable overridden by temporary variable'
+	^ 'Outer variable shadowed by temporary variable or argument'
 ]

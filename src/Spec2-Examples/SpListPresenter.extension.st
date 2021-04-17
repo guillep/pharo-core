@@ -10,6 +10,27 @@ SpListPresenter class >> example [
 ]
 
 { #category : #'*Spec2-Examples' }
+SpListPresenter class >> exampleDragAndDrop [
+	| list1 list2 |
+
+	(list1 := self new)
+		items: #( 'abc' 'def' 'xyz' );
+		dragEnabled: true.
+		
+	(list2 := self new)
+		dropEnabled: true;
+		wantsDrop: [ :transfer | transfer passenger allSatisfy: #isString ];
+		acceptDrop: [ :transfer | list2 items: (list2 items, transfer passenger) ].
+				
+	SpPresenter new 
+		layout: (SpBoxLayout newHorizontal
+			add: list1;
+			add: list2;
+			yourself);
+		openWithSpec
+]
+
+{ #category : #'*Spec2-Examples' }
 SpListPresenter class >> exampleMultipleSelection [
 	<sampleInstance>
 	^ self new

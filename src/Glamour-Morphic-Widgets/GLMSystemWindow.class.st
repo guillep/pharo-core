@@ -38,7 +38,7 @@ GLMSystemWindow >> extent: aPoint [
 	self fullBounds
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 GLMSystemWindow >> handleKeyStroke: anEvent [
 
 	self allKeystrokeActions

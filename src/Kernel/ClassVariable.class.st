@@ -69,6 +69,11 @@ ClassVariable >> isDefinedByOwningClass [
 ]
 
 { #category : #testing }
+ClassVariable >> isPoolVariable [
+	^ self definingClass isPool 
+]
+
+{ #category : #testing }
 ClassVariable >> isReferenced [
 	"A class variable can only be accessed in the defintionClass and its subclasses (both class and instance side)"
 

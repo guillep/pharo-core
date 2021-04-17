@@ -124,7 +124,7 @@ OpenOnStringExample >> label [
 	^ label
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OpenOnStringExample >> openOnString [
 	| ui temp object |
 	object whenChangedDo: [ :o | ui label label: o asString ].

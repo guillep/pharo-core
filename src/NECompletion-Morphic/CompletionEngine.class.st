@@ -100,6 +100,12 @@ CompletionEngine >> editor [
 ]
 
 { #category : #keyboard }
+CompletionEngine >> handleKeyDownAfter: aKeyboardEvent editor: aParagraphEditor [
+
+	^ self updateCompletionAfterEdition: aParagraphEditor
+]
+
+{ #category : #keyboard }
 CompletionEngine >> handleKeyDownBefore: aKeyboardEvent editor: anEditor [
 	"I return a boolean. 
 	true when I have handled the event and no futher processing is needed by the caller.
@@ -113,9 +119,11 @@ CompletionEngine >> handleKeyDownBefore: aKeyboardEvent editor: anEditor [
 	commandKeyPressed := aKeyboardEvent commandKeyPressed.
 	
 	(self isMenuOpen not and: [
-		self editor atCompletionPosition and: [ 
+		self editor atCompletionPosition and: [
 			NECPreferences popupShowWithShortcut matches: {aKeyboardEvent}]])
-				ifTrue: [ self openMenu. ^ true ].
+				ifTrue: [ 
+					aKeyboardEvent supressNextKeyPress: true.
+					self openMenu. ^ true ].
 	
 	key = KeyboardKey backspace
 		ifTrue: [ 
@@ -164,15 +172,9 @@ CompletionEngine >> handleKeyDownBefore: aKeyboardEvent editor: anEditor [
 ]
 
 { #category : #keyboard }
-CompletionEngine >> handleKeystrokeAfter: aKeyboardEvent editor: aParagraphEditor [ 
-	(aParagraphEditor isNil or: [ self isMenuOpen not ])
-		ifTrue: [ ^ self ].
-		
-	aParagraphEditor atCompletionPosition 
-		ifFalse: [ ^ self closeMenu ].
-	
-	context narrowWith: aParagraphEditor wordAtCaret.
-	menuMorph refreshSelection.
+CompletionEngine >> handleKeystrokeAfter: aKeyboardEvent editor: aParagraphEditor [
+
+	^ self updateCompletionAfterEdition: aParagraphEditor
 ]
 
 { #category : #keyboard }
@@ -187,8 +189,8 @@ CompletionEngine >> handleKeystrokeBefore: aKeyboardEvent editor: anEditor [
 	keyCharacter := aKeyboardEvent keyCharacter.
 	controlKeyPressed := aKeyboardEvent controlKeyPressed.
 	
-	self editor atCompletionPosition ifFalse: [ 
-		^ (self smartInputWithEvent: aKeyboardEvent ) notNil ].	
+	(self smartInputWithEvent: aKeyboardEvent )
+		ifNotNil: [ ^ true ].
 	
 	self isMenuOpen
 		ifFalse: [ ^ self handleKeystrokeWithoutMenu: aKeyboardEvent ].
@@ -548,4 +550,16 @@ CompletionEngine >> stopCompletionDelay [
 
     completionDelay ifNotNil: [ 
         completionDelay isTerminating ifFalse: [ completionDelay terminate ] ]
+]
+
+{ #category : #keyboard }
+CompletionEngine >> updateCompletionAfterEdition: aParagraphEditor [
+
+	(aParagraphEditor isNil or: [ self isMenuOpen not ]) ifTrue: [ 
+		^ self ].
+
+	aParagraphEditor atCompletionPosition ifFalse: [ ^ self closeMenu ].
+
+	context narrowWith: aParagraphEditor wordAtCaret.
+	menuMorph refreshSelection
 ]

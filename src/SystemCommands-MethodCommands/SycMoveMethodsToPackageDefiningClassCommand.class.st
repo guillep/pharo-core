@@ -21,10 +21,7 @@ SycMoveMethodsToPackageDefiningClassCommand class >> canBeExecutedInContext: aTo
 SycMoveMethodsToPackageDefiningClassCommand class >> methodContextMenuActivation [
 	<classAnnotation>
 	
-	^CmdContextMenuActivation 
-		byItemOf: ClyMoreRefactorsMenuGroup 
-		order: 80 
-		for: ClyMethod asCalypsoItemContext
+	^ SycMethodMenuActivation byRootGroupItemOrder: 80 for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #accessing }

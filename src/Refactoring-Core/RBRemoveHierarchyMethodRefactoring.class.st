@@ -1,6 +1,15 @@
 "
 I am a refactoring for removing a method and those of its subclasses,
- to remove the methods use RBRemoveMethodRefactoring
+ to remove the methods use RBRemoveMethodRefactoring.
+
+Example
+-------
+Script
+```
+(RBRemoveHierarchyMethodRefactoring 
+		removeMethods: #(#msg4)
+		from: RBSharedPoolForTestData) execute
+```
 "
 Class {
 	#name : #RBRemoveHierarchyMethodRefactoring,

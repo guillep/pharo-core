@@ -42,6 +42,8 @@ Class {
 		'okEdit',
 		'editerArgumentList',
 		'refactoring',
+		'newArgs',
+		'args',
 		'isEditable'
 	],
 	#category : #'SystemCommands-RefactoringSupport'
@@ -50,20 +52,20 @@ Class {
 { #category : #specs }
 SycMethodNameEditorPresenter class >> defaultEditableSpec [
 	<spec>
-	^ SpBoxLayout newVertical
+	^ SpBoxLayout newTopToBottom
 		add:
-			(SpBoxLayout newHorizontal
+			(SpBoxLayout newLeftToRight
 				add: 'Selector'
 					withConstraints: [ :aConstraints | aConstraints width: 80 ];
 				add: #selectorInput;
 				yourself);
 		add:
-			(SpBoxLayout newHorizontal
+			(SpBoxLayout newLeftToRight
 				add: 'Arguments'
 					withConstraints: [ :aConstraints | aConstraints width: 80 ];
 				add: #argumentsList;
 				add:
-					(SpBoxLayout newVertical
+					(SpBoxLayout newTopToBottom
 						add: #upButton
 							withConstraints: [ :aConstraints | aConstraints height: 30 ];
 						add: #downButton
@@ -72,19 +74,19 @@ SycMethodNameEditorPresenter class >> defaultEditableSpec [
 					withConstraints: [ :aConstraints | aConstraints width: 30 ];
 				yourself);
 		add:
-			(SpBoxLayout newHorizontal
+			(SpBoxLayout newLeftToRight
 				add: 'Edit'
 					withConstraints: [ :aConstraints | aConstraints width: 80 ];
 				add: #editParameter; 
 				add:
-					(SpBoxLayout newVertical
+					(SpBoxLayout newTopToBottom
 						add: #okEdit
 							withConstraints: [ :aConstraints | aConstraints height: 20 ];
 						yourself)
 					withConstraints: [ :aConstraints | aConstraints width: 30 ];
 				yourself);
 		add:
-			(SpBoxLayout newHorizontal
+			(SpBoxLayout newLeftToRight
 				add: 'Preview'
 					withConstraints: [ :aConstraints | aConstraints width: 80 ];
 				add: #previewResult yourself);
@@ -93,20 +95,20 @@ SycMethodNameEditorPresenter class >> defaultEditableSpec [
 
 { #category : #specs }
 SycMethodNameEditorPresenter class >> defaultSpec [
-	^ SpBoxLayout newVertical
+	^ SpBoxLayout newTopToBottom
 		add:
-			(SpBoxLayout newHorizontal
+			(SpBoxLayout newLeftToRight
 				add: 'Selector'
 					withConstraints: [ :aConstraints | aConstraints width: 80 ];
 				add: #selectorInput;
 				yourself);
 		add:
-			(SpBoxLayout newHorizontal
+			(SpBoxLayout newLeftToRight
 				add: 'Arguments'
 					withConstraints: [ :aConstraints | aConstraints width: 80 ];
 				add: #argumentsList;
 				add:
-					(SpBoxLayout newVertical
+					(SpBoxLayout newTopToBottom
 						add: #upButton
 							withConstraints: [ :aConstraints | aConstraints height: 30 ];
 						add: #downButton
@@ -115,7 +117,7 @@ SycMethodNameEditorPresenter class >> defaultSpec [
 					withConstraints: [ :aConstraints | aConstraints width: 30 ];
 				yourself);
 		add:
-			(SpBoxLayout newHorizontal
+			(SpBoxLayout newLeftToRight
 				add: 'Preview'
 					withConstraints: [ :aConstraints | aConstraints width: 80 ];
 				add: #previewResult yourself);
@@ -152,6 +154,17 @@ SycMethodNameEditorPresenter class >> openOn: aMethod withRefactoring: refactori
 	^ temp openModalWithSpec
 ]
 
+{ #category : #accessing }
+SycMethodNameEditorPresenter >> addArgumentAfter: anItem [
+	| newArg argValue |
+	newArg := self newArgName asSymbol.
+	argValue := UIManager default
+		request: 'Enter default value for argument' initialAnswer: 'nil'.
+	self newArgs at: newArg put: argValue.
+	argumentsList items: (argumentsList items copyUpThrough: anItem), {newArg}, (argumentsList items copyAfter: anItem).
+	self updateLabel
+]
+
 { #category : #services }
 SycMethodNameEditorPresenter >> alert: aString [
 	"Display a message for the user to read and then dismiss."
@@ -163,6 +176,32 @@ SycMethodNameEditorPresenter >> alert: aString [
 { #category : #accessing }
 SycMethodNameEditorPresenter >> argumentsList [
 	^ argumentsList
+]
+
+{ #category : #accessing }
+SycMethodNameEditorPresenter >> argumentsListMenu [
+	^ self newMenu
+		addGroup: [ :aGroup | 
+			aGroup
+				addItem: [ :anItem | 
+					anItem
+						name: 'Add';
+						iconName: #add;
+						action: [ self addArgumentAfter: argumentsList selectedItem ] ];
+				addItem: [ :anItem | 
+					anItem
+						name: 'Remove';
+						shortcut: $x meta;
+						iconName: #remove;
+						description: 'Remove argument';
+						action: [ self removeArgument: argumentsList selectedItem ] ] ]
+]
+
+{ #category : #action }
+SycMethodNameEditorPresenter >> computePermutation [
+	^ argumentsList items collect: [ :e |
+		args indexOf: e ifAbsent: [ (newArgs indexOfKey: e ifAbsent: [ 0 ]) * -1 ]
+	 ]
 ]
 
 { #category : #accessing }
@@ -238,7 +277,8 @@ SycMethodNameEditorPresenter >> initializePresenter [
 				ifEmpty: [ upButton disable.
 					downButton disable ] ].
 
-	argumentsList items: methodName arguments.
+	argumentsList items: methodName arguments;
+		contextMenu: self argumentsListMenu.
 	self updateEditArgumentInput.
 	
 	argumentsList whenSelectionChangedDo: [ self updateEditArgumentInput ].
@@ -274,6 +314,24 @@ SycMethodNameEditorPresenter >> isEditable: aBoolean [
 	isEditable ifTrue: [ self buildWithSpecLayout: self class defaultEditableSpec ]
 	ifFalse: [ self buildWithSpecLayout: self class defaultSpec ]
 	
+]
+
+{ #category : #'instance creation' }
+SycMethodNameEditorPresenter >> newArgName [
+	| baseString index newString |
+	newString := baseString := 'arg'.
+	index := 0.
+	
+	[ args includes: newString ] 
+			whileTrue: 
+				[index := index + 1.
+				newString := baseString , index printString].
+	^newString
+]
+
+{ #category : #accessing }
+SycMethodNameEditorPresenter >> newArgs [
+	^ newArgs ifNil: [ newArgs := OrderedDictionary new ]
 ]
 
 { #category : #accessing }
@@ -324,6 +382,13 @@ SycMethodNameEditorPresenter >> refactoring: anObject [
 	refactoring := anObject 
 ]
 
+{ #category : #accessing }
+SycMethodNameEditorPresenter >> removeArgument: anItem [
+	self newArgs removeKey: anItem ifAbsent: [  ].
+	argumentsList items: (argumentsList items copyUpTo: anItem), (argumentsList items copyAfter: anItem).
+	self updateLabel
+]
+
 { #category : #action }
 SycMethodNameEditorPresenter >> renameMethodAndClose: presenter [
 	^ self previewResult label = '(invalid)'
@@ -332,7 +397,9 @@ SycMethodNameEditorPresenter >> renameMethodAndClose: presenter [
 			refactoring ifNotNil: [ refactoring parameterMap: editerArgumentList].
 			methodName
 				arguments: self getParametersOrder;
-				selector: selectorInput text.
+				selector: selectorInput text;
+				newArgs: self newArgs;
+				permutation: self computePermutation.
 			presenter
 				beOk;
 				close ]
@@ -345,7 +412,8 @@ SycMethodNameEditorPresenter >> selectorInput [
 
 { #category : #'accessing model' }
 SycMethodNameEditorPresenter >> setModelBeforeInitialization: aRBMethodName [
-	methodName := aRBMethodName
+	methodName := aRBMethodName.
+	args := methodName arguments copy
 ]
 
 { #category : #accessing }

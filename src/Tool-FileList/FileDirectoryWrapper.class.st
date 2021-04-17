@@ -9,7 +9,7 @@ Class {
 	#category : #'Tool-FileList'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 FileDirectoryWrapper class >> with: anObject name: aString model: aModel [
 
 	^self new 
@@ -43,7 +43,7 @@ FileDirectoryWrapper >> contents [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FileDirectoryWrapper >> directoriesFor: anItem [
 	^model directoriesFor: anItem
 ]
@@ -89,7 +89,7 @@ FileDirectoryWrapper >> setItem: anObject name: aString model: aModel [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FileDirectoryWrapper >> settingSelector [
 
 	^#setSelectedDirectoryTo:

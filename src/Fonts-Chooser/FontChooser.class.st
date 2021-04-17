@@ -23,9 +23,14 @@ Class {
 	#category : #'Fonts-Chooser'
 }
 
+{ #category : #examples }
+FontChooser class >> example [
+	self openWithWindowTitle: 'Choose the Menu Font' for: StandardFonts setSelector: #menuFont: getSelector: #menuFont
+]
+
 { #category : #open }
 FontChooser class >> openWithWindowTitle: titleString for: anObject setSelector: setSelector getSelector: getSelector [
-	"FontChooser openWithWindowTitle: 'Choose the Menu Font' for: StandardFonts setSelector: #menuFont: getSelector: #menuFont"
+	<script: 'self example'>
 
 	| instance windowMorph |
 	instance := self new.

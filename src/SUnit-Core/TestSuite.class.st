@@ -1,7 +1,11 @@
 "
-This is a Composite of Tests, either TestCases or other TestSuites. The top-level protocol is #run.  This creates aTestResult and sends
-	self run: aTestResult.
-then ensures that any TestResources made available during the run are reset.  These, and the dependencies protocol, are common between this and TestCase.
+I'm a Composite of tests, either `TestCase`s or other `TestSuite`s. The top-level protocol is `#run`. This creates a`TestResult` and sends `self run: aTestResult`.
+Then ensures that any `TestResource`s made available during the run are reset.  These, and the dependencies protocol, are common between `TestSuite` and `TestCase`.
+
+### Implementation
+While I implement a composite I do not inherit from a common superclass such as we could expect. 
+It is just like that. Newer versions of the frameworks may want to introduce a more conventional design. 
+
 "
 Class {
 	#name : #TestSuite,

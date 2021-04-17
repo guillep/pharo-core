@@ -26,32 +26,10 @@ WinPlatform >> accept: aVisitor [
 ]
 
 { #category : #accessing }
-WinPlatform >> currentWorkingDirectoryPath [
-	^ self currentWorkingDirectoryPathWithBufferSize: self defaultMaximumPathLength
-]
-
-{ #category : #'working-directory' }
-WinPlatform >> currentWorkingDirectoryPathWithBufferSize: aBufferSize [
-	| buffer |
-	<primitive: 'primitiveGetCurrentWorkingDirectory' module: '' error: ec>
-
-	buffer := Win32WideString new: aBufferSize.
-	self currentWorkingDirectoryPathWithBuffer: buffer.
-	^ buffer asString
-]
-
-{ #category : #accessing }
-WinPlatform >> defaultEncoding [
-
-	"Windows encoding is managed directly by Win32WideString class.
-	See Win32WideString class comment for more details."
-	self shouldNotImplement 
-]
-
-{ #category : #accessing }
 WinPlatform >> defaultMaximumPathLength [
-		"This method returns the default maximum path length for the getCurrentWorkingDirectory implementation. Windows default PATH_MAX is 260.  PATH_MAX is needed to avoid buffer overflow.  In case PATH_MAX is not sufficient the method currentWorkingDirectoryWithBufferSize: can be used to give desired buffer size."
-	 ^260
+		"This method returns the default maximum path length for the getCurrentWorkingDirectory implementation. Windows default PATH_MAX is 260.  PATH_MAX is needed to avoid buffer overflow.  In case PATH_MAX is not sufficient the method currentWorkingDirectoryWithBufferSize: can be used to give desired buffer size. The path can include unicode characters, so it can be longer than 260, doubling it should be enough"
+		
+	 ^ 260 * 2 
 
 ]
 
@@ -79,7 +57,12 @@ WinPlatform >> getPwdViaFFI: buffer size: bufferSize [
 	This method should be removed, as we should delegate to the VM
 	
 	We use FFI-OldFFIBackend for this because this is required for bootstrapping, and we ensure minimal dependencies."
-	^ (ExternalLibraryFunction 
+	
+	| wideString return |
+	
+	wideString := Win32WideString new: bufferSize.
+	
+	return := (ExternalLibraryFunction 
 			name: '_wgetcwd'
 			module: 'msvcrt.dll'
 			callType: 0
@@ -87,8 +70,12 @@ WinPlatform >> getPwdViaFFI: buffer size: bufferSize [
 			argumentTypes: {
 				ExternalType char asPointerType.
 				ExternalType long })
-					invokeWith: buffer getHandle with: bufferSize.
+					invokeWith: wideString getHandle with: bufferSize.
 
+	return ifNil: [ ^ nil ].
+	
+	"The primitive is returning an string that is encoded in UTF8. We need to emulate the same behavior"
+	^ wideString asString utf8Encoded asString
 ]
 
 { #category : #testing }
@@ -128,6 +115,12 @@ WinPlatform >> multiByteToWideCharacterCodepage: codepage flags: flags input: in
 WinPlatform >> setEnvironmentVariable: nameString value: valueString [
 
 	 ^ self ffiCall: #( int SetEnvironmentVariableW ( Win32WideString nameString, Win32WideString valueString ) )
+]
+
+{ #category : #accessing }
+WinPlatform >> setLastError: aValue [
+
+	^ self ffiCall: #(void SetLastError(ulong aValue))
 ]
 
 { #category : #accessing }

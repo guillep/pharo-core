@@ -36,6 +36,12 @@ SycRenameVariableCommand >> applyResultInContext: aToolContext [
 	aToolContext showVariableNamed: newName
 ]
 
+{ #category : #execution }
+SycRenameVariableCommand >> classRefactoring [
+
+	^ RBRenameInstanceVariableRefactoring
+]
+
 { #category : #accessing }
 SycRenameVariableCommand >> defaultMenuItemName [
 	^'Rename'
@@ -43,11 +49,12 @@ SycRenameVariableCommand >> defaultMenuItemName [
 
 { #category : #execution }
 SycRenameVariableCommand >> execute [
+
 	| refactoring |
-	
-	refactoring := variable createVariableRefactoring: RBRenameInstanceVariableRefactoring.
-	refactoring	newName: newName asSymbol.
-		
+	refactoring := variable createVariableRefactoring:
+		               self classRefactoring.
+	refactoring newName: self newVariableName.
+
 	refactoring execute
 ]
 
@@ -62,14 +69,28 @@ SycRenameVariableCommand >> newName: anObject [
 ]
 
 { #category : #execution }
+SycRenameVariableCommand >> newVariableName [
+
+	^ newName asSymbol
+]
+
+{ #category : #execution }
 SycRenameVariableCommand >> prepareFullExecutionInContext: aToolContext [
+
 	super prepareFullExecutionInContext: aToolContext.
 	variable := aToolContext lastSelectedVariable.
-	newName := UIManager default 
-		request: 'New name of the variable' 
-		initialAnswer: variable name 
-		title: 'Rename a variable'.
-	newName isEmptyOrNil | (newName = variable name) ifTrue: [ CmdCommandAborted signal ]
+	self requestNewNameIn: aToolContext
+]
+
+{ #category : #execution }
+SycRenameVariableCommand >> requestNewNameIn: aToolContext [
+
+	newName := UIManager default
+		           request: 'New name of the variable'
+		           initialAnswer: variable name
+		           title: 'Rename a variable'.
+	newName isEmptyOrNil | (newName = variable name) ifTrue: [ 
+		CmdCommandAborted signal ]
 ]
 
 { #category : #accessing }

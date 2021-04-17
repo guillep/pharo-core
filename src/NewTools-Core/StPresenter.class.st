@@ -7,7 +7,7 @@ Class {
 { #category : #private }
 StPresenter class >> currentApplication [
 
-	^ StPharoApplication current
+	^ SpToolCurrentApplication value ifNil: [ StPharoApplication current ]
 ]
 
 { #category : #'instance creation' }

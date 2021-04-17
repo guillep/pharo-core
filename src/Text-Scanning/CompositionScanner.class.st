@@ -212,18 +212,6 @@ CompositionScanner >> placeEmbeddedObject: anchoredMorph [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
-CompositionScanner >> registerBreakableIndex [
-	"Record left x and character index of the line-wrappable point. 
-	Used for wrap-around in eastern Asian languages."
-
-	spaceX := destX.
-	lineHeightAtSpace := lineHeight.
-	baselineAtSpace := baseline.
-	spaceIndex := lastIndex.
-	lastBreakIsNotASpace := true.
-]
-
 { #category : #accessing }
 CompositionScanner >> rightX [
 	"Meaningful only when a line has just been composed -- refers to the 

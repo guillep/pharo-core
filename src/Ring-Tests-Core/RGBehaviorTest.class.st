@@ -57,6 +57,17 @@ RGBehaviorTest >> testBehaviorWithProtocols [
 ]
 
 { #category : #tests }
+RGBehaviorTest >> testOldDefinition [
+	| newBehavior |
+	newBehavior := self behaviorClass named: #SomeClass.
+	self assert: newBehavior oldDefinition equals: 'unresolved subclass: #SomeClass
+	instanceVariableNames: ''''
+	classVariableNames: ''''
+	poolDictionaries: ''''
+	category: ''unresolved'''
+]
+
+{ #category : #tests }
 RGBehaviorTest >> testResolvingConsistency [
 
 	| anObject |

@@ -35,7 +35,7 @@ Class {
 
 { #category : #specs }
 SycRefactoringPreviewPresenter class >> defaultSpec [
-	^ SpBoxLayout newVertical
+	^ SpBoxLayout newTopToBottom
 		add: #table;
 		add: #scopeDropList withConstraints: [ :constraints | constraints height: 30 ];
 		add: #diffPresenter;
@@ -129,7 +129,7 @@ SycRefactoringPreviewPresenter >> generateChanges [
 
 	| rbEnvironment |
 	changes := command asRefactorings.
-	rbEnvironment := self activeRBEnvironment.
+	rbEnvironment := changes first model environment.
 	changes do: [ :each | 
 		each model environment: rbEnvironment.
 		each primitiveExecute ]
@@ -258,7 +258,7 @@ SycRefactoringPreviewPresenter >> updateChanges [
 	self selectectAllCheckBox
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #update }
 SycRefactoringPreviewPresenter >> updateTablePresenter [
 	| aCompositeChange anEnvironment |
 	"We get the environment to apply the changes from any element in the changes instance variable"

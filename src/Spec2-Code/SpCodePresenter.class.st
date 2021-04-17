@@ -138,18 +138,6 @@ SpCodePresenter >> allowingContextMenu [
 	self overrideContextMenu: false
 ]
 
-{ #category : #'private commands' }
-SpCodePresenter >> basicBrowseImplementors [
-
-	self systemNavigation browseAllImplementorsOf: self selectedSelector
-]
-
-{ #category : #'private commands' }
-SpCodePresenter >> basicBrowseSenders [
-
-	self systemNavigation browseAllReferencesTo: self selectedSelector
-]
-
 { #category : #private }
 SpCodePresenter >> basicInteractionModel: anObject [
 
@@ -202,6 +190,26 @@ SpCodePresenter >> bindingOf: aString [
 
 	self interactionModel ifNotNil:  [ :im | ^ im bindingOf: aString  ].
 	^ nil
+]
+
+{ #category : #'private commands' }
+SpCodePresenter >> browseSelectedSelectorIfGlobal: globalBlock ifNotGlobal: nonGlobalBlock [
+	| variableOrClassName env |
+
+	variableOrClassName := self selectedSelector.
+
+	env := self environment.
+	
+	self flag: #bug.
+	"If we are looking for implementors of a class variable, this does not work right..."
+	env isBehavior ifTrue: [
+		(env hasSlotNamed: variableOrClassName) ifTrue: [
+		 ^ self systemNavigation browseAllAccessesTo: variableOrClassName from: env ] ].
+
+	(env bindingOf: variableOrClassName) 
+		ifNotNil: [ :ref | ^ globalBlock value: ref ].
+	
+	nonGlobalBlock value: variableOrClassName
 ]
 
 { #category : #private }
@@ -261,7 +269,8 @@ SpCodePresenter >> doBrowseClass [
 
 	result := self 
 		evaluate: self selectedTextOrLine
-		ifError: [ :e | ^ self ].
+		onCompileError: [ ^ self ]
+		onError: [ :e | ^ self ].
 	self systemNavigation browse: result
 ]
 
@@ -270,8 +279,9 @@ SpCodePresenter >> doBrowseClassReferences [
 	| result class |
 
 	result := self 
-		evaluate: self selectedTextOrLine 
-		ifError: [ :e | ^ self ].
+		evaluate: self selectedTextOrLine
+		onCompileError: [ ^ self ]
+		onError: [ :e | ^ self ].
 		
 	(result isClass or: [ result isTrait ])
 		ifFalse: [ result := result class ].
@@ -287,8 +297,9 @@ SpCodePresenter >> doBrowseHierarchy [
 	| result |
 
 	result := self 
-		evaluate: self selectedTextOrLine 
-		ifError: [ :e | ^ self ].
+		evaluate: self selectedTextOrLine
+		onCompileError: [ ^ self ]
+		onError: [ :e | ^ self ].
 	(result isClass or: [ result isTrait ])
 		ifFalse: [ result := result class ].
 	self systemNavigation browseHierarchy: result
@@ -296,14 +307,17 @@ SpCodePresenter >> doBrowseHierarchy [
 
 { #category : #commands }
 SpCodePresenter >> doBrowseImplementors [
-
-	self basicBrowseImplementors
+	
+	self
+		browseSelectedSelectorIfGlobal: [ :global | global browse ]
+		ifNotGlobal:  [ :selector |
+			self systemNavigation browseAllImplementorsOf: selector ].
 ]
 
 { #category : #commands }
 SpCodePresenter >> doBrowseMethodReferences [
 
-	self basicBrowseSenders
+	self doBrowseSenders
 ]
 
 { #category : #commands }
@@ -316,21 +330,12 @@ SpCodePresenter >> doBrowseMethodsContainingString [
 
 { #category : #commands }
 SpCodePresenter >> doBrowseSenders [
-	| env variableOrClassName |
 
-	variableOrClassName := self selectedTextOrLine trimmed asSymbol.
-	variableOrClassName ifEmpty: [ ^ self ].
-	 
-	env := self environment.
-	env isBehavior ifTrue: [
-		(env hasSlotNamed: variableOrClassName) ifTrue: [
-		 ^ self systemNavigation browseAllAccessesTo: variableOrClassName from: env ] ].
-
-	(env bindingOf: variableOrClassName) 
-		ifNotNil: [ :ref | ^ self systemNavigation browseAllSendersOf: ref ].
-	
-	"If this is not a class, behave as SpBrowseMethodReferencesCommand"
-	self basicBrowseSenders
+	self
+		browseSelectedSelectorIfGlobal: [ :global | 
+			self systemNavigation browseAllSendersOf: global ]
+		ifNotGlobal:  [ :selector |
+			self systemNavigation browseAllReferencesTo: selector ]
 ]
 
 { #category : #'private bindings' }
@@ -369,18 +374,32 @@ SpCodePresenter >> environment: anEnvironment [
 ]
 
 { #category : #'command support' }
-SpCodePresenter >> evaluate: aString ifError: aBlock [
-
+SpCodePresenter >> evaluate: aString onCompileError: compileErrorBlock onError: errorBlock [ 
+	"evaluate aString. 
+	 evaluate compileErrorBlock if there are compilation errors. 
+	 evaluate errorBlock is anything happens *during* evaluation (code compiled, but it does not 
+	 executes.). 
+	 NOTE for future me. This is how I understand the evaluation works and why we need to catch 
+	 differently the error: If there is a syntax error (avoiding compilation), it will evaluate 
+	 requestor>>#notify:at:in: to notify the error and then it will call failBlock: *which is not 
+	 intended to be used to throw an error*, since that should be handled (and it is) in the 
+	 notification. Instead, most users of failBlock: use it to return execution without doing 
+	 anything. 
+	 Instread, the on:do: will catch all errors happening while executing the code once it is 
+	 compiled. "
+	| receiver |
+	
 	^ [
-		self class compilerClass new
-			environment: self environment;
-			source: self selectedTextOrLine readStream;
+		receiver := self interactionModel doItReceiver.
+		receiver class compiler
+			source: aString readStream;
 			context: self interactionModel doItContext;
 			receiver: self interactionModel doItReceiver;
 			requestor: self interactionModel;
+			failBlock:  [ ^ compileErrorBlock value ];
 			evaluate ]
-		on: Error 
-		do: aBlock
+	on: Error 
+	do: errorBlock
 ]
 
 { #category : #accessing }
@@ -503,7 +522,7 @@ SpCodePresenter >> insertPopoverAfterCurrentSelection: aPresenter style: styleNa
 SpCodePresenter >> insertPrintPopoverAfterCurrentSelection: anObject [
 	"Inserts a print-it result popover. 
 	 This is for use of SpCodePrintItCommand"
-	
+
 	self 
 		insertPopoverAfterCurrentSelection: (SpCodePopoverPrintPresenter 
 			newCode: self
@@ -591,21 +610,8 @@ SpCodePresenter >> selectedClassOrMetaClass [
 
 { #category : #'command support' }
 SpCodePresenter >> selectedSelector [
-
-	"If text is selected, extract the selectors from the selected text. If there is no selection, try to extract the selectors under the caret position."
-
-	| extractor selectedText fullSource |
-	fullSource := self text.
-	fullSource ifNil: [ ^ nil ].
-	extractor := CNSelectorExtractor new.
-	selectedText := self selectedText.
-	^ selectedText
-		  ifNotEmpty: [ 
-		  extractor extractSelectorFromSelection: selectedText ]
-		  ifEmpty: [ 
-			  extractor
-				  extractSelectorFromSource: fullSource
-				  atPosition: self selectionInterval first ]
+	
+    ^ CNSelectorExtractor new extractSelectorFromSelection: self selectedTextOrLine
 ]
 
 { #category : #api }

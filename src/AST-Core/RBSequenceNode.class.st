@@ -235,8 +235,8 @@ RBSequenceNode >> bestNodeFor: anInterval [
 { #category : #accessing }
 RBSequenceNode >> children [
 	^(OrderedCollection new)
-		addAll: self temporaries;
-		addAll: self statements;
+		addAll: temporaries;
+		addAll: statements;
 		yourself
 ]
 

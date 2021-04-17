@@ -42,6 +42,12 @@ KMKeyCombinationSequence >> = aShortcut [
 	^ super = aShortcut and: [ shortcuts = aShortcut sequence ]
 ]
 
+{ #category : #printing }
+KMKeyCombinationSequence >> acceptVisitor: aKMShortcutPrinter [ 
+	
+	^ aKMShortcutPrinter visitCombinationShortcut: self
+]
+
 { #category : #accessing }
 KMKeyCombinationSequence >> addShortcut: aShortcut [
 	self sequence add: aShortcut
@@ -76,6 +82,14 @@ KMKeyCombinationSequence >> matches: anEventBuffer [
 { #category : #accessing }
 KMKeyCombinationSequence >> next: aShortcut [
 	self addShortcut: aShortcut
+]
+
+{ #category : #printing }
+KMKeyCombinationSequence >> platformModifier [
+
+	self sequence do: [ :each | ^ each platformModifier ].
+	
+	^ nil
 ]
 
 { #category : #printing }

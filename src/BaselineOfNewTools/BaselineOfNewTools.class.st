@@ -7,6 +7,13 @@ Class {
 	#category : #BaselineOfNewTools
 }
 
+{ #category : #accessing }
+BaselineOfNewTools class >> releaseCommit [
+	"The commit corresponding to current release (to be used on bootstrap process)"
+	
+	^ 'f35f3f62fea0d4334863a3687ab6d602858f5b65'
+]
+
 { #category : #baselines }
 BaselineOfNewTools >> baseline: spec [
 	<baseline>
@@ -15,6 +22,7 @@ BaselineOfNewTools >> baseline: spec [
 		spec preLoadDoIt: #'preload:package:'.
 		spec postLoadDoIt: #'postload:package:'.
 
+		"self spec: spec."
 		self sindarin: spec.
 
 		spec
@@ -35,10 +43,19 @@ BaselineOfNewTools >> baseline: spec [
 			package: 'NewTools-Debugger-Tests' with: [ spec requires: #('NewTools-Debugger') ];
 			"playground"
 			package: 'NewTools-Playground' with: [ spec requires: #('NewTools-Inspector') ];
+			"spotter"
+			package: 'NewTools-Spotter' with: [ spec requires: #('NewTools-Core') ];
+			package: 'NewTools-Morphic-Spotter' with: [ spec requires: #('NewTools-Morphic') ];
 			"browser"
 			package: 'NewTools-SystemBrowser' with: [ spec requires: #('NewTools-Inspector') ];
 			"system reporter"
 			package: 'NewTools-SystemReporter' with: [ spec requires: #('NewTools-Core') ];
+			"spotter"
+			package: 'NewTools-Spotter-Processors';
+			package: 'NewTools-Spotter' with: [ spec requires: #('NewTools-Core' 'NewTools-Spotter-Processors') ];
+			package: 'NewTools-Spotter-Extensions' with: [ spec requires: #('NewTools-Spotter') ];
+			package: 'NewTools-Spotter-Processors-Tests' with: [ spec requires: #('NewTools-Spotter-Processors') ];
+			package: 'NewTools-Morphic-Spotter' with: [ spec requires: #('NewTools-Morphic') ];
 			"extras"
 			package: 'HelpCenter' with: [ spec requires: #('NewTools-Core') ];
 			package: 'NewTools-FlagBrowser' with: [ spec requires: #('NewTools-Core') ];
@@ -78,6 +95,12 @@ BaselineOfNewTools >> baseline: spec [
 				'NewTools-Debugger-Breakpoints-Tools'
 				'NewTools-Debugger-Tests'
 				'NewTools-Debugger-Fuel');
+			group: 'Spotter' with: #(
+				'NewTools-Morphic-Spotter' 
+				'NewTools-Spotter-Processors' 
+				'NewTools-Spotter' 
+				'NewTools-Spotter-Extensions'
+				'NewTools-Spotter-Processors-Tests');
 			group: 'SystemReporter' with: #('Core' 'NewTools-SystemReporter');
 			group: 'Methods' with: #('Core' 'NewTools-MethodBrowsers');
 			"Not in the image for the moment, we need a pass on them"
@@ -99,11 +122,12 @@ BaselineOfNewTools >> baseline: spec [
 				'Inspector'
 				'Debugger'
 				'Methods'
+				'Spotter'
 				"'ChangeSorter'"
 				"'KeymapBrowser'"
-				"'FlagBrowser'");
+				"'FlagBrowser'").
 			"A group for running CI"
-			group: 'CI' with: #('Spec2' 'default') ]
+			"spec group: 'CI' with: #('Spec2' 'default')" ]
 ]
 
 { #category : #dependencies }

@@ -74,6 +74,12 @@ SpLinkPresenter >> localeChanged [
 		
 ]
 
+{ #category : #private }
+SpLinkPresenter >> performAction [
+
+	self action value
+]
+
 { #category : #api }
 SpLinkPresenter >> url: aString [
 	"Set the url to open when link is pressed. Also, it sets action (See `SpLinkPresenter>>#action:` 

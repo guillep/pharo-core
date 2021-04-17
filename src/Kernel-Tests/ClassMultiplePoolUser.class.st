@@ -14,7 +14,7 @@ Class {
 { #category : #accessing }
 ClassMultiplePoolUser class >> author [
 
-	^ Author
+	^ AnAuthor
 ]
 
 { #category : #accessing }

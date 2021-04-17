@@ -21,7 +21,7 @@ CompletionEngineTest >> allSmartCharacters [
 	^ self allSelfClosingCharacters , { '||'. '<>' }
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 CompletionEngineTest >> interactionModel [
 	
 	^ nil
@@ -89,7 +89,7 @@ CompletionEngineTest >> selectFrom: start to: stop [
 	editor selectFrom: start to: stop
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 CompletionEngineTest >> selectedClassOrMetaClass [
 	
 	^ nil
@@ -241,6 +241,16 @@ CompletionEngineTest >> testSmartBackspaceWithSelection [
 		assert: controller smartBackspace not
 		description: 'No smartbackspace if no selection and not a smart character'.
 		
+]
+
+{ #category : #'tests-keyboard' }
+CompletionEngineTest >> testSmartCharacterAfterEspace [
+	"Test we surround selected text with smart characters properly"
+	self
+		setEditorText: 'a b';
+		selectFrom: 2 to: 4.
+	editor keystroke: (self keyboardPressFor: $").
+	self assert: editor text equals: 'a" b"'.
 ]
 
 { #category : #'tests-keyboard' }

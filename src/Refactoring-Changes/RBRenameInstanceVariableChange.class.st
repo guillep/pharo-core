@@ -10,20 +10,15 @@ Class {
 
 { #category : #private }
 RBRenameInstanceVariableChange >> addNewVariable [
-	self flag: #todo.
-	"We should use the factory"
-	(RBAddInstanceVariableChange add: newName to: self changeClass)
-		execute
+	(self changeClass allInstVarNames includes: newName) 
+		ifFalse: [ (changeFactory addInstanceVariable: newName to: self changeClass) execute ]
 ]
 
 { #category : #private }
 RBRenameInstanceVariableChange >> copyOldValuesToNewVariable [
-	| newIndex oldIndex |
-	oldIndex := self changeClass allInstVarNames indexOf: oldName asString.
-	newIndex := self changeClass allInstVarNames indexOf: newName asString.
 	self changeClass withAllSubclasses do: [ :class |
 		class allInstances 
-			do: [ :each | each instVarAt: newIndex put: (each instVarAt: oldIndex) ] ]
+			do: [ :each | each instVarNamed: newName asString put: (each instVarNamed: oldName asString) ] ]
 ]
 
 { #category : #printing }
@@ -42,8 +37,6 @@ RBRenameInstanceVariableChange >> printOn: aStream [
 
 { #category : #private }
 RBRenameInstanceVariableChange >> removeOldVariable [
-	self flag: #todo.
-	"We should use the factory"
-	(RBRemoveInstanceVariableChange remove: oldName from: self changeClass) 
-		execute
+	(self changeClass allInstVarNames includes: oldName) 
+		ifTrue: [ (changeFactory removeInstanceVariable: oldName from: self changeClass) execute ]
 ]

@@ -104,9 +104,10 @@ FluidClassBuilder >> fillShiftClassBuilder [
 
 { #category : #building }
 FluidClassBuilder >> install [
+
 	"Install the class in the system environment"
-	
-	ShiftClassInstaller new makeWithBuilder: shiftClassBuilder 
+
+	^ ShiftClassInstaller new makeWithBuilder: shiftClassBuilder
 ]
 
 { #category : #API }
@@ -198,13 +199,19 @@ FluidClassBuilder >> tagToBuild [
 	^ tagToBuild
 ]
 
+{ #category : #API }
+FluidClassBuilder >> trait: aTraitComposition [
+
+	traitComposition := aTraitComposition
+]
+
 { #category : #accessing }
 FluidClassBuilder >> traitsToBuild [
 
 	^ traitComposition
 ]
 
-{ #category : #API }
+{ #category : #deprecated }
 FluidClassBuilder >> uses: aTraitComposition [
 
 	traitComposition := aTraitComposition

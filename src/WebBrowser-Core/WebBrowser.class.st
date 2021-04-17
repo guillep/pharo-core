@@ -29,17 +29,17 @@ WebBrowser class >> isUsed [
 ]
 
 { #category : #private }
-WebBrowser class >> openNativeWebBrowserOn: aURL [
+WebBrowser class >> openNativeWebBrowserOn: aURLString [
 
 	self subclassResponsibility
 ]
 
 { #category : #'instance creation' }
-WebBrowser class >> openOn: aURLString [
-	"Open the webbrowser on the given URL"
+WebBrowser class >> openOn: anURLOrString [
+	"Open the webbrowser on the given URL or String"
 	
 	^self webbrowserClassForPlatform 
-				openNativeWebBrowserOn: aURLString	
+				openNativeWebBrowserOn: anURLOrString asString
 
 ]
 

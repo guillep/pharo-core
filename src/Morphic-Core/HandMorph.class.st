@@ -27,7 +27,8 @@ Class {
 		'lastKeyScanCode',
 		'captureBlock',
 		'recentModifiers',
-		'pendingEventQueue'
+		'pendingEventQueue',
+		'supressNextKeyPress'
 	],
 	#classVars : [
 		'DoubleClickTime',
@@ -677,8 +678,16 @@ HandMorph >> handleEvent: anEvent [
 	
 
 	evt isKeyboard ifTrue:[
-		self sendListenEvent: evt to: self keyboardListeners.
-		^ self sendKeyboardEvent: evt ].
+		
+		(evt isKeystroke and: [supressNextKeyPress == true])
+			ifTrue: [
+				supressNextKeyPress := false.
+				^ self ].
+		
+			self sendListenEvent: evt to: self keyboardListeners.
+			self sendKeyboardEvent: evt.
+			supressNextKeyPress := evt isKeyDown and: [evt supressNextKeyPress].
+		^ self ].
 
 	evt isDropEvent ifTrue:[
 		^ self sendEvent: evt focus: nil ].
@@ -742,6 +751,7 @@ HandMorph >> initialize [
 	bounds := 0 @ 0 extent: Cursor normal extent.
 	damageRecorder := DamageRecorder new.
 	cachedCanvasHasHoles := false.
+	supressNextKeyPress := false.
 	self initForEvents
 ]
 
@@ -1300,12 +1310,19 @@ HandMorph >> sendEvent: anEvent focus: focusHolder clear: aBlock [
 { #category : #'private events' }
 HandMorph >> sendFocusEvent: anEvent to: focusHolder clear: aBlock [
 	"Send the event to the morph currently holding the focus"
-	| result w |
+	| result w transformedEvent |
+	
 	w := focusHolder world ifNil:[^ aBlock value].
+	transformedEvent := anEvent transformedBy: (focusHolder transformedFrom: self).
+
 	w becomeActiveDuring:[
-		result := focusHolder handleFocusEvent: 
-			(anEvent transformedBy: (focusHolder transformedFrom: self)).
+		result := focusHolder handleFocusEvent: transformedEvent.
 	].
+
+	"As I am copying the event, I have to propagate the supressNextKeyPress, so it is correctly handled."
+	anEvent isKeyboard 
+		ifTrue: [ anEvent supressNextKeyPress: transformedEvent supressNextKeyPress ]. 
+
 	^result
 ]
 

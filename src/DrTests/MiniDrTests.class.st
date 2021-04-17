@@ -3,7 +3,7 @@ A minified version of the DrTest tool.
 "
 Class {
 	#name : #MiniDrTests,
-	#superclass : #AbstractDrTestsUI,
+	#superclass : #AbstractDrTestsPresenter,
 	#category : #'DrTests-Spec'
 }
 

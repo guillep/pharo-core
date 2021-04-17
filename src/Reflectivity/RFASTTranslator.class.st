@@ -183,7 +183,7 @@ RFASTTranslator >> visitInlinedBlockNode: anOptimizedBlockNode [
 	anOptimizedBlockNode scope tempVector ifNotEmpty: [
 		methodBuilder 
 			createTempVectorNamed: anOptimizedBlockNode scope tempVectorName 
-			withVars: (anOptimizedBlockNode scope tempVector collect: [:each| each name]).
+			withVars: anOptimizedBlockNode scope tempVectorVarNames.
 	].
 	methodBuilder addTemps: anOptimizedBlockNode scope tempVarNamesWithoutArguments.
 	methodBuilder addTemps: anOptimizedBlockNode scope inComingCopiedVarNames.

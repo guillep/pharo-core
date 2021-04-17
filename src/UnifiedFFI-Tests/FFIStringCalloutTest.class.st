@@ -1,10 +1,6 @@
 Class {
 	#name : #FFIStringCalloutTest,
 	#superclass : #TestCase,
-	#classVars : [
-		'CLASSVAR',
-		'TYPEVAR'
-	],
 	#category : #'UnifiedFFI-Tests-Tests'
 }
 

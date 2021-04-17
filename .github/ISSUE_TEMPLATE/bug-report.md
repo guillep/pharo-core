@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-**Describe the bug**
+**Bug description**
 A clear and concise description of what the bug is.
 
 **To Reproduce**
@@ -26,6 +26,7 @@ If applicable, add screenshots to help explain your problem.
 **Version information:**
  - OS: [e.g. iOS]
  - Version: [e.g. 1.6.1]
+ - Pharo Version [e.g 9]
 
 **Expected development cost**
 As you know nothing happens magically, so do you have an idea of the development effort required? 

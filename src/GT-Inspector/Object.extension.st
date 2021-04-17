@@ -2,8 +2,10 @@ Extension { #name : #Object }
 
 { #category : #'*GT-Inspector' }
 Object >> gtDisplayOn: stream [
-	"This offers a means to customize how the object is shown in the inspector"
-	^ self printOn: stream
+	self 
+		deprecated: 'Use displayStringOn:' 
+		transformWith: '`@receiver gtDisplayOn: `@arg' -> '`@receiver displayStringOn: `@arg'.
+	self displayStringOn: stream
 ]
 
 { #category : #'*GT-Inspector' }
@@ -11,11 +13,8 @@ Object >> gtDisplayString [
 	"This offers a means to customize how the object is shown in the inspector.
 	Do not override this method. Override gtDisplayOn: instead"
 		
-	| limitedString limit |
-	limit := 1000.
-	limitedString := String streamContents: [:s | self gtDisplayOn: s] limitedTo: limit.
-	limitedString size < limit ifTrue: [^ limitedString].
-	^ limitedString , ' ...'
+	self deprecated: 'Use displayString' transformWith: '`@receiver gtDisplayString' -> '`@receiver displayString'.
+	^ self displayString	
 ]
 
 { #category : #'*GT-Inspector' }

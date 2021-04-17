@@ -154,27 +154,16 @@ SpMorphicMenuItemAdapter >> shortcut [
 
 { #category : #'widget API' }
 SpMorphicMenuItemAdapter >> shortcutText [
-	"This should use KMShortcutPrinter (check on this method history), but it cannot be used 
-	 because ToggleMenuItemMorph already normalises the shortcut text (and since it does not know 
-	 is already normalised, it does it two times)"
-	| shortcut platform string |
 	
-	self flag: #REVIEW. "Maybe modify ToggleMenuItemMorph to detect already normalised texts?"
+	| shortcut |
 	
 	shortcut := self shortcut.
 	shortcut isString ifTrue: [ shortcut := self defaultModifierShortcut ].
 	shortcut ifNil: [ ^ nil ].
-	platform := Smalltalk os platformFamily.
-	shortcut combinationsDo: [ :each | 
-		(each platform = Smalltalk os platformFamily) ifTrue: [ shortcut := each ] ].
-	
-	string := '⌘⇧'.
-	
-	^ (platform =  #MacOSX and: [ 
-		(StandardFonts menuFont hasGlyphsForAll: string) and: [
-		string allSatisfy: [ :c | (StandardFonts menuFont characterFormAt: c) width~= 0 ]]])
-		ifFalse: [ shortcut shortcut printString ]
-		ifTrue: [ String streamContents: [:stream | shortcut shortcut prettyPrintOn: stream ] ]
+
+	"We can use the KMShortcutPrinter. ToggleMenuItemMorph handles when it has been already normalized or not"
+		
+	^ shortcut asKeyCombination acceptVisitor: OSPlatform current shortcutPrinter	
 ]
 
 { #category : #'widget API' }

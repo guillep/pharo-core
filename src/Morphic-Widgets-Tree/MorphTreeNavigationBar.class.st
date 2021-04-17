@@ -120,7 +120,7 @@ MorphTreeNavigationBar >> basicButton [
 { #category : #accessing }
 MorphTreeNavigationBar >> basicIcon [
 	| button |
-	^ (button := IconicButton new)
+	^ (button := IconicButtonMorph new)
 		clipSubmorphs: true;
 		color: self pagerColor;		
 		on: #mouseEnter send: #value to: [button borderColor: self pagerColor muchDarker];

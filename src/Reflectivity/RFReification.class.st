@@ -106,6 +106,11 @@ RFReification >> genForRBInstanceVariableNode [
 ]
 
 { #category : #generate }
+RFReification >> genForRBLiteralArrayNode [
+	^self genForRBProgramNode
+]
+
+{ #category : #generate }
 RFReification >> genForRBLiteralNode [
 	^self genForRBProgramNode
 ]

@@ -1,5 +1,5 @@
 "
-A PDGraphVizGenerator is a class able to generate a dot file from a package cycle (PDPackageCycle)
+A class able to generate a dot file from a package cycle (DAPackageCycle)
 "
 Class {
 	#name : #DAPackageCycleGenerator,

@@ -13,6 +13,12 @@ Class {
 	#category : #'TraitsV2-Compositions'
 }
 
+{ #category : #testing }
+TaAbstractComposition class >> isAbstract [
+
+	^self == TaAbstractComposition
+]
+
 { #category : #operations }
 TaAbstractComposition >> + anotherTrait [
 	"I create another TaSequence with me and then I concatenate anotherTrait to it. The new sequence includes both elements, me and the anotherTrait.
@@ -362,9 +368,8 @@ TaAbstractComposition >> name [
 { #category : #testing }
 TaAbstractComposition >> needsRecompilation: aSelector [
 	"Checks if a selector should be compiled because it uses new slots or if its code has been rewritten."
-	
-	^ self slots isEmpty not or: [ self changesSourceCode: aSelector ]
 
+	^ self slots isNotEmpty or: [ self changesSourceCode: aSelector ]
 ]
 
 { #category : #querying }

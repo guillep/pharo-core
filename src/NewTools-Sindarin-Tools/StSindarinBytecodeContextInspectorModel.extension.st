@@ -11,5 +11,7 @@ StSindarinBytecodeContextInspectorModel >> contextReceiverSlotNodes [
 
 { #category : #'*NewTools-Sindarin-Tools' }
 StSindarinBytecodeContextInspectorModel >> contextTempNodes [
-	^ StNodeCollector new tempNodesForContext: self inspectedObject
+	^ self inspectedObject astScope allTemps collect: [ :temp | 
+		  (StInspectorTempNode hostObject: self inspectedObject) tempVariable: temp ]
+
 ]

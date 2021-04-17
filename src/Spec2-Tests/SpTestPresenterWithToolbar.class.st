@@ -7,9 +7,6 @@ Class {
 	#instVars : [
 		'button'
 	],
-	#classVars : [
-		'TestWorld'
-	],
 	#category : #'Spec2-Tests-Core-Support'
 }
 

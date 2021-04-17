@@ -28,7 +28,7 @@ Class {
 	#category : #'Athens-Balloon-Text'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 FT2GlyphRenderer class >> forFont: aFont surface: aSurface [
 	^ self new initForFont: aFont surface: aSurface
 ]
@@ -56,7 +56,7 @@ FT2GlyphRenderer >> getAdvance [
 	^ pt
 ]
 
-{ #category : #'initailize-release' }
+{ #category : #initialization }
 FT2GlyphRenderer >> initForFont: aFont surface: aSurface [
 
 	self assert: (aFont class == FreeTypeFont).

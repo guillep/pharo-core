@@ -15,6 +15,11 @@ Class {
 	#category : #'Kernel-Methods'
 }
 
+{ #category : #printing }
+CompiledBlock >> displayStringOn: stream [
+	self printOn: stream
+]
+
 { #category : #accessing }
 CompiledBlock >> endPC [
 	"Answer the index of the last bytecode."

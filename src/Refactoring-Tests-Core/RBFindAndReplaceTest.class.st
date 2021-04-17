@@ -1,7 +1,7 @@
 Class {
 	#name : #RBFindAndReplaceTest,
 	#superclass : #RBRefactoringTest,
-	#category : #'Refactoring-Tests-Core'
+	#category : #'Refactoring-Tests-Core-Refactorings'
 }
 
 { #category : #running }
@@ -17,7 +17,7 @@ RBFindAndReplaceTest >> testBadSelector [
 	self
 		shouldFail:
 			(RBFindAndReplaceRefactoring 
-				model: model find: #unexitingMethod of: class inAllHierarchy: true)
+				model: model find: #unexitingMethod of: class inWholeHierarchy: true)
 ]
 
 { #category : #'failure tests' }
@@ -33,7 +33,7 @@ RBFindAndReplaceTest >> testFindOcurrencesFailureInHierarchy [
 			^ nil'
 		classified: #(#accessing).
 	refactoring := RBFindAndReplaceRefactoring 
-				model: model find: #simpleMethod of: class inAllHierarchy: true.
+				model: model find: #simpleMethod of: class inWholeHierarchy: true.
 	self shouldFail: refactoring.
 ]
 
@@ -46,7 +46,7 @@ RBFindAndReplaceTest >> testFindOcurrencesInClass [
 			^ currentChar isLetter'
 		classified: #(#accessing).
 	refactoring := RBFindAndReplaceRefactoring 
-				model: model find: #simpleMethod of: class inAllHierarchy: false.
+				model: model find: #simpleMethod of: class inWholeHierarchy: false.
 	self executeRefactoring: refactoring.
 	self assert: (class parseTreeFor: #myMethod) equals: (self parseMethod: 'myMethod
 
@@ -82,7 +82,7 @@ RBFindAndReplaceTest >> testFindOcurrencesInHierarchy [
 			^ currentChar isLetter'
 		classified: #(#accessing).
 	refactoring := RBFindAndReplaceRefactoring 
-				model: model find: #simpleMethod of: class inAllHierarchy: true.
+				model: model find: #simpleMethod of: class inWholeHierarchy: true.
 	self executeRefactoring: refactoring.
 	self assert: (class parseTreeFor: #myMethod) equals: (self parseMethod: 'myMethod
 
@@ -107,4 +107,20 @@ RBFindAndReplaceTest >> testFindOcurrencesInHierarchy [
 
 	(self simpleMethod and: [ anArg isDecimal ]) ifTrue: [ ^ self ].
 	^ nil')
+]
+
+{ #category : #tests }
+RBFindAndReplaceTest >> testFindOcurrencesWithArgInHierarchy [
+	|class refactoring|
+	class := model classNamed: #MyClassA.
+	class 
+		compile: 'simpleMethod
+			^ currentChar isLetter'
+		classified: #(#accessing).
+	refactoring := RBFindAndReplaceRefactoring 
+				model: model find: #methodWithArg:andArg: of: class inWholeHierarchy: true.
+	self executeRefactoring: refactoring.
+	class := model classNamed: #MyClassB.
+	self assert: (class parseTreeFor: #dummyMethod) equals: (self parseMethod: 
+	'dummyMethod self methodWithArg: 3 andArg: self someMethod')
 ]

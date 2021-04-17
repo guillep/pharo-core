@@ -100,16 +100,6 @@ SpListPresenter >> displayValueFor: anObject [
 	^ self display value: anObject
 ]
 
-{ #category : #generated }
-SpListPresenter >> displayValueOf: anObject [
-
-	self
-		deprecated: 'Use #displayValueFor: instead'
-		transformWith:
-		'`@rec displayValueOf: `@arg' -> '`@rec displayValueFor: `@arg'.
-	^ self displayValueFor: anObject
-]
-
 { #category : #testing }
 SpListPresenter >> hasHeaderTitle [
 	"Answer true if the list has a title (See `SpListPresenter>>#headerTitle:`)."

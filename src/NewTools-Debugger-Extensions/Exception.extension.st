@@ -5,3 +5,9 @@ Exception >> signalContext [
 
 	^ signalContext
 ]
+
+{ #category : #'*NewTools-Debugger-Extensions' }
+Exception >> stDebuggerInspectorNodesFor: aStDebuggerContext [
+
+	^ aStDebuggerContext exceptionNodesFor: self
+]

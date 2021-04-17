@@ -11,7 +11,7 @@ Class {
 	#category : #'OSWindow-Core-Utilities'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 OSNullBackendWindow class >> fromAttributes: attributes for: anOSWindow [ 
 	^ self new attributes: attributes
 ]
@@ -71,6 +71,11 @@ OSNullBackendWindow >> isValid [
 ]
 
 { #category : #factory }
+OSNullBackendWindow >> newAthensRenderer [
+	self subclassResponsibility
+]
+
+{ #category : #factory }
 OSNullBackendWindow >> newFormRenderer: form [
 	^ renderer := OSNullFormRenderer new form: form
 ]
@@ -78,6 +83,11 @@ OSNullBackendWindow >> newFormRenderer: form [
 { #category : #factory }
 OSNullBackendWindow >> newGenericRenderer [
 	^ renderer := OSWindowNullGenericRenderer new
+]
+
+{ #category : #factory }
+OSNullBackendWindow >> newOpenGLRenderer [
+	self subclassResponsibility
 ]
 
 { #category : #accessing }

@@ -33,8 +33,8 @@ ReReplaceNodeCritique >> change [
 
 	newTreeNode replaceMethodSource: newNode.
 	newTreeNode becomeForward: newNode.
-	^ RBAddMethodChange
-		compile: newTree methodNode newSource
+	^ (RBRefactoryChangeFactory instance)
+		addMethodSource: newTree methodNode newSource
 		in: self entity  methodClass
 ]
 

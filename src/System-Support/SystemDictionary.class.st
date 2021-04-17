@@ -115,7 +115,7 @@ SystemDictionary >> at: aKey put: anObject [
 	^ anObject
 ]
 
-{ #category : #accessing }
+{ #category : #'variable lookup' }
 SystemDictionary >> bindingOf: varName [
 	"SystemDictionaries includes symbols only"
 	
@@ -278,7 +278,7 @@ SystemDictionary >> hasClassOrTraitNamed: aString [
 	^ false
 ]
 
-{ #category : #'dictionary access' }
+{ #category : #'variable lookup' }
 SystemDictionary >> lookupVar: name [
 	"Return a var with this name.  Return nil if none found"
 	^self reservedVariables at: name ifAbsent: [self bindingOf: name]
@@ -311,6 +311,11 @@ SystemDictionary >> organization: anOrganization [
 	
 	anOrganization environment: self.
 	^self at: #SystemOrganization put: anOrganization
+]
+
+{ #category : #'variable lookup' }
+SystemDictionary >> outerScope [
+	^nil
 ]
 
 { #category : #accessing }
@@ -414,9 +419,16 @@ SystemDictionary >> renameClassNamed: oldName as: newName [
 	oldClass rename: newName
 ]
 
-{ #category : #removing }
+{ #category : #'variable lookup' }
 SystemDictionary >> reservedVariables [
+	"we cache the variables for speed"
 	^reservedVariables ifNil: [ reservedVariables := ReservedVariable lookupDictionary]
+]
+
+{ #category : #'variable lookup' }
+SystemDictionary >> resetReservedVariables [
+	"lazy init in the accessor, resetting it will take new subclasses on ReserverdVariable into account"
+	^reservedVariables := nil
 ]
 
 { #category : #'class and trait names' }

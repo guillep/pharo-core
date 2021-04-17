@@ -32,7 +32,7 @@ Class {
 	],
 	#classVars : [
 		'ClockProvider',
-		'LocalTimeZone'
+		'LocalTimeZoneCache'
 	],
 	#pools : [
 		'ChronologyConstants'
@@ -153,7 +153,7 @@ DateAndTime class >> localOffset [
 DateAndTime class >> localTimeZone [
 	"Answer the local time zone"
 
-	^ LocalTimeZone ifNil: [ LocalTimeZone := TimeZone default ]
+	^ LocalTimeZoneCache ifNil: [ LocalTimeZoneCache := TimeZone default ]
 
 
 ]
@@ -167,7 +167,7 @@ DateAndTime class >> localTimeZone: aTimeZone [
 	DateAndTime localTimeZone: (TimeZone offset: -8 hours name: 'Pacific Standard Time' abbreviation: 'PST').
 	"
 
-	LocalTimeZone := aTimeZone
+	LocalTimeZoneCache := aTimeZone
 
 
 

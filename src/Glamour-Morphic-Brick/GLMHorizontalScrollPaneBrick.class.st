@@ -9,7 +9,7 @@ Class {
 	#category : #'Glamour-Morphic-Brick-Widgets-Scrollpane'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 GLMHorizontalScrollPaneBrick >> calculateMaxVelocity [
 
 	"max velocity must depend from the height of the band"

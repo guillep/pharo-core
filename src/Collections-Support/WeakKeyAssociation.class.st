@@ -66,6 +66,17 @@ WeakKeyAssociation >> hash [
 	^self key hash
 ]
 
+{ #category : #generated }
+WeakKeyAssociation >> isVariableBinding [
+
+	"Return true if I represent a literal variable binding"
+
+	self
+		deprecated: 'Use #isAssociation instead'
+		transformWith: '`@rec isVariableBinding' -> '`@rec isAssociation'.
+	^ self isAssociation
+]
+
 { #category : #accessing }
 WeakKeyAssociation >> key [
 	"Answer the lookup key of the receiver."

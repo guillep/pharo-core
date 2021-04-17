@@ -1,5 +1,5 @@
 "
-A PDDependentPackageNode is used to display a dependent package in a tree.
+A DADependentPackageNode is used to display a dependent package in a tree.
 "
 Class {
 	#name : #DADependentPackageNode,

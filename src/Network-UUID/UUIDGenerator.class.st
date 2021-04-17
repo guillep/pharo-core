@@ -122,9 +122,13 @@ UUIDGenerator >> computeNodeIdentifier [
 UUIDGenerator >> initialize [
 	super initialize.
 	random := Random new.
-	lock := Semaphore forMutualExclusion.
+	"This prior usage of a Semaphore has been exchanged because there are reports that
+	the Semaphore did not work in concurrent situations. So the Mutex adds some extra 
+	bits here for usage in multi threaded environments"
+	lock := Mutex new.
 	node := self computeNodeIdentifier.
 	counter := self nextRandom16
+	
 ]
 
 { #category : #accessing }

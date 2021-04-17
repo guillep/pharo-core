@@ -12,7 +12,7 @@ Class {
 	#category : #'Graphics-Canvas-Fills'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 ImageFillStyle class >> form: aForm [
 	"Answer a new instance of the receiver with the given form."
 

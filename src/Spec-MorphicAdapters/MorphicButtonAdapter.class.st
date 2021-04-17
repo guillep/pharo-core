@@ -30,7 +30,7 @@ MorphicButtonAdapter >> buildLabel: text withIcon: icon [
 			ifNil: [ '' ]
 			ifNotNil: [ text ] ].
 	
-	^ IconicListItem 
+	^ IconicListItemMorph 
 		text: text 
 		icon: icon
 

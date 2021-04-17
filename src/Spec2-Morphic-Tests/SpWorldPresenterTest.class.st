@@ -78,5 +78,5 @@ SpWorldPresenterTest >> testOpenPresenterInWorldRemoveExisitingMorphsInWorld [
 
 	self deny: (worldMorph submorphs anySatisfy: [ :morph | morph class = CircleMorph ]).
 	self assert: worldMorph submorphs size equals: 1.
-	self assert: worldMorph submorphs first class equals: PanelMorph.
+	self assert: worldMorph submorphs first class equals: Morph
 ]

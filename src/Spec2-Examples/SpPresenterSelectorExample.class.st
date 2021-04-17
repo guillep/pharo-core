@@ -23,7 +23,7 @@ SpPresenterSelectorExample class >> defaultSpec [
 ]
 
 { #category : #initialization }
-SpPresenterSelectorExample >> initializePresenter [
+SpPresenterSelectorExample >> initializePresenters [
 	"self new openWithSpec"
 
 	list := self newList items: #(1 2 3).

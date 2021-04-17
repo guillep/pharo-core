@@ -13,6 +13,23 @@ FloatTest >> classToBeTested [
 	^ Float
 ]
 
+{ #category : #test }
+FloatTest >> testAsScaledDecimal [
+
+	self
+		assert: 0.00000000000006 asScaledDecimal asString
+		equals: '0.00000000000006s14'.
+	self
+		assert: 9.99999999999999 asScaledDecimal asString
+		equals: '9.99999999999999s14'.
+	self
+		assert:
+		(ScaledDecimal newFromNumber: 9.999999999999999 scale: 15) asString
+		equals: '9.999999999999998s15'.
+		self assert: (ScaledDecimal  newFromNumber: 9.999999999999994 scale: 15) asString 
+		equals: '9.999999999999995s15'
+]
+
 { #category : #'tests - conversion' }
 FloatTest >> testCeiling [
 

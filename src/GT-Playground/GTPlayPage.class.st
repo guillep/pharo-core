@@ -133,6 +133,11 @@ GTPlayPage >> creationTimeForFileName [
 	^ (self creationTime asString copyReplaceAll: ':' with: '-') copyReplaceAll: '.' with: '-'
 ]
 
+{ #category : #ui }
+GTPlayPage >> displayStringOn: stream [
+	stream nextPutAll: (self contentString copyReplaceAll: String cr with: String space)
+]
+
 { #category : #'accessing-dynamic' }
 GTPlayPage >> ensureStashPersistency [
 	(self persistenceStrategies noneSatisfy: [ :each | each isStash ])

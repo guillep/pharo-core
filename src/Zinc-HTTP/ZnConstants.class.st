@@ -7,7 +7,6 @@ Class {
 	#name : #ZnConstants,
 	#superclass : #Object,
 	#classVars : [
-		'DefaultMaximumEntitySize',
 		'HTTPStatusCodes'
 	],
 	#category : #'Zinc-HTTP-Support'

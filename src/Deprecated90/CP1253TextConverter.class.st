@@ -4,9 +4,6 @@ Text converter for CP1253.  Windows code page used for Greek.
 Class {
 	#name : #CP1253TextConverter,
 	#superclass : #ByteTextConverter,
-	#classVars : [
-		'FromTable'
-	],
 	#category : #Deprecated90
 }
 

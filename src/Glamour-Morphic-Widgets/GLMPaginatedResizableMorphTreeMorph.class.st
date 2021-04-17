@@ -4,7 +4,7 @@ Class {
 	#category : #'Glamour-Morphic-Widgets'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 GLMPaginatedResizableMorphTreeMorph >> resizeColumns [
 	| rowMorphsWidths |
 	
@@ -18,13 +18,13 @@ GLMPaginatedResizableMorphTreeMorph >> resizeColumns [
 { #category : #'events-processing' }
 GLMPaginatedResizableMorphTreeMorph >> toggleExpandedState: aMorph event: event [
 	super toggleExpandedState: aMorph event: event.
-	self resizeColumns.
+	self resizeColumns 
 ]
 
 { #category : #updating }
 GLMPaginatedResizableMorphTreeMorph >> updateColumnMorphs [
 	super updateColumnMorphs.
-	self resizeColumns.
+	self resizeColumns
 		
 	
 ]

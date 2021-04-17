@@ -1114,7 +1114,9 @@ RBParser >> parseStatementList: pragmaBoolean into: sequenceNode untilAnyCloserO
 					periodList: periods
 					withAcceptedStatementClosers: aCollectionOfClosers ].
 
-	statements notEmpty ifTrue: [ self addCommentsTo: statements last ].
+	statements
+		ifEmpty: [ self addCommentsTo: sequenceNode ]
+		ifNotEmpty: [ self addCommentsTo: statements last ].
 	sequenceNode
 		statements: statements;
 		periods: periods.

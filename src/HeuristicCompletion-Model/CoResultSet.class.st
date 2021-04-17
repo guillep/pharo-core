@@ -15,7 +15,8 @@ Class {
 	#instVars : [
 		'results',
 		'fetcher',
-		'completionString'
+		'completionString',
+		'caseSensitive'
 	],
 	#category : #'HeuristicCompletion-Model-Core'
 }
@@ -37,9 +38,37 @@ CoResultSet class >> onContext: aCompletionContext fetcher: aFetcher [
 ]
 
 { #category : #accessing }
+CoResultSet >> caseSensitive [
+
+	^ caseSensitive
+]
+
+{ #category : #accessing }
+CoResultSet >> caseSensitive: anObject [
+
+	caseSensitive := anObject
+]
+
+{ #category : #accessing }
 CoResultSet >> completionToken [
 	
 	^ completionString
+]
+
+{ #category : #'api-filtering' }
+CoResultSet >> does: aCandidate matches: aLookupString [
+
+	| aLookupStringToUse aCandidateString |
+
+	caseSensitive 
+		ifTrue: [
+			aLookupStringToUse := aLookupString.
+			aCandidateString := aCandidate contents]  
+		ifFalse: [
+			aLookupStringToUse := aLookupString asLowercase.
+			aCandidateString := aCandidate contents asLowercase ].
+	
+	^ aLookupString isEmpty or: [ aCandidateString beginsWith: aLookupStringToUse ]
 ]
 
 { #category : #enumerating }
@@ -75,20 +104,20 @@ CoResultSet >> fetcher: anObject [
 ]
 
 { #category : #'api-filtering' }
-CoResultSet >> filterWithString: aString [ 
-	
+CoResultSet >> filterWithString: aString [
+
 	"Narrow results"
+
 	aString size >= completionString size
-		ifTrue: [ 
-			"Filter existing results".
-			fetcher := fetcher narrowFilterBlock: [ :e | aString isEmpty or: [ e contents beginsWith: aString ] ].
-			results := results select: [ :e | aString isEmpty or: [ e contents beginsWith: aString ] ] ]
-		ifFalse: [
-			"Smaller filter, reset results and filter"
+		ifTrue: [ "Filter existing results"
+			fetcher := fetcher narrowFilterBlock: [ :e | 
+				 self does: e matches: aString ].
+			results := results select: [ :e | 
+				self does: e matches: aString ] ]
+		ifFalse: [ "Smaller filter, reset results and filter"
 			results := OrderedCollection new.
 			fetcher reset.
-			fetcher := fetcher select: [ :e | aString isEmpty or: [ e contents beginsWith: aString ] ].
-		].
+			fetcher := fetcher select: [ :e | self does: e matches: aString ] ].
 	completionString := aString
 ]
 

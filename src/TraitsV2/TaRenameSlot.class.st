@@ -48,17 +48,12 @@ TaRenameSlot >> renames: anObject [
 
 { #category : #accessing }
 TaRenameSlot >> slots [
-	| renameDict | 
-	
-	renameDict := renames asDictionary.
-	
-	^ inner slots
-		collect: [ :e | 
-			| slot |
-			slot := e asSlot copy.
-			(renameDict includesKey: slot name) 
-				ifTrue: [ slot name: (renameDict at: slot name) ].
-			slot ]
+
+	^ inner slots collect: [ :slot | 
+		  (renames asDictionary includesKey: slot name)
+			  ifTrue: [ 
+				  (TaRenamedSlotWrapper for: slot) name: (renames asDictionary at: slot name) ]
+			  ifFalse: [ slot ] ]
 ]
 
 { #category : #accessing }

@@ -38,20 +38,9 @@ StPharoMorphicConfiguration >> configureWindows: anApplication [
 { #category : #private }
 StPharoMorphicConfiguration >> styleSheet [
 
-	^ SpStyle defaultStyleSheet, self styleSheetCommon
-]
-
-{ #category : #private }
-StPharoMorphicConfiguration >> styleSheetCommon [
-	"Just an example on how to build styles programatically ;)"
-
-	^ SpStyle newApplication 
-		addClass: 'searchInputField' with: [ :searchInputField |
-			searchInputField addClass: 'stSpotter' with: [ :spotter |
-				spotter 
-					addPropertyGeometryWith: [ :geometry | geometry height: 30 ];
-					addPropertyFontWith: [ :font | font size: 12 ] ] ];
-		yourself
+	^ StPharoStyleContributor availableContributors 
+		inject: SpStyle defaultStyleSheet 
+		into: [ :accum :each | accum, (each styleSheetContribution) ]
 ]
 
 { #category : #private }

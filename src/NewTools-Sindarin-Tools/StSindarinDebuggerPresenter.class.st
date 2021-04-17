@@ -2,13 +2,9 @@ Class {
 	#name : #StSindarinDebuggerPresenter,
 	#superclass : #StInspection,
 	#instVars : [
-		'currentNodeInspector',
 		'currentNodeSource',
-		'contextStack',
-		'sindarinDebuggingToolbar',
 		'stack',
 		'inspector',
-		'election',
 		'toolbar'
 	],
 	#category : #'NewTools-Sindarin-Tools'

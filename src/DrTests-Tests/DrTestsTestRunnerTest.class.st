@@ -30,7 +30,7 @@ DrTestsTestRunnerTest >> setUp [
 					[ :p | p definedClasses select: [ :c | c allSuperclasses includes: TestCase ] ])
 		packages: {package}.
 	reRunconf := DTReRunConfiguration new.
-	plugin := DTTestsRunner new
+	plugin := DTTestsRunnerPlugin new
 ]
 
 { #category : #tests }

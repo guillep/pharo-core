@@ -46,6 +46,11 @@ MethodChunk >> description [
 	^ 'Method ( ', behaviorName , ' >> ' , (contents first: (20 min: contents size)), ' )' , stamp asString
 ]
 
+{ #category : #printing }
+MethodChunk >> displayStringOn: stream [
+	stream nextPutAll: self description
+]
+
 { #category : #importing }
 MethodChunk >> handleMissingBehavior [
 	"self error: ('Cannot install method in unexistent behavior {1}' format: {(behaviorName asString)})"

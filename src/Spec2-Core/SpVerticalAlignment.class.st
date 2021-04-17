@@ -5,7 +5,7 @@ I can move the scrolling to make an element visible with the #desiredVisibleRow:
 "
 Class {
 	#name : #SpVerticalAlignment,
-	#superclass : #SpAbstractPresenter,
+	#superclass : #Object,
 	#traits : 'SpTObservable',
 	#classTraits : 'SpTObservable classTrait',
 	#instVars : [

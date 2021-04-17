@@ -4,7 +4,7 @@ Class {
 	#category : #'Glamour-Morphic-Renderer'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GLMPluggableButtonMorph >> model: anObject [
 	model := anObject
 ]

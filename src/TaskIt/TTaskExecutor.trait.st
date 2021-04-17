@@ -27,18 +27,18 @@ TTaskExecutor >> executeTask: aTaskExecution [
 		do: [ :error | self exceptionHandler handleException: error ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 TTaskExecutor >> isDebuggingCompatible [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 TTaskExecutor >> noteBusy [
 
 	self shouldBeImplemented
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 TTaskExecutor >> noteFree [
 
 	self shouldBeImplemented

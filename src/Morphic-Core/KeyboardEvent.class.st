@@ -8,7 +8,8 @@ Class {
 		'keyValue',
 		'charCode',
 		'scanCode',
-		'key'
+		'key',
+		'supressNextKeyPress'
 	],
 	#category : #'Morphic-Core-Events'
 }
@@ -46,6 +47,13 @@ KeyboardEvent >> hasSpecialCTRLKeyValue [
 KeyboardEvent >> hash [
 	^buttons hash + keyValue hash
 
+]
+
+{ #category : #initialization }
+KeyboardEvent >> initialize [
+
+	super initialize.
+	supressNextKeyPress := false.
 ]
 
 { #category : #testing }
@@ -244,4 +252,22 @@ KeyboardEvent >> storeOn: aStream [
 	charCode storeOn: aStream.
 	aStream space.
 	scanCode storeOn: aStream.
+]
+
+{ #category : #accessing }
+KeyboardEvent >> supressNextKeyPress [
+
+	^ supressNextKeyPress
+]
+
+{ #category : #accessing }
+KeyboardEvent >> supressNextKeyPress: anObject [
+
+	supressNextKeyPress := anObject
+]
+
+{ #category : #accessing }
+KeyboardEvent >> wasHandled [
+
+	^ super wasHandled or: [ supressNextKeyPress ]
 ]

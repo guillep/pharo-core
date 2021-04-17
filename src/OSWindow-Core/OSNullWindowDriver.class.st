@@ -12,7 +12,7 @@ Class {
 	#category : #'OSWindow-Core-Utilities'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 OSNullWindowDriver class >> isSupported [
 	"Yep, i am always supported"
 	^ true

@@ -63,6 +63,11 @@ RBRefactoryChangeFactory >> addMethodSource: sourceCode in: aClass for: aControl
 			compile: sourceCode in: aClass for: aController
 ]
 
+{ #category : #'refactory-changes-packages' }
+RBRefactoryChangeFactory >> addPackageNamed: aString [
+	^ RBAddPackageChange addPackageNamed: aString
+]
+
 { #category : #'refactory-changes-variables' }
 RBRefactoryChangeFactory >> addPoolVariable: variableName to: aClass [
 	^ RBAddPoolVariableChange add: variableName to: aClass
@@ -108,6 +113,11 @@ RBRefactoryChangeFactory >> removeMethod: aSelector from: aClass [
 	^ RBRemoveMethodChange remove: aSelector from: aClass
 ]
 
+{ #category : #'refactory-changes-packages' }
+RBRefactoryChangeFactory >> removePackageNamed: aString [
+	^ RBRemovePackageChange removePackageNamed: aString
+]
+
 { #category : #'refactory-changes-variables' }
 RBRefactoryChangeFactory >> removePoolVariable: variableName from: aClass [
 	^ RBRemovePoolVariableChange remove: variableName from: aClass
@@ -126,4 +136,14 @@ RBRefactoryChangeFactory >> renameClassVariable: oldName to: newName in: aClass 
 { #category : #'refactory-changes-variables' }
 RBRefactoryChangeFactory >> renameInstanceVariable: oldName to: newName in: aClass [
 	^ RBRenameInstanceVariableChange rename: oldName to: newName in: aClass 
+]
+
+{ #category : #'refactory-changes-packages' }
+RBRefactoryChangeFactory >> renamePackage: aRBPackage to: newName [
+	^ RBRenamePackageChange rename: aRBPackage name to: newName
+]
+
+{ #category : #'refactory-changes-packages' }
+RBRefactoryChangeFactory >> renamePackageNamed: aRBPackage to: newName [
+	^ RBRenamePackageChange rename: aRBPackage to: newName
 ]

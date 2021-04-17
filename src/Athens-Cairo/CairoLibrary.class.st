@@ -10,7 +10,8 @@ Class {
 
 { #category : #'accessing platform' }
 CairoLibrary >> macLibraryName [
-	^ 'libcairo.2.dylib'
+
+	^ FFIMacLibraryFinder findLibrary: 'libcairo.2.dylib'
 ]
 
 { #category : #'accessing platform' }
@@ -40,8 +41,18 @@ CairoLibrary >> unixLibraryName [
 		
 ]
 
+{ #category : #versions }
+CairoLibrary >> versionString [
+	"Answer the version in a String, such as '1.16.0'. 
+	
+	See https://www.cairographics.org/manual/cairo-Version-Information.html#cairo-version-string
+	"
+
+	^ self ffiCall: #( String cairo_version_string #() )
+]
+
 { #category : #'accessing platform' }
 CairoLibrary >> win32LibraryName [ 
 	
-	^ FFIWindowsLibraryFinder findAnyLibrary: #('cairo.dll' 'libcairo-2.dll')	
+	^ FFIWindowsLibraryFinder findAnyLibrary: #('libcairo-2.dll')	
 ]

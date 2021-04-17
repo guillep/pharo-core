@@ -12,7 +12,8 @@ Class {
 		'parameterTypes',
 		'returnType',
 		'frontendCallback',
-		'runStrategy'
+		'runStrategy',
+		'success'
 	],
 	#category : #'ThreadedFFI-Callbacks'
 }
@@ -47,10 +48,22 @@ TFCallback class >> primUnregister: callbackHandle [
 ]
 
 { #category : #accessing }
+TFCallback >> beFailed [
+
+	success := false
+]
+
+{ #category : #accessing }
 TFCallback >> beNull [
 
 	self setHandle: ExternalAddress null
 
+]
+
+{ #category : #accessing }
+TFCallback >> beSuccess [
+
+	success := true
 ]
 
 { #category : #accessing }
@@ -78,6 +91,7 @@ TFCallback >> frontendCallback: anObject [
 TFCallback >> initialize [
 
 	super initialize.
+	success := true.
 	callbackData := ExternalAddress new.
 	parameterHandlers := #()
 ]
@@ -100,6 +114,12 @@ TFCallback >> invokeAsFunctionWithArguments: aCollection [
 		collect: [ :anArgument :aType | aType marshallToPrimitive: anArgument ].
 
 	^ self returnType marshallFromPrimitive: (self runner invokeFunction: function withArguments: preparedArguments)
+]
+
+{ #category : #testing }
+TFCallback >> isSuccess [
+
+	^ success == true
 ]
 
 { #category : #accessing }

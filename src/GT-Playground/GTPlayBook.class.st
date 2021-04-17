@@ -198,7 +198,7 @@ GTPlayBook >> gtPagesIn: composite [
 	composite list 
 		title: 'Pages';
 		display: [ self pages ];
-		format: #gtDisplayString;
+		format: #displayString;
 		filterOn: [ :text :each | text match: each content ]
 ]
 

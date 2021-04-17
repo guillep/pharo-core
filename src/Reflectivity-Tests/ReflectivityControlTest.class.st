@@ -515,6 +515,23 @@ ReflectivityControlTest >> testBeforeBlockSequenceNoValue [
 ]
 
 { #category : #'tests - before' }
+ReflectivityControlTest >> testBeforeBlockSequenceOptimized [
+	| sequence |
+	"we should be able to set a link on the sequence of an optimzied block with escaping vars"
+	sequence := (ReflectivityExamples >> #exampleBlockOptimized) ast blockNodes first body.
+	self assert: sequence isSequence.
+	link := MetaLink new
+		metaObject: self;
+		selector: #tagExec.
+	sequence link: link.
+	self assert: sequence hasMetalinkBefore.
+	self assert: tag isNil.
+	ReflectivityExamples new exampleBlockOptimized.
+	self assert: tag equals: 'yes'.
+	self assert: (ReflectivityExamples >> #exampleBlockNoValue) class equals: CompiledMethod
+]
+
+{ #category : #'tests - before' }
 ReflectivityControlTest >> testBeforeCascade [
 	| cascadeNode |
 	cascadeNode := (ReflectivityExamples >> #exampleCascade) ast statements first value.

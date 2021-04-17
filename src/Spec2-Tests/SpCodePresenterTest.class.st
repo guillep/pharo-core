@@ -47,6 +47,22 @@ SpCodePresenterTest >> testContextMenu [
 ]
 
 { #category : #tests }
+SpCodePresenterTest >> testEvaluateOnCompileErrorOnError [
+
+	self 
+		assert: (presenter evaluate: 'Obj { }}' onCompileError: [ #compile ] onError: [ :e | #error ])
+		equals: #compile.
+		
+	self 
+		assert: (presenter evaluate: 'nil text' onCompileError: [ #compile ] onError: [ :e | #error ])
+		equals: #error.	
+		
+	self 
+		assert: (presenter evaluate: '42' onCompileError: [ #compile ] onError: [ :e | #error ])
+		equals: 42.		
+]
+
+{ #category : #tests }
 SpCodePresenterTest >> testFindClassFrom [
 
 	self assert: (presenter findClassFrom: '') equals: nil.
@@ -64,39 +80,6 @@ SpCodePresenterTest >> testFindClassFrom [
 	self
 		assert: (presenter findClassFrom: 'NonExistingClass.Object.')
 		equals: Object
-]
-
-{ #category : #tests }
-SpCodePresenterTest >> testSelectedSelector [
-
-	"Testing border cases to avoid breaking execution. The selector extraction logic should be tested in the extractor class"
-
-	"Code presenter has nil text for some reason"
-
-	| selector |
-	presenter text: nil.
-	selector := presenter selectedSelector.
-	self assert: selector isNil.
-
-	"Code presenter is empty"
-	presenter text: ''.
-	selector := presenter selectedSelector.
-	self assert: selector isNil.
-
-	"Code has valid code"
-	selector := presenter text: 'anObject do: 1 with: 2'.
-	selector := presenter selectedSelector.
-	self assert: selector equals: #do:with:.
-
-	"Code has faulty code"
-	selector := presenter text: 'anObject do : 1 with: 2'.
-	selector := presenter selectedSelector.
-	self assert: selector equals: #do.
-
-	"Code has invalid code (no selectors at all)"
-	selector := presenter text: 'anObjectdo : 2'.
-	selector := presenter selectedSelector.
-	self assert: selector equals: #noMethod
 ]
 
 { #category : #tests }

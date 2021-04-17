@@ -1,5 +1,5 @@
 "
-A PDCycleNode is used to display a inheritance dependency in a tree.
+A node used to display a inheritance dependency in a tree.
 "
 Class {
 	#name : #DAInheritanceDependencyNode,

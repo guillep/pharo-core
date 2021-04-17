@@ -27,7 +27,7 @@ GLMPhlowListBrick >> display: anObject [
 	self setProperty: #phlowDisplay toValue: anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GLMPhlowListBrick >> displayLogic [
 
 	^ self valueOfProperty: #phlowDisplay ifAbsent: [ #yourself ]
@@ -82,7 +82,7 @@ GLMPhlowListBrick >> newScrollList [
 	^ GLMFallbackScrollListBrick"GLMScrollListBrick" new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 GLMPhlowListBrick >> setAdaptor [
 	| adaptor |
 	adaptor := (GLMBrickListModel on: self entity)

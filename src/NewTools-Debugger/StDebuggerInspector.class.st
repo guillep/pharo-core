@@ -14,7 +14,6 @@ Class {
 		'label',
 		'rawInspectionSelectionCache',
 		'assertionFailure',
-		'currentLayout',
 		'currentLayoutSpec',
 		'lateralToolbar'
 	],
@@ -260,15 +259,20 @@ StDebuggerInspector >> updateEvaluationPaneReceiver [
 
 { #category : #layout }
 StDebuggerInspector >> updateLayoutForContexts: aContext isAssertionFailure: isTopContextFailingAssertion [
-	(isTopContextFailingAssertion not or:[(aContext at: 2) isString])
-		ifTrue: [ currentLayoutSpec = self defaultLayoutSpec
+
+	(isTopContextFailingAssertion not 
+		or:[ (aContext at: 2) isString 
+		or:[ (aContext at: 2) size < 2 ] ])
+		ifTrue: [ 
+			currentLayoutSpec = self defaultLayoutSpec 
 				ifTrue: [ ^ self ].
 			self setDefaultLayout.
 			^ self ].
+	
 	currentLayoutSpec = self assertionLayoutSpec
 		ifTrue: [ ^ self ].
+
 	self flag: 'Way too much magickal: why these indexes?'.
-	
 	assertionFailure := StFailingAssertionInspector
 		diffInspectorsFromActual: ((aContext at: 2) at: 2)
 		expected: ((aContext at: 2) at: 1)
@@ -284,6 +288,7 @@ StDebuggerInspector >> updateWith: inspectedObject [
 		              dbgCtx context ].
 	newContext := inspectedObject ifNotNil: [ :dbgCtx | dbgCtx context ].
 	(self shouldUpdateContext: oldContext with: newContext) ifFalse: [ ^ self ].
+
 	self saveRawInspectionSelectionForContext: oldContext.
 	self model: (self debuggerInspectorModelClass on: inspectedObject).
 	self updateEvaluationPaneReceiver.

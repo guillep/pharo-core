@@ -4,5 +4,5 @@ Extension { #name : #BorderStyle }
 BorderStyle class >> dashed [
 	"Answer a dashed border style"
 
-	^DashedBorder new
+	^DashedBorderStyle new
 ]

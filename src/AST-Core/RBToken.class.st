@@ -19,6 +19,12 @@ Class {
 	#category : #'AST-Core-Tokens'
 }
 
+{ #category : #testing }
+RBToken class >> isAbstract [
+
+	^ self == RBToken
+]
+
 { #category : #'instance creation' }
 RBToken class >> start: anInterval [ 
 	^self new start: anInterval

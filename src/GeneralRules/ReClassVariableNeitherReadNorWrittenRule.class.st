@@ -12,25 +12,11 @@ ReClassVariableNeitherReadNorWrittenRule class >> checksClass [
 	^ true
 ]
 
-{ #category : #enumerating }
+{ #category : #running }
 ReClassVariableNeitherReadNorWrittenRule >> check: aClass forCritiquesDo: aCriticBlock [
 	aClass classVariables
 		select: [ :variable | variable isReferenced not ]
-		thenDo: [ :variable | aCriticBlock cull: (self critiqueFor: aClass about: variable) ]
-]
-
-{ #category : #enumerating }
-ReClassVariableNeitherReadNorWrittenRule >> critiqueFor: aClass about: aVariable [
-
-	| crit |
-	crit := ReTrivialCritique
-		withAnchor: (ReVarSearchSourceAnchor
-			entity: aClass
-			string: aVariable name)
-		by: self.
-	
-	crit tinyHint: aVariable name.
-	^ crit
+		thenDo: [ :variable | aCriticBlock cull: (self critiqueFor: aClass about: variable name) ]
 ]
 
 { #category : #accessing }

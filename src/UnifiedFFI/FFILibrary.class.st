@@ -73,6 +73,8 @@ FFILibrary >> libraryName [
 { #category : #'accessing platform' }
 FFILibrary >> macLibraryName [
 	"Calling by default #macModuleName for backwards compatibility.
+	The system complains that this method is not implemented as it will only exist
+	in subclasses that use the old API.
 	Please redefine #macLibraryName"
 	^ self macModuleName
 ]
@@ -112,6 +114,8 @@ FFILibrary >> unix64LibraryName [
 { #category : #'accessing platform' }
 FFILibrary >> unixLibraryName [
 	"Kept for backward compatibility. 
+	The system complains that this method is not implemented as it will only exist
+	in subclasses that use the old API.
 	 Users should use unix32* or unix64*"
 	^ self unixModuleName
 ]
@@ -119,6 +123,8 @@ FFILibrary >> unixLibraryName [
 { #category : #'accessing platform' }
 FFILibrary >> win32LibraryName [
 	"Calling by default #win32ModuleName for backwards compatibility.
+	The system complains that this method is not implemented as it will only exist
+	in subclasses that use the old API.
 	Please redefine #win32LibraryName"
 	^ self win32ModuleName
 ]

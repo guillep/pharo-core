@@ -110,6 +110,25 @@ RBRenameClassTest >> testRenameClass [
 ]
 
 { #category : #tests }
+RBRenameClassTest >> testRenameClassFromTrait [
+	| refactoring class classA classB classC aModel |
+	
+	classA := ('RBClass', 'ToRename') asSymbol.
+	classB := ('RBNew', 'ClassName') asSymbol.
+	classC := #RBDummy.
+	refactoring := self rename: (testingEnvironment at: classA) to: classB using: nil.
+	self executeRefactoring: refactoring.
+	aModel := refactoring model.
+	self assert: (aModel includesClassNamed: classB).
+	self deny: (aModel includesClassNamed: classA).
+	class := aModel classNamed: classC.
+	self assert: (class parseTreeFor: #methodFromTrait) 
+				equals: (self parseMethod: 'methodFromTrait
+	RBNewClassName justForTest').
+	self assert: ((refactoring model classNamed: #RBClassUsingSharedPoolForTestData) methodFor: #methodFromTrait) modelClass name equals: #RBDummy
+]
+
+{ #category : #tests }
 RBRenameClassTest >> testUnmarkRemovedClassIfRenameTargetClass [
 	"Unmark a removed class if we rename another class to the removed class name.
 rename class A to C (class A is marked as removed)

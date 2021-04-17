@@ -32,6 +32,16 @@ RewriteRuleEditor class >> defaultSpec [
 		yourself	
 ]
 
+{ #category : #'world menu' }
+RewriteRuleEditor class >> menuCommandOn: aBuilder [
+    <worldMenu>
+    (aBuilder item: #'Rewrite Rule Editor')
+                action: [self open];
+                parent: #Refactoring;
+                help: 'Editor for custom refactoring rewrites';
+                order: 10
+]
+
 { #category : #examples }
 RewriteRuleEditor class >> open [
 	<example>

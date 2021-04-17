@@ -24,11 +24,6 @@ IRTempVector >> indexForVarNamed: aName [
 
 ]
 
-{ #category : #initialization }
-IRTempVector >> initialize [ 
-	vars := Dictionary new
-]
-
 { #category : #testing }
 IRTempVector >> isTempVector [
 	^true

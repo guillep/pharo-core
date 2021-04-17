@@ -107,6 +107,12 @@ SpMorphicBaseTextAdapter >> cursorPositionIndex [
 ]
 
 { #category : #'widget API' }
+SpMorphicBaseTextAdapter >> cursorPositionIndex: index [ 
+
+	self subclassResponsibility
+]
+
+{ #category : #'widget API' }
 SpMorphicBaseTextAdapter >> font: aFont [
 
 	self widgetDo: [ :w | w font: aFont ]

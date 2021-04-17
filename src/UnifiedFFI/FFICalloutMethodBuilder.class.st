@@ -84,7 +84,7 @@ FFICalloutMethodBuilder >> createFFICalloutLiteralFromSpec: functionSpec [
 	^ externalFunction
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #compatibility }
 FFICalloutMethodBuilder >> extractLibrary [
 	"Obtain the library to use"
 	| ffiLibrary |

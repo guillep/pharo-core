@@ -256,16 +256,6 @@ RubCharacterScanner >> plainTab [
 	firstDestX  := destX.
 ]
 
-{ #category : #'multilingual scanning' }
-RubCharacterScanner >> registerBreakableIndex [
-
-	"Record left x and character index of the line-wrappable point. 
-	The default implementation here does nothing."
-
-	^ false.
-
-]
-
 { #category : #scanning }
 RubCharacterScanner >> scanCharactersFrom: startIndex to: stopIndex in: sourceString rightX: rightX stopConditions: stops kern: kernDelta [
 

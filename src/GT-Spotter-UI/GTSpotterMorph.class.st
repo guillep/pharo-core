@@ -413,6 +413,14 @@ GTSpotterMorph >> togglePreview [
 	self spotterModel togglePreview
 ]
 
+{ #category : #generated }
+GTSpotterMorph >> unsubscribeListeners [
+
+	self deprecated: 'Use #unsubscribeListeners: instead'.
+	self activeHand removeEventListener: self.
+	Morph announcer unsubscribe: self
+]
+
 { #category : #initialization }
 GTSpotterMorph >> unsubscribeListeners: aWorld [
 

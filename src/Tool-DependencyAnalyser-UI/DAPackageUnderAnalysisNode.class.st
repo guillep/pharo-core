@@ -1,5 +1,5 @@
 "
-A PDPackageNode is used to display a package in a tree.
+A DAPackageNode is used to display a package in a tree.
 "
 Class {
 	#name : #DAPackageUnderAnalysisNode,

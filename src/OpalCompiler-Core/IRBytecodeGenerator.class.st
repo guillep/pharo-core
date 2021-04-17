@@ -715,13 +715,13 @@ IRBytecodeGenerator >> send: selector toSuperOf: behavior [
 	index := self literalIndexOf: selector.
 
 	(encoder class = EncoderForSistaV1 and: [ inBlock ])
-		ifTrue: [ 
-			encoder genPushLiteralVar: (self literalIndexOf: behavior binding).
+		ifTrue: [
+			"we need to use a copy of the binding as else 'references to' will find this method" 
+			encoder genPushLiteralVar: (self literalIndexOf: behavior binding copy).
 			encoder genSendDirectedSuper: index numArgs: nArgs ]
 		ifFalse: [ 
 			self addLastLiteral: behavior binding.  
 			encoder genSendSuper: index numArgs: nArgs ]
-
 ]
 
 { #category : #results }

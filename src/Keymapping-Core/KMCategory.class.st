@@ -62,6 +62,15 @@ KMCategory >> commonEntries [
 	^self entriesAt: #all
 ]
 
+{ #category : #printing }
+KMCategory >> displayStringOn: stream [
+	super displayStringOn: stream.
+	^ stream
+		nextPut: $(;
+		nextPutAll: self name asString;
+		nextPut: $)
+]
+
 { #category : #accessing }
 KMCategory >> entriesAt: aPlatform [
 	platforms ifNil: [ platforms := Dictionary new ].

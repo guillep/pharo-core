@@ -185,8 +185,22 @@ CompiledCode >> comment [
 
 { #category : #'source code management' }
 CompiledCode >> definition [
+
 	"Polymorphic to class definition"
-	
+
+	self
+		deprecated: #definition
+		transformWith:
+		'`@receiver definition' -> '`@receiver definitionString'.
+
+	^ self definitionString
+]
+
+{ #category : #'source code management' }
+CompiledCode >> definitionString [
+
+	"Polymorphic to class definitionString"
+
 	^ self sourceCode
 ]
 

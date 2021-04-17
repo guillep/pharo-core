@@ -43,7 +43,7 @@ FluidTraitBuilderTest >> testFillShiftClassBuilder [
 	| shift |
 	builder := Trait << #TPoint2.
 	builder slots: { #x . #y }.
-	builder uses: {TViewModelMock}.
+	builder trait: {TViewModelMock}.
 	builder tag: 'Mafia'.
 	builder package: 'FakedCore'.
 	builder fillShiftClassBuilder.
@@ -117,7 +117,7 @@ FluidTraitBuilderTest >> testTraitUse [
 	
 	| trait |
 	builder := Trait << #TPoint3
-		uses: TViewModelMock;
+		trait: TViewModelMock;
 		package: 'Fake'.
 	trait := builder build.
 	

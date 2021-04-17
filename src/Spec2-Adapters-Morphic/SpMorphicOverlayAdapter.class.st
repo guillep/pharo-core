@@ -24,10 +24,11 @@ SpMorphicOverlayAdapter >> addConstraints: constraints toChild: childMorph [
 
 { #category : #protocol }
 SpMorphicOverlayAdapter >> basicAdd: aPresenter constraints: constraints to: aWidget [
-
 	| childMorph |
+	
 	childMorph := self buildMorph: aPresenter constraints: constraints.	
-	aWidget addMorphBack: childMorph.
+	aWidget addMorph: childMorph.
+	
 	^ childMorph
 ]
 
@@ -41,13 +42,9 @@ SpMorphicOverlayAdapter >> children [
 SpMorphicOverlayAdapter >> layout: aLayout [
 
 	widget ifNil: [ 
-		widget := PanelMorph new
-			          layoutPolicy: SpMorphicOverlayLayout new;
-			          hResizing: #spaceFill;
-			          vResizing: #spaceFill;
-			          color: Color transparent;
-			          borderColor: Color transparent;
-			          yourself ].
+		widget := self newPanel
+          layoutPolicy: SpMorphicOverlayLayout new;
+          yourself ].
 
 	aLayout whenChildrenAddedDo: [ :ann | 
 		self

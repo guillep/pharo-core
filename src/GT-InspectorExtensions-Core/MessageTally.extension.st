@@ -6,8 +6,18 @@ MessageTally >> children [
 ]
 
 { #category : #'*GT-InspectorExtensions-Core' }
+MessageTally >> displayIdentifierOn: aStream [
+	class displayStringOn: aStream.
+	self method methodClass ~~ class 
+		ifTrue: [ aStream nextPut: $(; print: self method methodClass; nextPut: $) ].
+	aStream 
+		nextPutAll: '>>';
+		store: self method selector
+]
+
+{ #category : #'*GT-InspectorExtensions-Core' }
 MessageTally >> gtDisplayIdentifierOn: aStream [
-	class gtDisplayOn: aStream.
+	class displayStringOn: aStream.
 	self method methodClass ~~ class 
 		ifTrue: [ aStream nextPut: $(; print: self method methodClass; nextPut: $) ].
 	aStream 

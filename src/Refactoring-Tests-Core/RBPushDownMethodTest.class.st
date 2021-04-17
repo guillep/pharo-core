@@ -48,17 +48,16 @@ RBPushDownMethodTest >> testPushDownMethodSubclassesReferToSelector [
 RBPushDownMethodTest >> testPushDownMethodThatReferencesPoolDictionary [
 	| refactoring class parseTree |
 	parseTree := RBLintRuleTestData parseTreeFor: #junk.
-	self proceedThroughWarning: 
-		[ refactoring := RBPushDownMethodRefactoring 
+	refactoring := RBPushDownMethodRefactoring 
 			pushDown: #(#junk )
 			from: RBLintRuleTestData.
-		self executeRefactoring: refactoring ].
+		self executeRefactoring: refactoring.
 	class := refactoring model classNamed: #RBLintRuleTestData.
 	self deny: (class directlyDefinesMethod: #junk).
 	class subclasses do: 
 		[ :each | 
 		self assert: (each parseTreeFor: #junk) equals: parseTree.
-		self assert: (each directlyDefinesPoolDictionary: 'TextConstants' asSymbol) ]
+		self assert: (each definesPoolDictionary: 'TextConstants' asSymbol) ]
 ]
 
 { #category : #'failure tests' }

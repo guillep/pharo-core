@@ -20,8 +20,11 @@ FBDASTBuilder class >> newFor: class [
 ]
 
 { #category : #constructor }
-FBDASTBuilder >> codeAnyLitInd: anAssociation [ 
-	^ (RBVariableNode named: anAssociation key)
+FBDASTBuilder >> codeAnyLitInd: anAssociation [
+	| varName |
+	"class binding on the class side has nil as key"
+	varName := anAssociation key ifNil: [ 'class binding' ] ifNotNil: [ anAssociation key ].
+	^ (RBVariableNode named: varName)
 		binding: anAssociation;
 		yourself
 ]

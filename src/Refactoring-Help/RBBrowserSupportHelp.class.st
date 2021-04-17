@@ -43,5 +43,5 @@ See the chapter in "RB Refactoring Engine - RBBrowserEnvironment" for more examp
 
 { #category : #accessing }
 RBBrowserSupportHelp class >> pages [
-	^#( overview #RBBrowserClassRefactoringHelp #RBBrowserMethodRefactoringHelp #RBBrowserSourceRefactoringHelp )
+	^#( overview #RBBrowserClassRefactoringHelp #RBBrowserMethodRefactoringHelp #RBBrowserSourceRefactoringHelp #RBBrowserPackageRefactoringHelp )
 ]

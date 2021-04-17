@@ -19,8 +19,7 @@ SyntaxErrorNotification class >> inClass: aClass withCode: codeString doitFlag: 
 		doitFlag: doitFlag
 		errorMessage: errorString
 		location: location) signal.
-	sourceCode ifNil: [ (OCAbortCompilation sourceCode: sourceCode) signal ].
-	^ sourceCode
+	^sourceCode ifNil: [ self error: 'source nil, should not happen' ].
 ]
 
 { #category : #exceptiondescription }

@@ -16,9 +16,6 @@ Class {
 		'alivePresentersByPage',
 		'activateOnSingleClick'
 	],
-	#classVars : [
-		'PreferredExtent'
-	],
 	#classInstVars : [
 		'header'
 	],

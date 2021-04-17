@@ -15,6 +15,12 @@ Class {
 	#category : #'TaskIt-Kernel'
 }
 
+{ #category : #testing }
+TKTAbstractExecutor class >> isAbstract [
+
+	^self == TKTAbstractExecutor 
+]
+
 { #category : #accessing }
 TKTAbstractExecutor >> exceptionHandler [
 	^ exceptionHandler
@@ -33,36 +39,36 @@ TKTAbstractExecutor >> initialize [
 	exceptionHandler := TKTConfiguration errorHandler
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 TKTAbstractExecutor >> isBusy [
 
 	^ busy
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 TKTAbstractExecutor >> isFree [
 
 	^ busy not
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 TKTAbstractExecutor >> noteBusy [
 
 	busy := true
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 TKTAbstractExecutor >> noteFree [
 
 	busy := false
 ]
 
-{ #category : #polimorfism }
+{ #category : #polymorphism }
 TKTAbstractExecutor >> start [
  " nothing to do "
 ]
 
-{ #category : #polimorfsms }
+{ #category : #polymorphism }
 TKTAbstractExecutor >> stop [
 
 ]

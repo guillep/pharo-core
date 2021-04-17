@@ -62,7 +62,7 @@ GLMPhlowTableBrick >> entity: anObject [
 	super entity: anObject.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 GLMPhlowTableBrick >> setAdaptor [
 	| adaptor |
 	adaptor := (GLMBrickListModel on: self transformedEntity)

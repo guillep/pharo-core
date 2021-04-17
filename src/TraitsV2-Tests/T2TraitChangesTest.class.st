@@ -14,7 +14,7 @@ T2TraitChangesTest >> testGeneratingTheSameTraitDoesNotProduceChanges [
 	builder := ShiftClassBuilder new.
 	builder buildEnvironment: ShSmalltalkGlobalsEnvironment new.
 
-	Trait configureBuilder: builder withName: #T1 traitComposition: {} slots: {}  packageName: 'TraitsV2-Tests-TestClasses'.
+	Trait configureBuilder: builder withName: #T1 traitComposition: TEmpty slots: {}  packageName: 'TraitsV2-Tests-TestClasses'.
 				
 	builder tryToFillOldClass.
 	builder detectBuilderEnhancer.
@@ -36,7 +36,7 @@ T2TraitChangesTest >> testUpdatingTheSameTraitDoesNotProduceChanges [
 	builder := ShiftClassBuilder new.
 	builder buildEnvironment: ShSmalltalkGlobalsEnvironment new.
 
-	Trait configureBuilder: builder withName: #T1 traitComposition: {} slots: {}  packageName: 'TraitsV2-Tests-TestClasses'.
+	Trait configureBuilder: builder withName: #T1 traitComposition: TEmpty slots: {}  packageName: 'TraitsV2-Tests-TestClasses'.
 
 	builder oldClass: t1.
 				

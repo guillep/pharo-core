@@ -13,6 +13,12 @@ Class {
 	#category : #'System-Settings-Core-Persistence-Ston-StoredSettings'
 }
 
+{ #category : #testing }
+AbstractFontStoredSetting class >> isAbstract [
+
+	^ self == AbstractFontStoredSetting
+]
+
 { #category : #accessing }
 AbstractFontStoredSetting >> emphasized [
 	^ emphasized

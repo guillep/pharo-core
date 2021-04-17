@@ -19,10 +19,7 @@ Class {
 SycMoveMethodsToClassCommand class >> methodContextMenuActivation [
 	<classAnnotation>
 	
-	^CmdContextMenuActivation 
-		byItemOf: ClyMoreRefactorsMenuGroup 
-		order: 60 
-		for: ClyMethod asCalypsoItemContext
+	^ SycMethodMenuActivation byRootGroupItemOrder: 60 for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #'instance creation' }
@@ -46,7 +43,7 @@ SycMoveMethodsToClassCommand >> defaultMenuItemName [
 SycMoveMethodsToClassCommand >> execute [
 	
 	methods 
-		collect: [ :each | RBMoveMethodToClassRefactoring method: each class: targetClass]
+		collect: [ :each | RBMoveMethodToClassRefactoring model: model method: each class: targetClass ]
 		thenDo: [ :each | each execute ]
 ]
 

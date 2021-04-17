@@ -267,8 +267,11 @@ WelcomeHelp class >> pharoVersionString [
 			aStream nextPutAll: 'build: '.
 			version build printOn: aStream.
 			aStream nextPutAll: ', '. ].
-		aStream nextPutAll: 'commit: '.
-		aStream nextPutAll: version commitHashShort ]
+		aStream 
+			nextPutAll: 'commit: ';
+		   nextPutAll: version commitHashShort;
+			nextPutAll: ', date: ';
+			nextPutAll: version date asString]
 ]
 
 { #category : #defaults }

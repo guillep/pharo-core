@@ -68,13 +68,13 @@ SpMorphicTreeTableDataSource >> cellIndentFor: item [
 	^ item depth * 16
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SpMorphicTreeTableDataSource >> expandPath: anArray [
 
 	self expandPath: anArray root: self rootItem children
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SpMorphicTreeTableDataSource >> expandPath: anArray root: nodes [ 
 	| node |
 	
@@ -105,6 +105,12 @@ SpMorphicTreeTableDataSource >> isFirstColumn: column [
 ]
 
 { #category : #accessing }
+SpMorphicTreeTableDataSource >> itemAtIndex: anInteger [ 
+	
+	^ self allShownItems at: anInteger
+]
+
+{ #category : #accessing }
 SpMorphicTreeTableDataSource >> itemAtPath: aPath [ 
 	
 	^ self itemAtPath: aPath expanding: false
@@ -125,6 +131,13 @@ SpMorphicTreeTableDataSource >> itemAtPath: aPath expanding: shouldExpandItems [
 	].
 
 	^ item
+]
+
+{ #category : #'drag and drop' }
+SpMorphicTreeTableDataSource >> passengerAt: rowIndex [
+	"Answer 'passenger' for drag&drop operation (a passenger is the object who will travel between 
+	 drag and drop). By default, passenger is same as current element"
+	^ (self allShownItems at: rowIndex) data
 ]
 
 { #category : #paths }

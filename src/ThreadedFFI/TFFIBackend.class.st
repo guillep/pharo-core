@@ -69,10 +69,12 @@ TFFIBackend >> isAvailable [
 
 { #category : #'instance creation' }
 TFFIBackend >> loadSymbol: moduleSymbol module: module [ 
-
-	<primitive: 'primitiveLoadSymbolFromModule'>
-
-	^ self primitiveFailed
+	
+	| encodedString |
+	encodedString := module ifNotNil: [ module utf8Encoded asString ].
+	
+	"The primitive is expected the module to be a utf8Encoded String."
+	^ self primLoadSymbol: moduleSymbol module: encodedString
 ]
 
 { #category : #accessing }
@@ -114,5 +116,13 @@ TFFIBackend >> on: anObject float64At: offset put: value [
 			  index: offset
 			  value: value ].
 		
+	^ self primitiveFailed
+]
+
+{ #category : #'instance creation' }
+TFFIBackend >> primLoadSymbol: moduleSymbol module: module [ 
+
+	<primitive: 'primitiveLoadSymbolFromModule'>
+
 	^ self primitiveFailed
 ]

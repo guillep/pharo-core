@@ -151,7 +151,7 @@ FFICalloutAPI >> newBuilder [
 	^ FFICalloutMethodBuilder calloutAPI: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #action }
 FFICalloutAPI >> newCallbackWithSignature: signature block: aBlock library: aLibrary [
 
 	^ (FFICallback signature: signature block: aBlock)

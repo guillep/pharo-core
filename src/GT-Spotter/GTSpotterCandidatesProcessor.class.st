@@ -68,7 +68,7 @@ GTSpotterCandidatesProcessor >> itemIconFor: anObject [
 
 { #category : #private }
 GTSpotterCandidatesProcessor >> itemNameFor: anObject [
-	^ anObject gtDisplayString
+	^ anObject displayString
 ]
 
 { #category : #accessing }

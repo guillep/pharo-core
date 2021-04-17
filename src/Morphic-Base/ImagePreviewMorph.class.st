@@ -12,7 +12,7 @@ Class {
 	#category : #'Morphic-Base-Basic'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ImagePreviewMorph >> cornerStyle: aSymbol [
 	"Pass on to selector and content too."
 
@@ -20,7 +20,7 @@ ImagePreviewMorph >> cornerStyle: aSymbol [
 	self imageMorph cornerStyle: aSymbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ImagePreviewMorph >> defaultImageFormOfSize: aPoint [
 	"Answer a default preview image form."
 
@@ -29,7 +29,7 @@ ImagePreviewMorph >> defaultImageFormOfSize: aPoint [
 		ifFalse: [defaultImageForm]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ImagePreviewMorph >> image: form size: imageSize [
 	"Set the image and update the description."
 	
@@ -78,7 +78,7 @@ ImagePreviewMorph >> initialize [
 		addMorphBack: self textMorph
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ImagePreviewMorph >> newImageMorph [
 	"Answer a new image morph."
 
@@ -88,7 +88,7 @@ ImagePreviewMorph >> newImageMorph [
 		alpha: 1.0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ImagePreviewMorph >> newTextMorph [
 	"Answer a new text morph."
 

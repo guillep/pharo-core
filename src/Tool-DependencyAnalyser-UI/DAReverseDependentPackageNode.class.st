@@ -1,5 +1,5 @@
 "
-A PDReverseDependentPackageNode is used to display a dependent package in a reverse tree.
+A DAReverseDependentPackageNode is used to display a dependent package in a reverse tree.
 "
 Class {
 	#name : #DAReverseDependentPackageNode,

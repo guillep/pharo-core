@@ -8,11 +8,11 @@ Class {
 	#category : #'Calypso-SystemQueries-Tests-P1WithHierarchy'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ClySubclassN1OfClass1FromP1 class >> classSideMethodFromSubclassN1 [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ClySubclassN1OfClass1FromP1 >> noTagMethod [
 ]
 

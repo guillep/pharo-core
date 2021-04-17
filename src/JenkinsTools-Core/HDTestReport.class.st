@@ -42,8 +42,9 @@ HDTestReport class >> runClasses: aCollectionOfClasses named: aString [
 			asSortedCollection: [ :a :b | a name <= b name ].
 	classes isEmpty
 		ifTrue: [ ^ nil ].
+		
 	classes
-		do: [ :each | each addToSuiteFromSelectors: suite ].
+		do: [ :each | suite addTests: each buildSuite tests ].
 	^ self runSuite: suite
 ]
 
@@ -211,7 +212,7 @@ HDTestReport >> reportTestCase: aTestCase runBlock: aBlock [
 		nextPutAll: 'starting testcase: ';
 		nextPutAll: aTestCase class name;
 		nextPutAll: '>>';
-		nextPutAll: aTestCase selector;
+		nextPutAll: aTestCase nameForReport;
 		nextPutAll: ' ... ';
 		flush.
 	"The test element must be written after test completion to include a time information about run.
@@ -226,7 +227,7 @@ HDTestReport >> reportTestCase: aTestCase runBlock: aBlock [
 		nextPut: $.;
 		nextPutAll: (self encode: aTestCase class name);
 		nextPutAll: '" name="';
-		nextPutAll: (self encode: aTestCase selector);
+		nextPutAll: (self encode: aTestCase nameForReport);
 		nextPutAll: '" time="';
 		print: time asMilliSeconds / 1000.0;
 		nextPutAll: '">';

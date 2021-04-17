@@ -59,22 +59,26 @@ SpDemoFormPresenter >> initialize [
 
 { #category : #initialization }
 SpDemoFormPresenter >> initializePresenters [
-	form := (self instantiate: SpDemoLabeledContainer)
-		label: 'form';
-		subwidget: (self instantiate: SpDemoStandaloneFormPresenter on: self announcingObject).
-	resultPane := (self instantiate: SpDemoLabeledContainer)
-		label: 'result';
-		subwidget: (table := self newTable).
+
+	form := self newPresenter 
+		layout: (SpBoxLayout newTopToBottom
+			add: 'form' expand: false;
+			add: (self instantiate: SpDemoStandaloneFormPresenter on: self announcingObject);
+			yourself);
+		yourself.
+
+	resultPane := self newPresenter 
+		layout: (SpBoxLayout newTopToBottom
+			add: 'result' expand: false;
+			add: (table := self newTable);
+			yourself);
+		yourself.
 
 	table
 		addColumn: (SpStringTableColumn title: 'Name' evaluated: #key);
 		addColumn: (SpStringTableColumn title: 'Value' evaluated: #value);
 		items: self model elements;
-		beResizable.
-
-	self focusOrder
-		add: form;
-		add: table
+		beResizable
 ]
 
 { #category : #accessing }

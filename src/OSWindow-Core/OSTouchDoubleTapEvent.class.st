@@ -7,7 +7,7 @@ Class {
 	#category : #'OSWindow-Core-Events-Touch'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OSTouchDoubleTapEvent class >> id [
 	^ #doubleTap
 ]

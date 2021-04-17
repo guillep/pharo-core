@@ -87,8 +87,14 @@ SpTMorphicTableDataSourceCommons >> setHeaderColumnLazyProperties: column [
 ]
 
 { #category : #sorting }
-SpTMorphicTableDataSourceCommons >> sortByColumn: aColumn event: anEvent morph: aMorph [
+SpTMorphicTableDataSourceCommons >> sortByColumn: aColumn [
 
 	aColumn sortDataSource: self.
 	self model selection unselectAll.
+]
+
+{ #category : #sorting }
+SpTMorphicTableDataSourceCommons >> sortByColumn: aColumn event: anEvent morph: aMorph [
+
+	self sortByColumn: aColumn
 ]

@@ -8,6 +8,16 @@ Class {
 }
 
 { #category : #tests }
+KeyboardKeyTest >> testEqual [ 
+
+	self 
+		assert: (KeyboardKey fromCharacter: Character arrowUp) 
+		equals: (KeyboardKey new 
+			withValue: 65362;
+			yourself)
+]
+
+{ #category : #tests }
 KeyboardKeyTest >> testNamed [
 	"These assertions have been written using data available in KeyboardKey class>>#initializeKeyTable"
 	self assert: (KeyboardKey named: 'SHIFT_L') equals: (KeyboardKey value: 65505).

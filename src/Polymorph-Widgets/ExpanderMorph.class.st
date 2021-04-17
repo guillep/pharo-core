@@ -11,7 +11,7 @@ Class {
 	#category : #'Polymorph-Widgets-Base'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 ExpanderMorph class >> titleText: aStringOrText [
 	"Answer a new instance of the receiver with the given title text."
 

@@ -183,7 +183,7 @@ FTTableMorph >> beCellSelection [
 
 { #category : #accessing }
 FTTableMorph >> beMultipleSelection [
-	selectionStrategy := FTMultipleSelection table: self
+	selectionStrategy := FTMultipleSelectionStrategy table: self
 ]
 
 { #category : #accessing }
@@ -217,7 +217,7 @@ FTTableMorph >> beRowSelection [
 
 { #category : #accessing }
 FTTableMorph >> beSingleSelection [
-	selectionStrategy := FTSimpleSelection table: self
+	selectionStrategy := FTSimpleSelectionStrategy table: self
 ]
 
 { #category : #'event handling' }

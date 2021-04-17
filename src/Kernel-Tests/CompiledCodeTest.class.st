@@ -261,6 +261,21 @@ CompiledCodeTest >> testLiteralsEvenTheOnesInTheInnerCleanBlocks [
 ]
 
 { #category : #'tests - scanning' }
+CompiledCodeTest >> testReadsRef [
+	| readMethod writeMethod classVar |
+	readMethod := SmalltalkImage class>>#compilerClass.
+	writeMethod := SmalltalkImage class>>#compilerClass:.
+	classVar := SmalltalkImage classVariableNamed: #CompilerClass.
+	
+	self assert: (readMethod readsRef: classVar).
+	self deny: (writeMethod readsRef: classVar).
+	
+	"Special test for a method with super in a full block. 
+	We push a binding for this class but make sure that it is not the same"
+	self deny: ((DelayMutexScheduler>>#unschedule:) readsRef: DelayMutexScheduler binding)
+]
+
+{ #category : #'tests - scanning' }
 CompiledCodeTest >> testReadsSelf [
 	| method |
 	method := self class compiler compile: 'method self doit'.

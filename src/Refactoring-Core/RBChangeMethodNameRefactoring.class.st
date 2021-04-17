@@ -87,7 +87,7 @@ RBChangeMethodNameRefactoring >> preconditions [
 	^conditions & (RBCondition withBlock: 
 		[self implementors size > 1 
 			ifTrue: 
-				[self refactoringWarning: ('This will modify all <1p> implementors.' 
+				[self refactoringWarning: ('This will modify all <1p> implementors. Proceed anyway?' 
 							expandMacrosWith: self implementors size)].
 		true])
 ]

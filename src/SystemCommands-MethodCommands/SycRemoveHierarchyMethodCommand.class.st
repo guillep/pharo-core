@@ -4,7 +4,7 @@ I am a command to remove given methods and the ones in the subclasses.
 "
 Class {
 	#name : #SycRemoveHierarchyMethodCommand,
-	#superclass : #SycMethodCommand,
+	#superclass : #SysRefactoringMethodCommand,
 	#category : #'SystemCommands-MethodCommands'
 }
 
@@ -12,10 +12,7 @@ Class {
 SycRemoveHierarchyMethodCommand class >> methodContextMenuActivation [
 	<classAnnotation>
 	
-	^CmdContextMenuActivation 
-		byItemOf: ClyMoreRefactorsMenuGroup 
-		order: 100 
-		for: ClyMethod asCalypsoItemContext
+	^ SycMethodMenuActivation byRootGroupItemOrder: 100 for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #converting }
@@ -41,4 +38,8 @@ SycRemoveHierarchyMethodCommand >> defaultMenuItemName [
 SycRemoveHierarchyMethodCommand >> execute [
 
 	self executeRefactorings
+]
+
+{ #category : #initialization }
+SycRemoveHierarchyMethodCommand >> setUpModelFromContext: aToolContext [
 ]

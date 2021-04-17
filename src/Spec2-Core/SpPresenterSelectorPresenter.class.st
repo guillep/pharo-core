@@ -51,7 +51,7 @@ SpPresenterSelectorPresenter >> initialize [
 ]
 
 { #category : #initialization }
-SpPresenterSelectorPresenter >> initializePresenter [
+SpPresenterSelectorPresenter >> initializePresenters [
 
 	layout := SpBoxLayout newTopToBottom
 ]

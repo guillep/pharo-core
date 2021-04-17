@@ -28,7 +28,7 @@ StDebuggerToolCommandTreeBuilderTest >> assertCommandGroup: cmdGroup hasSameComm
 	self deny: cmdGroup isRoot.
 	self assertCommandGroup: cmdGroup hasDisplayStrategy: displayStrategy.
 	commands := cmdGroup allCommands
-		collect: [ :spCommand | spCommand decoratedCommand ].
+		collect: [ :spCommand | spCommand innerCommand ].
 	self
 		assertCommandGroupEntries: commands
 		hasCommands: expectedCommands.
@@ -61,7 +61,8 @@ StDebuggerToolCommandTreeBuilderTest >> assertCommands: commands haveContext: ex
 
 { #category : #helper }
 StDebuggerToolCommandTreeBuilderTest >> commandsFromSpecGroup: group [
-	^ group decoratedGroup entries collect: [ :cmd | cmd decoratedCommand ]
+
+	^ group decoratedGroup entries collect: [ :cmd | cmd innerCommand ]
 ]
 
 { #category : #'instance creation' }

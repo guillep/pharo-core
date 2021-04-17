@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'classFactory'
 	],
-	#category : #'ReleaseTests-Tests'
+	#category : #'ReleaseTests-CleanCode'
 }
 
 { #category : #accessing }

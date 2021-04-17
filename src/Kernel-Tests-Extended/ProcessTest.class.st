@@ -611,6 +611,24 @@ ProcessTest >> testTerminateActive [
 	self deny: lastStatementEvaluated.
 ]
 
+{ #category : #'tests - creation' }
+ProcessTest >> testTerminateAnswersSelf [
+
+	| process |
+
+	"verify #terminate returns a process that is terminated"
+	process := [] newProcess terminate.
+	self assert: (process isKindOf: Process).
+	self assert: process isTerminated.
+
+	"verify repeating #terminate still returns a terminated process"
+	process := process terminate.
+	self assert: (process isKindOf: Process).
+	self assert: process isTerminated.
+	
+
+]
+
 { #category : #'tests - termination' }
 ProcessTest >> testTerminationShouldProceedAllEnsureBlocksIfSomeWasFailed [
 

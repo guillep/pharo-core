@@ -14,12 +14,6 @@ GLMHighlighterTextStylerDecorator class >> key [
 	^ nil
 ]
 
-{ #category : #'instance creation' }
-GLMHighlighterTextStylerDecorator class >> withParserStyler: aParser [
-	
-	^ self new styler: (GLMHighlighterTextParserStyler new parser: aParser)
-]
-
 { #category : #accessing }
 GLMHighlighterTextStylerDecorator >> defaultStyler [
 	"There is no default styler"

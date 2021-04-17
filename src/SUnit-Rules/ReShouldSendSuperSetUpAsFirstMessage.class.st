@@ -37,7 +37,14 @@ ReShouldSendSuperSetUpAsFirstMessage class >> superSetUpNotCalledFirstIn: aCompi
 
 { #category : #running }
 ReShouldSendSuperSetUpAsFirstMessage >> basicCheck: aMethod [
-	^ (aMethod methodClass inheritsFrom: TestCase) and: [ aMethod selector = #setUp and: [ self class superSetUpNotCalledFirstIn: aMethod ] ]
+
+	^ (self isClassToCheck: aMethod methodClass) and: [ aMethod selector = #setUp and: [ self class superSetUpNotCalledFirstIn: aMethod ] ]
+]
+
+{ #category : #testing }
+ReShouldSendSuperSetUpAsFirstMessage >> isClassToCheck: aClass [
+
+	^ { TestCase. TestResource } anySatisfy: [:each | aClass inheritsFrom: each ]
 ]
 
 { #category : #accessing }

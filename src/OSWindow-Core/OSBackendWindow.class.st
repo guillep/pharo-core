@@ -92,22 +92,12 @@ OSBackendWindow >> isValid [
 ]
 
 { #category : #factory }
-OSBackendWindow >> newAthensRenderer [
-	self subclassResponsibility
-]
-
-{ #category : #factory }
 OSBackendWindow >> newFormRenderer: aForm [
 	self subclassResponsibility
 ]
 
 { #category : #factory }
 OSBackendWindow >> newGenericRenderer [
-	self subclassResponsibility
-]
-
-{ #category : #factory }
-OSBackendWindow >> newOpenGLRenderer [
 	self subclassResponsibility
 ]
 

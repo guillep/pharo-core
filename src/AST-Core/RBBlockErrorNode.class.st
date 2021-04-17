@@ -9,7 +9,7 @@ or the closure : [ block node .
 Class {
 	#name : #RBBlockErrorNode,
 	#superclass : #RBEnglobingErrorNode,
-	#category : #'AST-Core-Nodes'
+	#category : #'AST-Core-Nodes - ErrorNodes'
 }
 
 { #category : #construction }

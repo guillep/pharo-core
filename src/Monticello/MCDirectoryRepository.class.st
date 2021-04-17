@@ -60,6 +60,11 @@ MCDirectoryRepository >> directory: aDirectory [
 	directory := aDirectory
 ]
 
+{ #category : #printing }
+MCDirectoryRepository >> displayStringOn: aStream [
+	aStream nextPutAll: self description
+]
+
 { #category : #comparing }
 MCDirectoryRepository >> hash [
 	^ directory hash

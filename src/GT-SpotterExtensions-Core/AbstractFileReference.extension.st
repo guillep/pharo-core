@@ -6,71 +6,12 @@ AbstractFileReference >> isZipFile [
 ]
 
 { #category : #'*GT-SpotterExtensions-Core' }
-AbstractFileReference >> spotterForDirectoriesFor: aStep [
-	<spotterOrder: 10>
-	^ self isDirectory ifTrue: [
-		aStep listProcessor
-			allCandidates: [ self directories ];
-			title: 'Directories';
-			candidatesLimit: Float infinity;
-			itemName: #basename;
-			itemIcon: [ GLMUIThemeExtraIcons glamorousFolder ];
-			filter: GTFilterSubstring ]
-]
-
-{ #category : #'*GT-SpotterExtensions-Core' }
-AbstractFileReference >> spotterForFilesFor: aStep [
-	<spotterOrder: 20>
-	^ self isDirectory ifTrue: [
-		aStep listProcessor
-			allCandidates: [ self files ];
-			title: 'Files';
-			candidatesLimit: Float infinity;
-			itemName: #basename;
-			itemIcon: [ GLMUIThemeExtraIcons glamorousBrowse ];
-			filter: GTFilterSubstring ]
-]
-
-{ #category : #'*GT-SpotterExtensions-Core' }
-AbstractFileReference >> spotterForZipDirectoriesFor: aStep [
-	<spotterOrder: 10>
-	| zipFileSystem |
-	self isZipFile ifFalse: [ ^ self ].
-	aStep listProcessor
-			allCandidates: [ 
-				zipFileSystem := (FileSystem zip: self) open.
-				zipFileSystem workingDirectory directories ];
-			title: 'Directories';
-			candidatesLimit: Float infinity;
-			itemName: #basename;
-			itemIcon: [ GLMUIThemeExtraIcons glamorousFolder ];
-			filter: GTFilterSubstring
-]
-
-{ #category : #'*GT-SpotterExtensions-Core' }
-AbstractFileReference >> spotterForZipFilesFor: aStep [
-	<spotterOrder: 10>
-	| zipFileSystem |
-	self isZipFile ifFalse: [ ^ self ].
-	aStep listProcessor
-			allCandidates: [ 
-				zipFileSystem := (FileSystem zip: self) open.
-				zipFileSystem workingDirectory files ];
-			title: 'Files';
-			candidatesLimit: Float infinity;
-			itemName: #basename;
-			itemIcon: [ GLMUIThemeExtraIcons glamorousBrowse ];
-			filter: GTFilterSubstring
-	
-]
-
-{ #category : #'*GT-SpotterExtensions-Core' }
 AbstractFileReference >> spotterPreviewContentsIn: aComposite [
 	<spotterPreview: 20>
 	
 	self isFile ifFalse: [ ^ self ].
 	aComposite text
-		title: [ self gtDisplayString ]; 
+		title: [ self displayString ]; 
 		display: #yourself;
 		entity: (self readStreamDo: [ :stream | 
 					| result |
@@ -88,7 +29,7 @@ AbstractFileReference >> spotterPreviewItemsIn: aComposite [
 	
 	self isDirectory ifFalse: [ ^ self ].
 	aComposite list
-		title: [ self gtDisplayString ];
+		title: [ self displayString ];
 		display: #yourself;
 		format: [ :folder | 
 			|iconName |			
@@ -126,7 +67,7 @@ AbstractFileReference >> spotterPreviewStScriptIn: aComposite [
 	(self extension = 'st' or: [self extension = 'ph']) 
 		ifFalse: [ ^ self ].
 	aComposite pharoMethod 
-		title: [self gtDisplayString];
+		title: [self displayString];
 		display: #yourself;
 		smalltalkClass: [ nil ];
 		entity: (self readStreamDo: #contents)
@@ -140,7 +81,7 @@ AbstractFileReference >> spotterPreviewZipItemsIn: aComposite [
 	self isZipFile ifFalse: [ ^ self ].
 	zip:= (FileSystem zip: self) open workingDirectory.
 	aComposite list
-		title: [ self gtDisplayString ];
+		title: [ self displayString ];
 		display: #yourself;
 		format: [ :folder | 
 			|iconName |			

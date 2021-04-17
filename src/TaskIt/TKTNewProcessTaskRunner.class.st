@@ -51,7 +51,7 @@ Class {
 	#category : #'TaskIt-Kernel'
 }
 
-{ #category : #schedulling }
+{ #category : #scheduling }
 TKTNewProcessTaskRunner >> scheduleTaskExecution: aTaskExecution [
 	TKTConfiguration processProvider
 		createProcessDoing:

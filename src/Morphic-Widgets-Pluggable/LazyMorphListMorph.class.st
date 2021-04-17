@@ -7,21 +7,21 @@ Class {
 	#category : #'Morphic-Widgets-Pluggable-Lists'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 LazyMorphListMorph >> adjustHeight [
 	"private.  Adjust our height to match the length of the underlying list.
 	Automatic with table layout."
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 LazyMorphListMorph >> adjustWidth [
 	"private.  Adjust our height to match the length of the underlying list"
 	
 	self width: (listSource innerBounds width max: self hUnadjustedScrollRange). 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 LazyMorphListMorph >> display: item  atRow: row on: aCanvas [
 	"Display the given item at the given row on the given canvas."
 	
@@ -36,7 +36,7 @@ LazyMorphListMorph >> display: item  atRow: row on: aCanvas [
 		 dashes: #(1 1)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 LazyMorphListMorph >> drawBoundsForRow: row [
 	"Calculate the bounds that row should be drawn at.  This might be outside our bounds!"
 	
@@ -45,7 +45,7 @@ LazyMorphListMorph >> drawBoundsForRow: row [
 	^(listItems at: row) bounds
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 LazyMorphListMorph >> drawSubmorphsOn: aCanvas [ 
 	"Display submorphs back to front"
 
@@ -60,7 +60,7 @@ LazyMorphListMorph >> drawSubmorphsOn: aCanvas [
 		ifFalse: [drawBlock value: aCanvas]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 LazyMorphListMorph >> hUnadjustedScrollRange [
 	"Answer the width of the widest item."
 
@@ -86,7 +86,7 @@ LazyMorphListMorph >> initialize [
 		hResizing: #rigid
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 LazyMorphListMorph >> listChanged [
 	"set newList to be the list of strings to display"
 	listItems := (1 to: self getListSize) collect: [:i |
@@ -105,7 +105,7 @@ LazyMorphListMorph >> listChanged [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 LazyMorphListMorph >> rowAtLocation: aPoint [
 	"return the number of the row at aPoint"
 
@@ -117,14 +117,14 @@ LazyMorphListMorph >> rowAtLocation: aPoint [
 	^listItems size
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 LazyMorphListMorph >> selectRow: index [
 	"select the index-th row"
 	selectedRows add: index.
 	self invalidRect: (self drawBoundsForRow: index)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 LazyMorphListMorph >> selectionFrameForRow: row [
 	"Answer the selection frame rectangle."
 
@@ -140,7 +140,7 @@ LazyMorphListMorph >> selectionFrameForRow: row [
 	^frame
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 LazyMorphListMorph >> userString [
 	"Do I have a text string to be searched on?"
 

@@ -14,7 +14,7 @@ Class {
 { #category : #accessing }
 RootClassPoolUser class >> author [
 
-	^  Author
+	^  AnAuthor
 ]
 
 { #category : #accessing }

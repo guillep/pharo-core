@@ -36,11 +36,22 @@ StPharoApplication class >> startUp: resuming [
 	Current startUp: resuming
 ]
 
+{ #category : #'accessing resources' }
+StPharoApplication >> defaultWindowExtent [
+	
+	self flag: #TODO. "Replace this with a real real estate"
+	^ 800@600
+]
+
 { #category : #initialization }
 StPharoApplication >> initialize [
 
 	super initialize.
-	self resetConfiguration
+	self resetConfiguration.
+	SystemAnnouncer uniqueInstance weak 
+		when: UIThemeChanged 
+		send: #resetConfiguration
+		to: self
 ]
 
 { #category : #'private factory' }
@@ -79,6 +90,8 @@ StPharoApplication >> start [
 
 { #category : #'system startup' }
 StPharoApplication >> startUp: resuming [
+
+	self resetConfiguration
 ]
 
 { #category : #settings }

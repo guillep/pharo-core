@@ -53,7 +53,7 @@ SpMorphicMenuBarAdapter >> buildButtonFor: item [
 		  action: #performMenuActionWith:
 		  arguments: { widget }
 		  getEnabled: #isEnabled
-		  label: (IconicListItem text: item name icon: item icon)
+		  label: (IconicListItemMorph text: item name icon: item icon)
 		  help: item description
 ]
 

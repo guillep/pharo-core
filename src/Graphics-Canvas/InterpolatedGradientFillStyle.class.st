@@ -7,7 +7,7 @@ Class {
 	#category : #'Graphics-Canvas-Fills'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 InterpolatedGradientFillStyle >> computePixelRampOfSize: length [
 	"Compute the pixel ramp in the receiver."
 	
@@ -35,7 +35,7 @@ InterpolatedGradientFillStyle >> computePixelRampOfSize: length [
 	^bits
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 InterpolatedGradientFillStyle >> interpolatedAlphaMix: ratio of: rgba1 and: rgba2 [
 	"Answer a proper interpolated value between two RGBA color words.
 	Theta is 0..1.."

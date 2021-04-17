@@ -102,7 +102,7 @@ Watch >> initialize [
 { #category : #install }
 Watch >> install [
 
-	node hasWatch ifTrue: [ self error: 'Node already has a watchpoint'].
+	node hasWatch ifTrue: [ self error: 'Node already has a Watchpoint'].
 	
 	link := MetaLink new 
 				metaObject: self;

@@ -5,10 +5,13 @@ Class {
 	#name : #StDebuggerActionModel,
 	#superclass : #Object,
 	#instVars : [
-		'debugger',
 		'session',
 		'contextPredicate',
-		'topContext'
+		'topContext',
+		'filterStack'
+	],
+	#classVars : [
+		'ShouldFilterStack'
 	],
 	#category : #'NewTools-Debugger-Model'
 }
@@ -19,6 +22,27 @@ StDebuggerActionModel class >> on: aDebugSession [
 	^ self basicNew
 		  session: aDebugSession;
 		  initialize
+]
+
+{ #category : #asserting }
+StDebuggerActionModel class >> shouldFilterStack [
+	^ShouldFilterStack ifNil:[ShouldFilterStack := true]
+]
+
+{ #category : #asserting }
+StDebuggerActionModel class >> shouldFilterStack: aBoolean [
+	ShouldFilterStack := aBoolean
+]
+
+{ #category : #settings }
+StDebuggerActionModel class >> shouldFilterStackSettingsOn: aBuilder [
+	<systemsettings>
+	(aBuilder setting: #shouldFilterStack)
+		label: 'Filter the debugger stack';
+		target: self;
+		default: true;
+		parent: #debugging;
+		description: 'Defines if methods with pragma #debuggerCompleteToSender are filtered (hidden) in the debugger stack'
 ]
 
 { #category : #'debug - session' }
@@ -59,13 +83,13 @@ StDebuggerActionModel >> contextPredicate [
 StDebuggerActionModel >> contextPredicateFor: aContext [
 
 	| postMortem ex |
-	
 	postMortem := self isContextPostMortem: aContext.
 
-	(self contextSignalsAnException: aContext) ifFalse:[^ self predicateFor: aContext postMortem: postMortem].
-	
+	(self contextSignalsAnException: aContext) ifFalse: [ 
+		^ self predicateFor: aContext postMortem: postMortem ].
+
 	ex := aContext receiver.
-	((ex isKindOf: TestFailure) ) ifTrue: [ 
+	(ex isKindOf: TestFailure) ifTrue: [ 
 		^ self predicateFor: aContext failure: ex postMortem: postMortem ].
 
 	^ self predicateFor: aContext exception: ex postMortem: postMortem
@@ -74,8 +98,9 @@ StDebuggerActionModel >> contextPredicateFor: aContext [
 { #category : #'debug - predicates' }
 StDebuggerActionModel >> contextSignalsAnException: aContext [
 
-	^ (aContext receiver isKindOf: Exception) and: [ 
-		  aContext selector = #signal ]
+	^ aContext notNil 
+		and: [ (aContext receiver isKindOf: Exception) 
+		and: [  aContext selector = #signal ] ]
 ]
 
 { #category : #'debug - stack' }
@@ -91,9 +116,15 @@ StDebuggerActionModel >> fileOutMethod: aMethod [
 	aMethod methodClass fileOutMethod: aMethod selector
 ]
 
+{ #category : #accessing }
+StDebuggerActionModel >> filterStack [
+	^ filterStack
+]
+
 { #category : #'debug - stack' }
 StDebuggerActionModel >> filterStack: aStack [
 	| context contextsToReject |	
+	self shouldFilterStack ifFalse: [  ^aStack ].
 	context := aStack first.
 	contextsToReject := 0.
 
@@ -127,7 +158,8 @@ StDebuggerActionModel >> implement: aMessage classified: messageCategory inClass
 { #category : #initialize }
 StDebuggerActionModel >> initialize [
 	super initialize.
-	self computeInitialTopContext
+	self computeInitialTopContext.
+	filterStack := true
 ]
 
 { #category : #accessing }
@@ -276,6 +308,12 @@ StDebuggerActionModel >> session: aDebugSession [
 	session := aDebugSession
 ]
 
+{ #category : #'debug - stack' }
+StDebuggerActionModel >> shouldFilterStack [
+
+	^ self filterStack and: [ self class shouldFilterStack ]
+]
+
 { #category : #context }
 StDebuggerActionModel >> statusStringForContext [
 
@@ -284,12 +322,19 @@ StDebuggerActionModel >> statusStringForContext [
 
 { #category : #'debug - stepping' }
 StDebuggerActionModel >> stepInto: aContext [ 
+	filterStack := false.
+	aContext stepIntoQuickMethod: true.
 	self session stepInto: aContext.
-	self updateTopContext
+	self updateTopContext.
+
 ]
 
 { #category : #'debug - stepping' }
 StDebuggerActionModel >> stepOver: aContext [
+	filterStack := (self topContext method hasPragmaNamed:
+		                #debuggerCompleteToSender)
+		               ifTrue: [ false ]
+		               ifFalse: [ self class shouldFilterStack ].
 	self session stepOver: aContext.
 	self updateTopContext
 ]
@@ -314,6 +359,18 @@ StDebuggerActionModel >> updateContextPredicate [
 StDebuggerActionModel >> updateContextPredicateFor: aContext [    
 	contextPredicate := self contextPredicateFor: aContext.
 	^contextPredicate
+]
+
+{ #category : #'debug - session' }
+StDebuggerActionModel >> updateDebugSession [
+	self contextPredicate updateSessionForModel: self 
+		
+]
+
+{ #category : #'debug - session' }
+StDebuggerActionModel >> updateDebugSessionException: e [
+
+	self session exception: e
 ]
 
 { #category : #context }

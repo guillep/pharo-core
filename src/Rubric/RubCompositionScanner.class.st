@@ -158,31 +158,6 @@ RubCompositionScanner >> placeEmbeddedObject: anchoredMorph [
 	^ true
 ]
 
-{ #category : #'multilingual scanning' }
-RubCompositionScanner >> registerBreakableIndex [
-
-	"Record left x and character index of the line-wrappable point. 
-	Used for wrap-around. Answer whether the character has crossed the 
-	right edge of the composition rectangle of the paragraph."
-
-	(text at: lastIndex) = Character space ifTrue: [
-		breakAtSpace := true.
-		spaceX := destX.
-		spaceCount := spaceCount + 1.
-		lineHeightAtBreak := lineHeight.
-		baselineAtBreak := baseline.
-		breakableIndex := lastIndex.
-		destX > rightMargin ifTrue: 	[^self crossedX].
-	] ifFalse: [
-		breakAtSpace := false.
-		lineHeightAtBreak := lineHeight.
-		baselineAtBreak := baseline.
-		breakableIndex := lastIndex - 1.
-	].
-	^ false.
-
-]
-
 { #category : #accessing }
 RubCompositionScanner >> rightX [
 	"Meaningful only when a line has just been composed -- refers to the 

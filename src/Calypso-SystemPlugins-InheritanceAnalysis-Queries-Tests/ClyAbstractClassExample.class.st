@@ -7,17 +7,17 @@ Class {
 	#category : #'Calypso-SystemPlugins-InheritanceAnalysis-Queries-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyAbstractClassExample >> abstractMethod1 [
 	self subclassResponsibility 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyAbstractClassExample >> abstractMethod2 [
 	self subclassResponsibility 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyAbstractClassExample >> overriddenMethod [
 	^#originalValue
 ]

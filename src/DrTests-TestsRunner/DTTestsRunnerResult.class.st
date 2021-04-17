@@ -17,14 +17,14 @@ Class {
 
 { #category : #accessing }
 DTTestsRunnerResult >> backgroundColor [
-	testsResult errors ifNotEmpty: [ ^ DTError backgroundColor ].
-	testsResult failures ifNotEmpty: [ ^ DTFail backgroundColor  ].
-	^ DTPass backgroundColor
+	testsResult errors ifNotEmpty: [ ^ DTErrorResultType backgroundColor ].
+	testsResult failures ifNotEmpty: [ ^ DTFailResultType backgroundColor  ].
+	^ DTPassResultType backgroundColor
 ]
 
 { #category : #'tree building' }
 DTTestsRunnerResult >> buildLeavesFrom: aCollection type: testResultType [
-	^ aCollection collect: [ :t | DTTestLeaf content: t type: testResultType ]
+	^ aCollection collect: [ :t | DTTestLeafNode content: t type: testResultType ]
 ]
 
 { #category : #'tree building' }
@@ -145,7 +145,7 @@ DTTestsRunnerResult >> testResults: anObject [
 
 { #category : #accessing }
 DTTestsRunnerResult >> textColor [
-	testsResult errors ifNotEmpty: [ ^ DTError textColor ].
-	testsResult failures ifNotEmpty: [ ^ DTFail textColor  ].
-	^ DTPass textColor
+	testsResult errors ifNotEmpty: [ ^ DTErrorResultType textColor ].
+	testsResult failures ifNotEmpty: [ ^ DTFailResultType textColor  ].
+	^ DTPassResultType textColor
 ]

@@ -265,6 +265,16 @@ ContextTest >> testStepIntoQuickMethodBoolean [
 ]
 
 { #category : #tests }
+ContextTest >> testStepIntoQuickMethodInCompiledBlock [
+
+	|newContext|
+	newContext := [ ] asContext.
+	self deny: newContext method stepIntoQuickMethods.
+	newContext stepIntoQuickMethod: true.
+	self deny: newContext method stepIntoQuickMethods
+]
+
+{ #category : #tests }
 ContextTest >> testStepIntoReturnSelfMethod [
 
 	|newContext quickMethod|

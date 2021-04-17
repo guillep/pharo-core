@@ -1,12 +1,15 @@
 "
-This simple example generates 2 cases. Exactly the 2 cases listed in testParameters
+This simple example generates 2 cases. Exactly the 2 cases listed in `PaSelectedCasesExampleTest class >>#testParameters` class method.
 
+
+
+```
 PaSelectedCasesExampleTest class >> testParameters
-
 	^ ParametrizedTestMatrix new
 		addCase: { #number1 -> 2. #number2 -> 1.0. #result -> 3 };
 		addCase: { #number1 -> (2/3). #number2 -> (1/3). #result -> 1 };
 		yourself
+```
 "
 Class {
 	#name : #PaSelectedCasesExampleTest,

@@ -29,13 +29,13 @@ OCScopesCollector >> scopes [
 	^scopes
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 OCScopesCollector >> visitBlockNode: aBlockNode [
 	scopes add: aBlockNode owningScope.
 	super visitBlockNode: aBlockNode
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visiting }
 OCScopesCollector >> visitMethodNode: aMethodNode [
 	scopes add: aMethodNode owningScope.
 	super visitMethodNode: aMethodNode

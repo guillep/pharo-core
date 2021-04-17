@@ -28,7 +28,7 @@ PRMetadata >> initialize [
 	metadata := Dictionary new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 PRMetadata >> metaData [
 	^ metadata
 ]

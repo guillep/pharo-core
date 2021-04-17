@@ -49,7 +49,7 @@ Morph >> gtInspectorMorphIn: composite [
 				to:
 					[ :event | morphPresentation selection: (self morphsAt: event position) ] ]
 				on: Error
-				do: [ IconicListItem
+				do: [ IconicListItemMorph
 						text: 'Error drawing Morph'
 						icon: (self iconNamed: #smallWarningIcon) ] ];
 		act: [ :pres | self exportAsPNG ] entitled: 'Export as PNG';

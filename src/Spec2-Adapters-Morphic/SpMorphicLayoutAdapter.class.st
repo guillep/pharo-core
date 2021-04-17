@@ -67,8 +67,8 @@ SpMorphicLayoutAdapter >> basicAdd: aPresenter constraints: constraints to: aPan
 
 { #category : #private }
 SpMorphicLayoutAdapter >> buildMorph: aPresenter constraints: constraints [ 
-
 	| childMorph |
+	
 	childMorph := aPresenter buildWithSpec: constraints spec.
 	self applyStyle: aPresenter to: childMorph.
 	"Add children alignment constraints (if applies)"
@@ -117,7 +117,8 @@ SpMorphicLayoutAdapter >> layout: aLayout [
 
 	"Basic apply visibility to the widget.
 	This call is here because layouts and widgets work differently"
-	self applyVisibility
+	self applyVisibility.
+	self applyStyle
 ]
 
 { #category : #factory }

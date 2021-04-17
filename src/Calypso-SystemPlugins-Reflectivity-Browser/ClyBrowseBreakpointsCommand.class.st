@@ -38,7 +38,7 @@ ClyBrowseBreakpointsCommand >> defaultMenuItemName [
 { #category : #accessing }
 ClyBrowseBreakpointsCommand >> description [
 
-	^'Open browser with methods where halts or breakpoints are installed'
+	^'Open browser with methods where Halts or Breakpoints are installed'
 ]
 
 { #category : #execution }

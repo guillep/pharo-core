@@ -1,5 +1,8 @@
 "
-A structure that contains information about the version of SDL in use. 
+A structure that contains information about the version of SDL in use.
+
+See:
+https://wiki.libsdl.org/SDL_version
 "
 Class {
 	#name : #'SDL_Version',
@@ -63,4 +66,27 @@ SDL_Version >> patch [
 SDL_Version >> patch: anObject [
 	"This method was automatically generated"
 	handle unsignedByteAt: OFFSET_PATCH put: anObject
+]
+
+{ #category : #printing }
+SDL_Version >> printAsSemanticVersioningOn: aStream [
+	"Print in format MAJOR.MINOR.PATCH."
+
+	aStream
+		print: self major;
+		nextPut: $.;
+		print: self minor;
+		nextPut: $.;
+		print: self patch
+
+]
+
+{ #category : #printing }
+SDL_Version >> printOn: aStream [
+	"Append a sequence of characters to aStream that identify the receiver."
+
+	super printOn: aStream.
+	aStream nextPut: $(.
+	self printAsSemanticVersioningOn: aStream.
+	aStream nextPut: $)
 ]

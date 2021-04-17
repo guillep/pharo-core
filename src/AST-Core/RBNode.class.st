@@ -16,6 +16,12 @@ Class {
 	#category : #'AST-Core-Nodes'
 }
 
+{ #category : #testing }
+RBNode class >> isAbstract [
+
+	^ self == RBNode
+]
+
 { #category : #visiting }
 RBNode >> acceptVisitor: aProgramNodeVisitor [
 	self subclassResponsibility

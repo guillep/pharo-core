@@ -74,13 +74,6 @@ StRawInspection >> hasOutputActivationPort [
 ]
 
 { #category : #initialization }
-StRawInspection >> initialize [ 
-
-	super initialize.
-	
-]
-
-{ #category : #initialization }
 StRawInspection >> initializePresenters [
 
 	attributeTable := self newTreeTable
@@ -94,6 +87,7 @@ StRawInspection >> initializePresenters [
 
 { #category : #accessing }
 StRawInspection >> inspectorNodes [
+
 	^ self model allInspectorNodes
 ]
 
@@ -178,7 +172,7 @@ StRawInspection >> valuesColumn [
 	^ SpStringTableColumn new
 		title: 'Value';
 		evaluated: #stringValue;
-		beEditable;
+		"beEditable;"
 		onAcceptEdition: [ :node :value | 
 			self inform: node label , '=' , value asString	"node value: value" ];
 		sortFunction: #stringValue ascending;

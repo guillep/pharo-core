@@ -7,7 +7,7 @@ Class {
 	#category : #'Kernel-Layout'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 EphemeronLayout class >> extending: superLayout scope: aScope host: aClass [ 
 	
 	^ (superLayout extendEphemeron: aScope)

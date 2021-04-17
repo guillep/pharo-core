@@ -55,22 +55,3 @@ SpCheckBoxTableColumn >> onDeactivation: aBlock [
 
 	onDeactivation := aBlock
 ]
-
-{ #category : #generated }
-SpCheckBoxTableColumn >> onDesactivation [
-
-	self
-		deprecated: 'Use #onDeactivation instead'
-		transformWith: '`@rec onDesactivation' -> '`@rec onDeactivation'.
-	^ self onDeactivation
-]
-
-{ #category : #generated }
-SpCheckBoxTableColumn >> onDesactivation: anObject [
-
-	self
-		deprecated: 'Use #onDeactivation: instead'
-		transformWith:
-		'`@rec onDesactivation: `@arg' -> '`@rec onDeactivation: `@arg'.
-	^ self onDeactivation: anObject
-]

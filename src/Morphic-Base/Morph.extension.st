@@ -117,7 +117,7 @@ Morph >> borderColor: aColorOrSymbolOrNil [
 
 	aColorOrSymbolOrNil isColor
 		ifTrue: [style style = #none "default border?"
-				ifTrue: [self borderStyle: (SimpleBorder width: 0 color: aColorOrSymbolOrNil)]
+				ifTrue: [self borderStyle: (SimpleBorderStyle width: 0 color: aColorOrSymbolOrNil)]
 				ifFalse: [style baseColor: aColorOrSymbolOrNil.
 					self changed].
 			^ self].
@@ -143,7 +143,7 @@ Morph >> borderWidth: aNumber [
 	style width = aNumber ifTrue: [ ^self ].
 
 	style style = #none
-		ifTrue: [ self borderStyle: (SimpleBorder width: aNumber color: Color transparent) ]
+		ifTrue: [ self borderStyle: (SimpleBorderStyle width: aNumber color: Color transparent) ]
 		ifFalse: [ style width: aNumber. self changed ].
 
 ]

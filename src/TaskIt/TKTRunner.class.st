@@ -45,3 +45,9 @@ Class {
 	#classTraits : 'TTaskScheduler classTrait',
 	#category : #'TaskIt-Kernel'
 }
+
+{ #category : #testing }
+TKTRunner class >> isAbstract [
+
+	^self == TKTRunner 
+]

@@ -79,6 +79,24 @@ SpTreeTableAdapterSingleSelectionTest >> testSelectPresenterWithoutScrollingDoes
 		equals: visibleItems
 ]
 
+{ #category : #tests }
+SpTreeTableAdapterSingleSelectionTest >> testSelectWhenSortedTransmitsCorrectElement [
+	| item |
+	
+	presenter columns first beSortable.
+	presenter whenSelectionChangedDo: [ :selection | item := selection selectedItem ].	
+	self openInstance.
+	presenter clickAtPath: #(1).
+	self assert: item equals: 10.
+	"ascending (no change)"
+	presenter adapter sortByColumn: presenter columns first. 
+	"desscending (inverses numbers, there will be a change)"
+	presenter adapter sortByColumn: presenter columns first.
+	"click last element, since they are inversed, it will be the same as before"
+	presenter clickAtPath: #(3).
+	self assert: item equals: 10
+]
+
 { #category : #'tests-model-to-widget' }
 SpTreeTableAdapterSingleSelectionTest >> testSelectWidgetIndexRaisesSelectionIndexChangeEventOnce [
 	| counter |

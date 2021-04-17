@@ -99,7 +99,7 @@ FTBasicTreeListItem >> datasource: aDS [
 { #category : #button }
 FTBasicTreeListItem >> defaultButton [
 
-	^IconicButton new
+	^IconicButtonMorph new
 		target: self;
 		color: Color transparent;
 		borderWidth: 0;

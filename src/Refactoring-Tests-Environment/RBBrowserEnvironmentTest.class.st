@@ -8,8 +8,8 @@ Class {
 		'universalEnvironment'
 	],
 	#classVars : [
-		'ClassSideOnlyVariable',
-		'ClassVariable'
+		'AClassVariable',
+		'ClassSideOnlyVariable'
 	],
 	#category : #'Refactoring-Tests-Environment'
 }
@@ -55,12 +55,12 @@ RBBrowserEnvironmentTest >> classNamesFor: anEnvironment [
 
 { #category : #mockup }
 RBBrowserEnvironmentTest >> classVariableReader [
-	^ ClassVariable
+	^ AClassVariable
 ]
 
 { #category : #mockup }
 RBBrowserEnvironmentTest >> classVariableWriter [
-	ClassVariable := nil
+	AClassVariable := nil
 ]
 
 { #category : #private }
@@ -450,10 +450,10 @@ RBBrowserEnvironmentTest >> testVariableEnvironmentAddRemove [
 	refs removeClass: self class instanceVariableWriter: 'universalEnvironment'.
 	self assert: refs numberSelectors equals: 0.
 	self assert: refs numberClasses equals: 0.
-	refs addClass: self class classVariable: 'ClassVariable'.
+	refs addClass: self class classVariable: 'AClassVariable'.
 	self assert: refs numberSelectors > 0.
 	self assert: refs numberClasses equals: 1.
-	refs removeClass: self class classVariable: 'ClassVariable'.
+	refs removeClass: self class classVariable: 'AClassVariable'.
 	self assert: refs numberSelectors equals: 0.
 	self assert: refs numberClasses equals: 0
 	
@@ -485,7 +485,7 @@ RBBrowserEnvironmentTest >> testVariableEnvironmentInstVars [
 		readersOfInstanceVariable: 'universalEnvironment'
 		in: self class.
 	classRefs := RBVariableEnvironment
-		referencesToClassVariable: 'ClassVariable'
+		referencesToClassVariable: 'AClassVariable'
 		in: self class.
 	self universalTestFor: refs.
 	self universalTestFor: writers.

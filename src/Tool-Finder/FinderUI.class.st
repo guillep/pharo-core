@@ -975,11 +975,11 @@ FinderUI >> sourceCode [
 				ifNil: [
 					self buildDescriptionOf: self selectedClass]
 				ifNotNil:[
-					| method |
-					method := self isExamplesSymbol
-								ifTrue: [self finder findSelector: self selectedMethod]
+					| selector |
+					selector := self isExamplesSymbol
+								ifTrue: [self selectedMethod selector]
 								ifFalse: [self selectedMethod].
-					(self selectedClass >> method) sourceCode]]
+					(self selectedClass >> selector) sourceCode]]
 ]
 
 { #category : #accessing }

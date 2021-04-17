@@ -763,11 +763,9 @@ Object >> deprecated: anExplanationString transformWith: aRule when: conditionBl
 
 { #category : #displaying }
 Object >> displayString [
-	"While printString is about to give a detailled information about an object, displayString is a message that should return a short string-based representation to be used by list and related UI frameworks. By default, simply return printString.
-	Subclasses should not override this method 
-	but instead stream based method #displayStringOn:"
+	"While printString is about to give a detailled information about an object, displayString is a message that should return a short string-based representation to be used by list and related UI frameworks. By default, simply return printString. Subclasses should not override this method but instead stream based method #displayStringOn:"
 	
-	^ self displayStringLimitedTo: 50000
+	^ self displayStringLimitedTo: 1000
 ]
 
 { #category : #displaying }

@@ -49,7 +49,6 @@ RBRemoveClassChange >> changeString [
 { #category : #printing }
 RBRemoveClassChange >> initialize [ 
 	super initialize.
-	onSystemDictionary ifNil: [ onSystemDictionary := Smalltalk globals ].
 	changeFactory := RBRefactoryChangeManager changeFactory
 ]
 

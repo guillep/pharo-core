@@ -5,6 +5,6 @@ Trait {
 	#category : #'Calypso-SystemPlugins-Traits-Queries-Tests-PWithTraits'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ClyTraitChild2 >> methodFromTraitChild2 [
 ]

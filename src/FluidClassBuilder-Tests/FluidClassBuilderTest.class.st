@@ -86,7 +86,7 @@ FluidClassBuilderTest >> testBuilderSharedVariables [
 { #category : #'tests - gathering' }
 FluidClassBuilderTest >> testBuilderTraits [
 	
-	builder uses: TViewModelMock.
+	builder trait: TViewModelMock.
 	self assert: builder traitsToBuild equals: TViewModelMock.
 	builder fillShiftClassBuilder 
 ]
@@ -94,7 +94,7 @@ FluidClassBuilderTest >> testBuilderTraits [
 { #category : #'tests - gathering' }
 FluidClassBuilderTest >> testBuilderTraitsClass [
 	
-	builder uses: TViewModelMock class.
+	builder trait: TViewModelMock class.
 	self assert: builder traitsToBuild equals: TViewModelMock class.
 	builder fillShiftClassBuilder 
 ]
@@ -102,7 +102,7 @@ FluidClassBuilderTest >> testBuilderTraitsClass [
 { #category : #'tests - gathering' }
 FluidClassBuilderTest >> testBuilderTraitsWithComposition [
 	
-	builder uses: TViewModelMock + TViewModelMock2.
+	builder trait: TViewModelMock + TViewModelMock2.
 	self assert: builder traitsToBuild equals: TViewModelMock + TViewModelMock2.
 	builder fillShiftClassBuilder
 ]

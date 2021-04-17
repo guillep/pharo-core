@@ -23,8 +23,19 @@ RBPullUpMethodTest >> addClassHierarchyForPools [
 	model 
 		defineClass: 'Object subclass: #TotoSuperclass instanceVariableNames: '''' classVariableNames: '''' poolDictionaries: '''' category: #''Refactory-Test data'''.
 	model 
-		defineClass: 'TotoSuperclass subclass: #Toto instanceVariableNames: '''' classVariableNames: '''' poolDictionaries: '''' category: #''Refactory-Test data'''.
+		defineClass: 'TotoSuperclass subclass: #Toto instanceVariableNames: '''' classVariableNames: '''' poolDictionaries: ''TotoSharedPool'' category: #''Refactory-Test data'''.
 	(model classNamed: #Toto) compile: 'poolReference ^ SP' classified: #(#accessing).
+]
+
+{ #category : #'failure tests' }
+RBPullUpMethodTest >> testDoesntPullUpReferencesInstVar [
+	| refactoring class |
+	class := model classNamed: ('RBTransformation', 'RuleTestData1') asSymbol.
+	refactoring := RBPullUpMethodRefactoring 
+			model: model
+			pullUp: #(#foo )
+			from: class.
+	[ self shouldFail: refactoring ] valueSupplyingAnswer: false.
 ]
 
 { #category : #tests }
@@ -104,21 +115,31 @@ RBPullUpMethodTest >> testPullUpMethodWithSharedPool [
 	self addClassHierarchyForPools.
 	class := model classNamed: #Toto.
 	superClass := model classNamed: #TotoSuperclass.
-	self executeRefactoring: (RBPullUpMethodRefactoring 
+	self proceedThroughWarning: [ self executeRefactoring: (RBPullUpMethodRefactoring 
 				model: model
 				pullUp: #(#poolReference)
 				from: class 
-				to: superClass ).
+				to: superClass) ].
 	self assert: (superClass parseTreeFor: #poolReference) 
 				equals: (self parseMethod: 'poolReference ^ SP').
 	self deny: (class directlyDefinesMethod: #poolReference).
 ]
 
-{ #category : #'failure tests' }
+{ #category : #tests }
 RBPullUpMethodTest >> testPullUpReferencesInstVar [
-	self shouldFail: (RBPullUpMethodRefactoring 
-			pullUp: #(#checkClass: )
-			from: RBBasicLintRuleTestData)
+	| refactoring class superClass |
+	class := model classNamed: ('RBTransformation', 'RuleTestData1') asSymbol.
+	refactoring := RBPullUpMethodRefactoring 
+			model: model
+			pullUp: #(#foo )
+			from: class.
+	[ self executeRefactoring: refactoring ] valueSupplyingAnswer: true.
+	superClass := model classNamed: ('RBFooLint', 'RuleTestData1') asSymbol.
+	self assert: (superClass parseTreeFor: #foo) 
+				equals: (self parseMethod: 'foo ^ foo').
+	self assert: (superClass directlyDefinesInstanceVariable: #foo).
+	self deny: (class directlyDefinesMethod: #foo).
+	self deny: (class directlyDefinesInstanceVariable: #foo).
 ]
 
 { #category : #'failure tests' }

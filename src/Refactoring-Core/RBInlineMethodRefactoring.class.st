@@ -74,6 +74,7 @@ RBInlineMethodRefactoring >> checkSuperMessages [
 
 { #category : #transforming }
 RBInlineMethodRefactoring >> compileMethod [
+
 	class compileTree: sourceParseTree
 ]
 
@@ -129,6 +130,11 @@ RBInlineMethodRefactoring >> inlineClass [
 		ifNotNil: [ inlineClass ]
 ]
 
+{ #category : #accessing }
+RBInlineMethodRefactoring >> inlineParseTree [
+	^ inlineParseTree
+]
+
 { #category : #transforming }
 RBInlineMethodRefactoring >> inlineSelector [
 
@@ -157,6 +163,7 @@ RBInlineMethodRefactoring >> inlineSourceReplacing: aParseTree [
 { #category : #transforming }
 RBInlineMethodRefactoring >> insertInlinedMethod [
 	| node |
+
 	node := sourceMessage.
 	self moveComments.
 	node parent isCascade 
@@ -386,6 +393,7 @@ RBInlineMethodRefactoring >> replaceArguments [
 { #category : #transforming }
 RBInlineMethodRefactoring >> rewriteCascadedMessage [
 	| index messages |
+	
 	messages := sourceMessage parent messages.
 	index := (1 to: messages size) 
 				detect: [:i | sourceMessage == (messages at: i)]
@@ -398,7 +406,7 @@ RBInlineMethodRefactoring >> rewriteCascadedMessage [
 ]
 
 { #category : #transforming }
-RBInlineMethodRefactoring >> rewriteInlinedTree [
+RBInlineMethodRefactoring >> rewriteInlinedTree [ 
 	sourceMessage parent isReturn 
 		ifTrue: 
 			[(sourceParseTree isLast: sourceMessage parent) 
@@ -446,6 +454,6 @@ RBInlineMethodRefactoring >> writeGuardClauses [
 			with: '`@methodName: `@args | `@temps | `@.s1. `@boolean ifTrue: [| `@t1 | `@.Stmts1. ^`@r1] ifFalse: [`@.s2. ^self]';
 		replaceMethod: '`@methodName: `@args | `@temps | `@.s1. `@boolean ifFalse: [| `@t1 | `@.Stmts1. ^`@r1]. `@.s2'
 			with: '`@methodName: `@args | `@temps | `@.s1. `@boolean ifTrue: [`@.s2. ^self] ifFalse: [| `@t1 | `@.Stmts1. ^`@r1]'.
-	[rewriter executeTree: inlineParseTree] 
+	[rewriter executeTree: self inlineParseTree] 
 		whileTrue: [inlineParseTree := rewriter tree]
 ]

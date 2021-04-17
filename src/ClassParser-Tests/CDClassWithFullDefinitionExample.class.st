@@ -29,6 +29,16 @@ CDClassWithFullDefinitionExample class >> classSideVar2 [
 ]
 
 { #category : #accessing }
+CDClassWithFullDefinitionExample >> classVar1 [
+	^ClassVar1
+]
+
+{ #category : #accessing }
+CDClassWithFullDefinitionExample >> classVar2 [
+	^ClassVar2
+]
+
+{ #category : #accessing }
 CDClassWithFullDefinitionExample >> instVar1 [
 
 	^ instVar1

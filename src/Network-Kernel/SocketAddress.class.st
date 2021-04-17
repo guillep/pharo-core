@@ -60,6 +60,13 @@ SocketAddress >> asSocketAddress [
 
 ]
 
+{ #category : #printing }
+SocketAddress >> displayStringOn: stream [
+	"Overwrite to get standard object behaviour"
+	
+	^ self printOn: stream
+]
+
 { #category : #testing }
 SocketAddress >> isPrivateAddress [
 	^ self first = 10

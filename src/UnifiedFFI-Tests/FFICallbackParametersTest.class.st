@@ -7,9 +7,6 @@ Class {
 	#instVars : [
 		'callback'
 	],
-	#classVars : [
-		'ARRAY'
-	],
 	#pools : [
 		'FFITestEnumeration'
 	],

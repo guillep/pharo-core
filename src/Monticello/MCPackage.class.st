@@ -30,6 +30,11 @@ MCPackage >> correspondingRPackage [
 	^ RPackageOrganizer default packageNamed: self name asSymbol ifAbsent: [ nil ]
 ]
 
+{ #category : #printing }
+MCPackage >> displayStringOn: aStream [
+	aStream nextPutAll: self name
+]
+
 { #category : #'working copies' }
 MCPackage >> hasWorkingCopy [
 	^ MCWorkingCopy registry includesKey: self

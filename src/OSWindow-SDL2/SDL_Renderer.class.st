@@ -40,8 +40,12 @@ SDL_Renderer >> copy: texture srcRect: srcRect dstRect: dstRect [
 
 { #category : #rendering }
 SDL_Renderer >> createTextureFormat: format access: access width: width height: height [
-	
-	^(self primCreateTextureFormat: format access: access width: width height: height) initialize.
+
+	^ self
+		  primCreateTextureFormat: format
+		  access: access
+		  width: width
+		  height: height
 ]
 
 { #category : #initialization }

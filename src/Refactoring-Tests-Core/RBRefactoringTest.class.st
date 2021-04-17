@@ -139,7 +139,7 @@ m
 { #category : #private }
 RBRefactoringTest >> extractMethodTestData [
 	| newModel classEnvironment classes |
-	classes := #(#MyClassA #MyClassB #MyClassC) 
+	classes := #(#MyClassA #MyClassB ) 
 		inject: OrderedCollection new 
 		into: [ :sum :each | 
 			testingEnvironment at: each ifPresent: [ :class | 
@@ -174,6 +174,8 @@ RBRefactoringTest >> extractMethodTestData [
 			^ ''SomeString''' #tests)
 		#('methodWithArg: anArg
 			^ anArg not' #tests) 
+		#('methodWithArg: anArg1 andArg: anArg2
+			^ (anArg1 > anArg2) not' #tests) 
 		#('problemCount
 			^ 435' #tests)
 		#('string: aString stream: aStream
@@ -205,6 +207,8 @@ RBRefactoringTest >> extractMethodTestData [
 			^ instVarName2 := 3' #tests)
 		#('exampleMethod
 			^ (currentChar isLetter) not' #tests) 
+		#('dummyMethod
+			(3 > self someMethod) not' #tests)
 		#('anotherMethod
 			|aStream|
 			aStream := WriteStream on: (String new: 128).
@@ -444,6 +448,15 @@ RBRefactoringTest >> setUp [
 ]
 
 { #category : #'set up' }
+RBRefactoringTest >> setupExtractionClassFor: aRefactoring toReturn: aClass [ 
+	| options |
+	options := aRefactoring options copy.
+	options at: #extractionClass
+		put: [:ref | aClass].
+	aRefactoring options: options
+]
+
+{ #category : #'set up' }
 RBRefactoringTest >> setupImplementorToInlineFor: aRefactoring toReturn: anObject [ 
 	| options |
 	options := aRefactoring options copy.
@@ -490,7 +503,7 @@ RBRefactoringTest >> setupMethodNameFor: aRefactoring toReturn: aSelector withAr
 RBRefactoringTest >> setupSearchInAllHierarchyFor: aRefactoring toReturn: aBoolean [ 
 	| options |
 	options := aRefactoring options copy.
-	options at: #searchInAllHierarchy put: [aBoolean ].
+	options at: #searchInWholeHierarchy put: [ :ref :cls | aBoolean ].
 	aRefactoring options: options
 ]
 

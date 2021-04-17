@@ -54,11 +54,6 @@ ClySystemBrowserContext >> confirmUnusedClasses: variables [
 ]
 
 { #category : #'user requests' }
-ClySystemBrowserContext >> confirmUnusedClassesExceptInheritance: variables [
-	^tool confirmUnusedClassesExceptInheritance: variables
-]
-
-{ #category : #'user requests' }
 ClySystemBrowserContext >> confirmUnusedVariables: variables [
 	^tool confirmUnusedVariables: variables
 ]
@@ -172,6 +167,14 @@ ClySystemBrowserContext >> refactoringScopes [
 ]
 
 { #category : #'user requests' }
+ClySystemBrowserContext >> requestMultiplePackages: queryTitle [
+
+	^ tool searchDialog 
+		requestMultipleObjects: queryTitle 
+		from: ClyAllPackagesQuery sorted
+]
+
+{ #category : #'user requests' }
 ClySystemBrowserContext >> requestMultipleVariables: queryTitle from: classes [
 
 	^tool searchDialog 
@@ -181,8 +184,22 @@ ClySystemBrowserContext >> requestMultipleVariables: queryTitle from: classes [
 ]
 
 { #category : #'user requests' }
+ClySystemBrowserContext >> requestRemoveClassStrategyFor: classes [
+	^tool requestRemoveClassStrategyFor: classes
+]
+
+{ #category : #'user requests' }
 ClySystemBrowserContext >> requestRemoveMethodStrategyFor: methods [
 	^tool requestRemoveMethodStrategyFor: methods
+]
+
+{ #category : #'user requests' }
+ClySystemBrowserContext >> requestSimpleVariable: queryTitle from: classes [
+
+	^tool searchDialog 
+		requestSingleObject: queryTitle 
+		from: ClyAllInstanceVariablesQuery sorted
+		inScope: (ClyClassScope ofAll: classes) withInheritedScope
 ]
 
 { #category : #'user requests' }

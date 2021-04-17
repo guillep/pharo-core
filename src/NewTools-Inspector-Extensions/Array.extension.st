@@ -1,7 +1,7 @@
 Extension { #name : #Array }
 
 { #category : #'*NewTools-Inspector-Extensions' }
-Array >> gtDisplayString [
+Array >> displayString [
 
-	^ super gtDisplayString contractTo: 200
+	^ super displayString contractTo: 200
 ]

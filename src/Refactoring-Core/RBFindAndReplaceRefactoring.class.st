@@ -1,7 +1,45 @@
 "
-I am a refactoring for find occurrences of a method in owner class and in all hierarchy if apply.
+I am a refactoring for find occurrences of a method in owner class and in the whole hierarchy if apply.
 
-My precondition verifies that the method exists in specified class, and if occurrences are searched in hierarchy this method should not overwritten in hierarchy.
+My precondition verifies that the method exists in specified class, and if occurrences are found in hierarchy this method should not overwritten in hierarchy.
+
+Example script
+----------------
+
+```
+(RBFindAndReplaceRefactoring 
+find: #methodWithArg:andArg: 
+of: MyClassA 
+inWholeHierarchy: true) execute.
+```
+Before refactoring:
+```
+Object subclass: #MyClassA
+	instanceVariableNames: ''
+	classVariableNames: ''
+	category: 'Testing'
+
+MyClassA >> methodWithArg: anArg1 andArg: anArg2
+	^ (anArg1 > anArg2) not	
+
+MyClassA subclass: #MyClassB
+	instanceVariableNames: ''
+	classVariableNames: ''
+	category: 'Testing'
+	
+MyClassB >> someMethod
+	^  3
+	
+MyClassB >> dummyMethod
+	(3 > self someMethod) not
+```
+
+After refactoring:
+
+```
+MyClassB >> dummyMethod 
+	self methodWithArg: 3 andArg: self someMethod
+```
 "
 Class {
 	#name : #RBFindAndReplaceRefactoring,
@@ -17,21 +55,21 @@ Class {
 }
 
 { #category : #'instance creation' }
-RBFindAndReplaceRefactoring class >> find: aMethod of: aClass inAllHierarchy: aBoolean [
+RBFindAndReplaceRefactoring class >> find: aMethod of: aClass inWholeHierarchy: aBoolean [
 	^ self new 
 		find: aMethod 
 		of: aClass
-		inAllHierarchy: aBoolean;
+		inWholeHierarchy: aBoolean;
 		yourself
 ]
 
 { #category : #'instance creation' }
-RBFindAndReplaceRefactoring class >> model: aModel find: aMethod of: aClass inAllHierarchy: aBoolean [
+RBFindAndReplaceRefactoring class >> model: aModel find: aMethod of: aClass inWholeHierarchy: aBoolean [
 	^ self new
 		model: aModel; 
 		find: aMethod 
 		of: aClass
-		inAllHierarchy: aBoolean;
+		inWholeHierarchy: aBoolean;
 		yourself
 ]
 
@@ -72,7 +110,7 @@ RBFindAndReplaceRefactoring >> extractMethodRefactoring [
 ]
 
 { #category : #initialization }
-RBFindAndReplaceRefactoring >> find: aSelector of: aClass inAllHierarchy: aBoolean [
+RBFindAndReplaceRefactoring >> find: aSelector of: aClass inWholeHierarchy: aBoolean [
 	class := self classObjectFor: aClass.
 	selector := aSelector.
 	replacesAllHierarchy := aBoolean.
@@ -123,23 +161,36 @@ RBFindAndReplaceRefactoring >> initialize [
 
 { #category : #accessing }
 RBFindAndReplaceRefactoring >> matchNodes [
-	^ matchNodes ifNil: [ |visitor node sourceCode|
-		visitor := RBMatchVisitor new.
-		node := self method ast copy .
-		node acceptVisitor: visitor.
-		sourceCode := self replaceArgumentsByPattern: node newSource .
-		sourceCode := sourceCode copyFrom: (self method ast body statements first start + visitor difference) to: sourceCode size.
-		matchNodes := OrderedCollection new.
-		matchNodes add: (self patternParserClass parseExpression: sourceCode).
-		node lastIsReturn ifTrue: [  node hasMultipleReturns 
-		ifFalse: [ sourceCode := sourceCode copyReplaceAll: '^' with:  ''.
-		matchNodes add: (self patternParserClass parseExpression: sourceCode) ] ].
-		matchNodes]
+
+	^ matchNodes ifNil: [ 
+		  | visitor node sourceCode |
+		  visitor := RBMatchVisitor new.
+		  node := self methodNode.
+		  node acceptVisitor: visitor.
+		  sourceCode := self replaceArgumentsByPattern: node newSource.
+		  sourceCode := sourceCode
+			                copyFrom: (self startLimitOf: sourceCode) + visitor difference
+			                to: sourceCode size.
+		  matchNodes := OrderedCollection new.
+		  matchNodes add:
+			  (self patternParserClass parseExpression: sourceCode).
+		  node lastIsReturn ifTrue: [ 
+			  node hasMultipleReturns ifFalse: [ 
+				  sourceCode := sourceCode copyReplaceAll: '^' with: ''.
+				  matchNodes add:
+					  (self patternParserClass parseExpression: sourceCode) ] ].
+		  matchNodes ]
 ]
 
 { #category : #accessing }
 RBFindAndReplaceRefactoring >> method [
 	^ method ifNil: [ method := class methodFor: selector ]
+]
+
+{ #category : #accessing }
+RBFindAndReplaceRefactoring >> methodNode [
+
+	^ self method ast copy
 ]
 
 { #category : #accessing }
@@ -159,7 +210,9 @@ RBFindAndReplaceRefactoring >> patternParserClass [
 { #category : #preconditions }
 RBFindAndReplaceRefactoring >> preconditions [
 
-	| condition |
+	| condition rbMethod |
+
+	rbMethod := class methodFor: selector.
 	condition := (RBCondition definesSelector: selector in: class)
 	             & (replacesAllHierarchy
 			              ifFalse: [ self emptyCondition ]
@@ -169,7 +222,7 @@ RBFindAndReplaceRefactoring >> preconditions [
 					              into: [ :cond :aClass | 
 						              cond
 						              &
-						              (RBCondition definesSelector: selector in: aClass)
+						              (RBCondition definesSelector: selector in: aClass orIsSimilarTo: rbMethod)
 							              not ] ]).
 	^ condition
 ]
@@ -181,6 +234,16 @@ RBFindAndReplaceRefactoring >> replaceArgumentsByPattern: sourceCode [
 	newSource := newSource copyWithRegex: 'argMatch*' matchesReplacedWith: '`@argMatch'.
 	^ newSource 
 	
+]
+
+{ #category : #preconditions }
+RBFindAndReplaceRefactoring >> selectorsFor: cls [
+	^ cls selectors copyWithout: selector
+]
+
+{ #category : #accessing }
+RBFindAndReplaceRefactoring >> startLimitOf: sourceCode [
+	^ self method ast body statements first start
 ]
 
 { #category : #printing }
@@ -199,9 +262,8 @@ RBFindAndReplaceRefactoring >> storeOn: aStream [
 { #category : #preconditions }
 RBFindAndReplaceRefactoring >> transform [
 	|classes|
-	
 	classes :=replacesAllHierarchy ifFalse: [ { class } ] ifTrue: [ class withAllSubclasses ].
-	classes do: [ :cls | (cls selectors copyWithout: selector) do: [ :sel | |rbMethod|
+	classes do: [ :cls | (self selectorsFor: cls) do: [ :sel | |rbMethod|
 		rbMethod := cls methodFor: sel.
 		self findAndReplaceOccurrencesIn: rbMethod] ].
 	self inform: occurrences asString, ' occurrences were found and changed.'

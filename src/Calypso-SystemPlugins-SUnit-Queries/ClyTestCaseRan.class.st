@@ -21,7 +21,7 @@ ClyTestCaseRan class >> testCase: aClass [
 		testCase: aClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ClyTestCaseRan >> affectsCritiques [
 	"It should be packages in critic plugin package 
 	but for such simple message we can not do it"

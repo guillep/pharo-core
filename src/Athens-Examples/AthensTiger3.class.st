@@ -12,7 +12,7 @@ Class {
 	#category : #'Athens-Examples-Utilities'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 AthensTiger3 >> draw [
 	surface drawDuring: [ :canvas | 
 		canvas pathTransform loadIdentity.

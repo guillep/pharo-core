@@ -34,15 +34,14 @@ Class {
 
 { #category : #specs }
 RBFindAndReplacePreviewPresenter class >> defaultSpec [
-	^ SpBoxLayout newVertical
+	^ SpBoxLayout newTopToBottom
 		add: #label withConstraints: [ :c | c height: self labelHeight ];
 		add:
-			(SpBoxLayout newHorizontal
+			(SpBoxLayout newLeftToRight
 				add: #changeList;
 				yourself);
 		add: #dropList withConstraints: [ :constraints | constraints height: self toolbarHeight ];
 		yourself.
-		
 ]
 
 { #category : #specs }

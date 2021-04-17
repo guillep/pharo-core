@@ -48,7 +48,7 @@ SycRemoveMethodCommand >> initialize [
 SycRemoveMethodCommand >> prepareFullExecutionInContext: aToolContext [
 	super prepareFullExecutionInContext: aToolContext.
 	
-	removeStrategy := aToolContext requestRemoveMethodStrategyFor: methods
+	removeStrategy := aToolContext requestRemoveMethodStrategyFor: methods.
 ]
 
 { #category : #accessing }

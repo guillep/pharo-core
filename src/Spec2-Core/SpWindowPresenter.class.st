@@ -629,6 +629,17 @@ SpWindowPresenter >> whenResizingDo: aBlock [
 ]
 
 { #category : #'api-events' }
+SpWindowPresenter >> whenToolbarChangedDo: aBlock [
+	"Inform when the toolbar has been changed.
+	
+	 `aBlock` receives two optional arguments 
+	 - new toolbar
+	 - old toolbar"
+	
+	self property: #toolbar whenChangedDo: aBlock
+]
+
+{ #category : #'api-events' }
 SpWindowPresenter >> whenWillCloseDo: aBlock [
 	"Inform when window will close, allowing process before the close happen. 
 	 Note that user cannot cancel the close operation using this event. 
@@ -674,6 +685,7 @@ SpWindowPresenter >> windowIsClosing [
 
 { #category : #updating }
 SpWindowPresenter >> windowIsOpening [
+
 	isClosed := false
 ]
 

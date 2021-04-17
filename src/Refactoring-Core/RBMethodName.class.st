@@ -16,7 +16,9 @@ Class {
 	#superclass : #Model,
 	#instVars : [
 		'selector',
-		'arguments'
+		'arguments',
+		'newArgs',
+		'permutation'
 	],
 	#category : #'Refactoring-Core-Support'
 }
@@ -46,6 +48,30 @@ RBMethodName >> isValid [
 	
 	^ 	selector isString and: [ selector isValidSelector
 			and: [ selector numArgs = arguments size ]]
+]
+
+{ #category : #accessing }
+RBMethodName >> newArgs [
+
+	^ newArgs
+]
+
+{ #category : #accessing }
+RBMethodName >> newArgs: anObject [
+
+	newArgs := anObject
+]
+
+{ #category : #accessing }
+RBMethodName >> permutation [
+
+	^ permutation
+]
+
+{ #category : #accessing }
+RBMethodName >> permutation: anObject [
+
+	permutation := anObject
 ]
 
 { #category : #printing }

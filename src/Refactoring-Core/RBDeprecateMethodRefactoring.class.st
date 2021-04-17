@@ -44,13 +44,20 @@ RBDeprecateMethodRefactoring >> deprecateMethod: aSelector in: aClass using: new
 
 { #category : #transforming }
 RBDeprecateMethodRefactoring >> formNameFor: aSelector [
+
 	| method keywords arguments |
 	method := class methodFor: aSelector.
-	keywords := method parseTree keywords asOrderedCollection ifNil: [ '' ].
+	keywords := method parseTree keywords asOrderedCollection ifNil: [ 
+		            '' ].
 	arguments := method parseTree arguments ifNil: [ '' ].
 	^ (keywords isNotEmpty and: [ arguments isNotEmpty ])
-		ifTrue: [ String streamContents: [ :s | keywords with: arguments do: [ :keyword :arg | s nextPutAll: keyword , ' ' , arg name , ' ' ] ] ]
-		ifFalse: [ aSelector asString ]
+		  ifTrue: [ 
+			  String streamContents: [ :s | 
+				  keywords with: arguments do: [ :keyword :arg | 
+					  s
+						  nextPutAll: keyword , ' ' , arg name;
+						  nextPutAll: ' ' ] ] ]
+		  ifFalse: [ aSelector asString ]
 ]
 
 { #category : #transforming }

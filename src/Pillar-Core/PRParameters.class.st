@@ -4,7 +4,7 @@ Class {
 	#category : #'Pillar-Core-Model'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 PRParameters class >> with: aPRParameter withAll: aCollection [ 
 	| anInstance |
 	anInstance := self new.

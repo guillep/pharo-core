@@ -15,7 +15,7 @@ Class {
 	#category : #'Polymorph-Widgets-Utilities'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 ObjectStringConverter class >> forClass: aClass [
 	"Answer a new instance of the receiver that converts to and from
 	the given class of object and a string."

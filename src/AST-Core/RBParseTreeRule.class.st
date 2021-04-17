@@ -17,6 +17,12 @@ Class {
 	#category : #'AST-Core-Matching'
 }
 
+{ #category : #testing }
+RBParseTreeRule class >> isAbstract [
+
+	^ self == RBParseTreeRule
+]
+
 { #category : #'instance creation' }
 RBParseTreeRule class >> methodSearch: aString [ 
 	^(self new)

@@ -4,13 +4,22 @@ I am a command to remove all given classes
 Class {
 	#name : #SycRemoveClassCommand,
 	#superclass : #SycClassCommand,
+	#instVars : [
+		'removeStrategy'
+	],
 	#category : #'SystemCommands-ClassCommands'
 }
 
 { #category : #execution }
 SycRemoveClassCommand >> asRefactorings [
 
-	^{RBRemoveClassRefactoring classNames: (classes collect: [:each | each name])}
+	^self asRefactoringsOfClass: RBRemoveClassRefactoring
+]
+
+{ #category : #execution }
+SycRemoveClassCommand >> asRefactoringsOfClass: aClass [
+
+	^{aClass classNames: (classes collect: [:each | each name])}
 ]
 
 { #category : #execution }
@@ -39,21 +48,24 @@ SycRemoveClassCommand >> defaultMenuItemName [
 { #category : #execution }
 SycRemoveClassCommand >> execute [
 
-	self executeRefactorings
+	removeStrategy execute: self.
+]
+
+{ #category : #execution }
+SycRemoveClassCommand >> executeRefactoringsAs: aClass [
+
+	(self asRefactoringsOfClass: aClass) do: [ :each | each execute ]
 ]
 
 { #category : #testing }
 SycRemoveClassCommand >> isComplexRefactoring [
-	^true
+	^removeStrategy isComplexRefactoring 
 ]
 
 { #category : #execution }
 SycRemoveClassCommand >> prepareFullExecutionInContext: aToolContext [
-	| noUsers answer |
+
 	super prepareFullExecutionInContext: aToolContext.
 	
-	noUsers := aToolContext confirmUnusedClasses: classes.
-	noUsers ifFalse: [ 
-		answer := UIManager default confirm: 'Do you want to remove anyway?'.
-		answer ifFalse: [ 	CmdCommandAborted signal ]]
+	removeStrategy := aToolContext requestRemoveClassStrategyFor: classes.
 ]

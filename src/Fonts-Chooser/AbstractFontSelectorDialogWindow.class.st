@@ -19,6 +19,12 @@ Class {
 	#category : #'Fonts-Chooser'
 }
 
+{ #category : #testing }
+AbstractFontSelectorDialogWindow class >> isAbstract [
+
+	^self == AbstractFontSelectorDialogWindow
+]
+
 { #category : #icons }
 AbstractFontSelectorDialogWindow class >> taskbarIconName [
 	"Answer the icon for the receiver in a task bar."

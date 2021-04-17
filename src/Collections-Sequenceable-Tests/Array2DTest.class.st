@@ -305,3 +305,22 @@ Array2DTest >> testTransposed [
 	self assert: (transposedMatrix at: 2 at: 1) equals: 3.
 	self assert: (transposedMatrix at: 2 at: 2) equals: 4
 ]
+
+{ #category : #'tests - instance creation' }
+Array2DTest >> testzeros [	
+
+	| m m2 | 
+
+	m := Array2D zeros: 5.
+
+	self assert: m numberOfColumns equals: 5.
+	self assert: m numberOfRows equals: 5.
+	self assert: (m occurrencesOf: 0) equals: (25).
+
+	m2 := Array2D ones: 0.
+
+	self assert: m2 numberOfColumns equals: 0.
+	self assert: m2 numberOfRows equals: 0.
+	self assert: (m2 occurrencesOf: 0) equals: 0.
+	
+]

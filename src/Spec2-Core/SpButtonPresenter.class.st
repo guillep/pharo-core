@@ -114,13 +114,11 @@ SpButtonPresenter >> initialize [
 	self color: nil
 ]
 
-{ #category : #TOREMOVE }
+{ #category : #private }
 SpButtonPresenter >> performAction [
 
-	self flag: #TODO. "To remove or move to morphic extension"
 	self action value.
-
-	" Here I set a dummy value just to make the holder raise an event "
+	" Here I set a dummy value just to make the holder raise an event"
 	actionPerformed := nil
 ]
 

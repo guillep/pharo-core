@@ -397,7 +397,10 @@ SmallInteger >> gcd: anInteger [
 { #category : #comparing }
 SmallInteger >> hash [
 
-	^self
+    "Spread consecutive integers or integers related by some other pattern
+    throughout the hash table, reducing the length of scans required."
+    
+    ^ self hashMultiply
 ]
 
 { #category : #'bit manipulation' }

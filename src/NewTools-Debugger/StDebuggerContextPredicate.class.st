@@ -115,3 +115,9 @@ StDebuggerContextPredicate >> printPostMortemDescriptionOn: str [
 	str << '[Post-mortem]'.
 	str space
 ]
+
+{ #category : #updating }
+StDebuggerContextPredicate >> updateSessionForModel: aStDebuggerActionModel [
+	aStDebuggerActionModel updateDebugSessionException: OupsNullException new
+	
+]

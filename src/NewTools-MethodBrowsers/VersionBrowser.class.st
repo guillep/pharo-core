@@ -143,8 +143,9 @@ VersionBrowser >> compareToOtherVersion [
 
 { #category : #initialization }
 VersionBrowser >> connectPresenters [
+
 	messageList
-		whenSelectionChangedDo: [ :selection | self selectItem: selection selectedItem ];
+		whenSelectedDo: [ :item | self selectItem: item ];
 		messages: self buildChangeList.
 	toolbarPresenter dropListModel selectIndex: 1
 ]

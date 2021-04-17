@@ -93,19 +93,16 @@ SpMorphicBoxLayoutTest >> testNestedLayoutModifiesHeightOfTopLayout [
 	| base presenter layout |
 
 	base := SpBoxLayoutWithTableForTestPresenter new.
+
 	presenter := SpLabelPresenter new
 		label: 'Test';
 		yourself.
 	
 	layout := SpBoxLayout newTopToBottom
 		add: (SpBoxLayout newLeftToRight 
-				add: presenter
-				expand: false
-				fill: false
-				padding: 0) 
-			expand: false 
-			fill: false 
-			padding: 0;
+				add: presenter expand: false;
+				yourself) 
+			expand: false;
 		yourself.
 		
 	base buildAdapterWithSpecLayout: layout.
@@ -114,4 +111,20 @@ SpMorphicBoxLayoutTest >> testNestedLayoutModifiesHeightOfTopLayout [
 	self 
 		assert: presenter adapter widget owner owner height  
 		equals: presenter adapter widget height
+]
+
+{ #category : #tests }
+SpMorphicBoxLayoutTest >> testPresenterTakesRightHeight [
+	| presenter l1 l2 |
+	
+	(presenter := SpPresenter new) 
+		layout: (SpBoxLayout newVertical 
+			add: (l1 := (presenter newLabel label: 'Line 1')) expand: false;
+			add: (l2 := (presenter newLabel label: 'Line 2')) expand: false).
+	
+	presenter buildWithSpec.	
+	
+	self 
+		assert: presenter adapter widget height 
+		equals: l1 adapter widget height + l2 adapter widget height
 ]

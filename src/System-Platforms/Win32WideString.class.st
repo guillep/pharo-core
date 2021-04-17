@@ -31,7 +31,7 @@ Win32WideString class >> fromHandle: handle [
 Win32WideString class >> fromString: aString [
 	| requestedSize r wideString anUTF8String codepage |
 
-	anUTF8String := aString utf8Encoded.
+	anUTF8String := aString utf8Encoded copyWith: 0.
 	codepage := 65001.
 
 	requestedSize := OSPlatform current

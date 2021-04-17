@@ -869,7 +869,7 @@ SystemWindow >> createBox [
 	"Transcript show: self paneColor asString;  
 	cr."
 	| box |
-	box := IconicButton new.
+	box := IconicButtonMorph new.
 	box color: Color transparent;
 		 target: self;
 		 useSquareCorners;
@@ -1509,6 +1509,18 @@ SystemWindow >> offerWindowMenu [
 	model ifNotNil:
 		[model addModelItemsToWindowMenu: aMenu].
 	aMenu popUpEvent: self currentEvent in: self world
+]
+
+{ #category : #'as yet unclassified' }
+SystemWindow >> openInWorldExtent: extent [
+
+	"This msg and its callees result in the window being activeOnlyOnTop"
+
+	self
+		deprecated: 'Use #extent: instead'
+		transformWith:
+		'`@rec openInWorldExtent: `@arg' -> '`@rec extent: `@arg'.
+	^ self extent: extent
 ]
 
 { #category : #'open/close' }

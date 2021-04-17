@@ -76,15 +76,15 @@ Class {
 	#category : #'Kernel-Delays'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 DelayBasicScheduler class >> defaultSuspendedDelaysHeap [
- ^ Heap 
-		sortBlock: [ :delay1 :delay2 | 
-			delay1 resumptionTick <= delay2 resumptionTick ].
+	 ^ Heap 
+			sortBlock: [ :delay1 :delay2 | 
+				delay1 resumptionTick <= delay2 resumptionTick ]
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 DelayBasicScheduler class >> onTicker: aDelayTicker suspendedDelaysHeap: aHeap [
 	"Facilitates unit tests examining the otherwise hidden suspendedDelays variable"
 	^self basicNew initializeTicker: aDelayTicker suspendedDelaysHeap: aHeap

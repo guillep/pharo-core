@@ -8,7 +8,7 @@ Forgetting the opening will be assumed to be a binary selector.
 Class {
 	#name : #RBTemporariesErrorNode,
 	#superclass : #RBEnglobingErrorNode,
-	#category : #'AST-Core-Nodes'
+	#category : #'AST-Core-Nodes - ErrorNodes'
 }
 
 { #category : #construction }

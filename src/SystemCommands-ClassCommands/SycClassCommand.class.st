@@ -9,6 +9,8 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : #SycClassCommand,
 	#superclass : #CmdCommand,
+	#traits : 'TRefactoringCommandSupport',
+	#classTraits : 'TRefactoringCommandSupport classTrait',
 	#instVars : [
 		'classes'
 	],
@@ -18,6 +20,12 @@ Class {
 { #category : #testing }
 SycClassCommand class >> canBeExecutedInContext: aToolContext [
 	^aToolContext isClassSelected
+]
+
+{ #category : #'instance creation' }
+SycClassCommand class >> for: classes [
+	^self new 
+		classes: classes
 ]
 
 { #category : #testing }
@@ -45,6 +53,5 @@ SycClassCommand >> prepareExecutionInDragContext: aToolContext [
 { #category : #execution }
 SycClassCommand >> prepareFullExecutionInContext: aToolContext [
 	super prepareFullExecutionInContext: aToolContext.
-	
 	classes := aToolContext selectedClasses
 ]

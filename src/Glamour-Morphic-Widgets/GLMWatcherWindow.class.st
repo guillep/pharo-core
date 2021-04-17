@@ -102,7 +102,7 @@ GLMWatcherWindow >> contentsMorph: anObject [
 
 { #category : #settings }
 GLMWatcherWindow >> defaultBorderStyle [
-	^ FillStyleBorder color: (Color white darker alpha: 0.5) width: 10
+	^ FillBorderStyle color: (Color white darker alpha: 0.5) width: 10
 ]
 
 { #category : #initialize }

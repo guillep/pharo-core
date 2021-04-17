@@ -20,11 +20,6 @@ GTBytecodeDebugger class >> defaultTitle [
 ]
 
 { #category : #accessing }
-GTBytecodeDebugger class >> helpClass [
-	^ GTBytecodeDebuggerHelp
-]
-
-{ #category : #accessing }
 GTBytecodeDebugger class >> sessionClass [
 
 	^ GTBytecodeDebuggerSession

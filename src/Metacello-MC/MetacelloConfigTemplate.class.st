@@ -32,9 +32,6 @@ Class {
 	#instVars : [
 		'project'
 	],
-	#classVars : [
-		'LastVersionLoad'
-	],
 	#category : #'Metacello-MC-Model'
 }
 

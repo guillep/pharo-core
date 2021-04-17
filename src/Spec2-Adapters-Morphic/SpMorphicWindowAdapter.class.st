@@ -48,7 +48,7 @@ SpMorphicWindowAdapter >> addPresenterIn: aWindow withSpecLayout: aSpec [
 			ifTrue: [ aWindow initializeLabelArea ]
 			ifFalse: [ aWindow removeLabelArea ] ].
 	
-self 
+	self 
 		addContent: (self presenter presenter buildWithSpecLayout: aSpec) 
 		toWindow: aWindow
 ]

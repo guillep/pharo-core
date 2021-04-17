@@ -8,7 +8,8 @@ Class {
 		'hasValidText',
 		'acceptOnCR',
 		'entryCompletion',
-		'maxLength'
+		'maxLength',
+		'encrypted'
 	],
 	#category : #'Rubric-Editing-Widgets'
 }
@@ -48,12 +49,14 @@ RubTextFieldMorph >> adornmentColor [
 { #category : #encryption }
 RubTextFieldMorph >> beDecrypted [
 
+	encrypted := false.
 	self textMorph font: TextStyle defaultFont.
 ]
 
 { #category : #encryption }
 RubTextFieldMorph >> beEncrypted [
-
+	
+	encrypted := true.
 	self textMorph font: (StrikeFont passwordFontSize: self theme textFont pointSize).
 ]
 
@@ -149,6 +152,17 @@ RubTextFieldMorph >> focusChanged [
 		ifFalse: [self closeChooser].
 	super focusChanged
 
+]
+
+{ #category : #'accessing text area' }
+RubTextFieldMorph >> font: aNewFont [
+	
+	"As the text field is using a font full of * to show the password.
+	Changing the font should preserve it"
+	encrypted ifTrue: [ 
+		^ super font: (StrikeFont passwordFontSize: aNewFont pointSize). ].
+
+	super font: aNewFont
 ]
 
 { #category : #'model protocol' }

@@ -17,18 +17,14 @@ NoUnusedVariablesLeftTest class >> defaultTimeLimit [
 NoUnusedVariablesLeftTest >> testNoUnusedClassVariablesLeft [
 	| variables classes validExceptions remaining |
 	
-	"turn this on when all class variables are cleaned"
-	self skip.
-	
 	variables := Smalltalk globals allBehaviors flatCollect: [ :each | each classVariables ].
 	variables := variables reject: [ :each | each isReferenced ].
 	
 	classes := variables collect: [ :each | each definingClass ] as: Set.
 	
-	validExceptions := {  }.	
+	validExceptions := #(OSKeySymbols FooSharedPool SDL2Constants AthensCairoDefinitions BalloonEngineConstants ShTestSharedPool RBLintRuleTestData RBDummyLintRuleTest MCMockClassF Unicode Character).	
 	
-	remaining := classes asOrderedCollection removeAll: validExceptions; yourself.
-	
+	remaining := classes asOrderedCollection reject: [ :each  | validExceptions includes: each name].
 	self assert: remaining isEmpty
 ]
 
@@ -36,19 +32,18 @@ NoUnusedVariablesLeftTest >> testNoUnusedClassVariablesLeft [
 NoUnusedVariablesLeftTest >> testNoUnusedInstanceVariablesLeft [
 	| variables classes validExceptions remaining |
 	
-	"turn this on when all instance variables are cleaned"
-	self skip.
-	
 	variables := Smalltalk globals allBehaviors flatCollect: [ :each | each instanceVariables ].
 	variables := variables reject: [ :each | each isReferenced ].
 	
 	classes := variables collect: [ :each | each definingClass ] as: Set.
 	
-	validExceptions := { RBFooLintRuleTestData . RBLintRuleTestData }.	
+	validExceptions := { RBFooLintRuleTestData . RBLintRuleTestData .RBFooDummyLintRuleTest . RBDummyLintRuleTest}.	
 	
 	remaining := classes asOrderedCollection removeAll: validExceptions; yourself.
 	
-	self assert: remaining isEmpty
+	"we have 25 left, there are issue tracker entries for those.
+ 	By testing for these, we avoid that new cases are added"
+ 	self assert: remaining size <= 19
 ]
 
 { #category : #testing }

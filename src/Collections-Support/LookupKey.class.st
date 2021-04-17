@@ -38,6 +38,17 @@ LookupKey >> hash [
 	^key hash
 ]
 
+{ #category : #generated }
+LookupKey >> isVariableBinding [
+
+	"Return true if I represent a literal variable binding"
+
+	self
+		deprecated: 'Use #isAssociation instead'
+		transformWith: '`@rec isVariableBinding' -> '`@rec isAssociation'.
+	^ self isAssociation
+]
+
 { #category : #accessing }
 LookupKey >> key [
 	"Answer the lookup key of the receiver."

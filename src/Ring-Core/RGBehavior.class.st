@@ -432,6 +432,12 @@ RGBehavior >> defaultTraitComposition [
 	^ self defaultTraitCompositionStubIn: self.
 ]
 
+{ #category : #fileout }
+RGBehavior >> definitionStringFor: aConfiguredPrinter [
+
+	^ aConfiguredPrinter classDefinitionString 
+]
+
 { #category : #'queries - methods' }
 RGBehavior >> ensureLocalMethodNamed: aSymbol [
 
@@ -761,6 +767,14 @@ RGBehavior >> name: aString [
 		self announcer behaviorDefinitionChangedFrom: assoc value to: assoc key.
 		self announcer behaviorModificationAppliedTo: assoc key.
 		self announcer behaviorParentRenamed: assoc key from: oldName ].
+]
+
+{ #category : #fileout }
+RGBehavior >> oldDefinition [
+	
+	^ ClassDefinitionPrinter legacy
+		for: self;
+		definitionString
 ]
 
 { #category : #printing }

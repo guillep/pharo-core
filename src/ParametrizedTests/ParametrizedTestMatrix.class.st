@@ -33,7 +33,8 @@ ParametrizedTestMatrix >> = aMatrix [
 
 { #category : #cases }
 ParametrizedTestMatrix >> addCase: aCollection [
-
+	"Declare a specific configuration of parameters. See forSelector:addOptions: for matrix combinations."
+	
 	cases add: (aCollection
 		collect: [ :assoc | assoc asTestParameter ]
 		as: Array).
@@ -73,6 +74,8 @@ ParametrizedTestMatrix >> expandMatrix [
 
 { #category : #addingOptions }
 ParametrizedTestMatrix >> forSelector: aSelector addOptions: someOptions [
+	"Declare all possible values for a given parameter expressed via a message send aSelector."
+	
 	options
 		add:
 			(ParametrizedTestOption new

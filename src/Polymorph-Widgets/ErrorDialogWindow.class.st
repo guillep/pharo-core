@@ -14,7 +14,7 @@ ErrorDialogWindow class >> taskbarIconName [
 	^#smallErrorIcon
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ErrorDialogWindow >> icon [
 	"Answer an icon for the receiver."
 

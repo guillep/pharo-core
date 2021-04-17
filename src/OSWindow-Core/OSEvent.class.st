@@ -15,7 +15,7 @@ Class {
 	#category : #'OSWindow-Core-Events'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 OSEvent class >> for: aWindow [
 	^ self new window: aWindow; yourself
 ]

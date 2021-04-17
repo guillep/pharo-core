@@ -149,9 +149,18 @@ StDebugger class >> codeLayout [
 { #category : #'instance creation' }
 StDebugger class >> debugSession: aDebugSession [
 	| debugger |
+
 	debugger := self on: aDebugSession.
+	aDebugSession application 
+		ifNotNil: [ :app | debugger application: app ].
 	debugger openWithFullView.
+	
 	^ debugger
+]
+
+{ #category : #accessing }
+StDebugger class >> debuggerContextClass [
+	^ StDebuggerContext
 ]
 
 { #category : #settings }
@@ -330,24 +339,21 @@ StDebugger >> acceptCodeChanges: newSource forContext: aContext [
 { #category : #'command support' }
 StDebugger >> buildContextMenus [
 	| stackGroup codeCommands debuggerCommandGroup |
+	
 	debuggerCommandGroup := self rootCommandsGroup.
-
 	"Stack"
-	stackGroup := debuggerCommandGroup
-		/ StDebuggerStackCommandTreeBuilder groupName.
+	stackGroup := debuggerCommandGroup / StDebuggerStackCommandTreeBuilder groupName.
 	stackTable contextMenu: stackGroup beRoot asMenuPresenter.
 
 	"Toolbar"
-	toolbarCommandGroup := debuggerCommandGroup
-		/ StDebuggerToolbarCommandTreeBuilder groupName.
+	toolbarCommandGroup := debuggerCommandGroup / StDebuggerToolbarCommandTreeBuilder groupName.
 	SpToolbarPresenterBuilder new
 		toolbarPresenter: toolbar;
 		visit: toolbarCommandGroup.
 	self updateToolbar.
 
 	"Code"
-	codeCommands := debuggerCommandGroup
-		/ StDebuggerCodeCommandTreeBuilder groupName.
+	codeCommands := debuggerCommandGroup / StDebuggerCodeCommandTreeBuilder groupName.
 	code contextMenu: codeCommands beRoot asMenuPresenter
 ]
 
@@ -523,11 +529,6 @@ StDebugger >> debuggerActionModel [
 ]
 
 { #category : #accessing }
-StDebugger >> debuggerContextClass [
-	^ StDebuggerContext
-]
-
-{ #category : #accessing }
 StDebugger >> debuggerInspectorClass [
 	^ StDebuggerInspector
 ]
@@ -660,8 +661,17 @@ StDebugger >> initializeInspector [
 	inspector := self
 		             instantiate: self debuggerInspectorClass
 		             on:
-		             (self debuggerInspectorModelClass on: self debuggerContextClass new).
+		             (self debuggerInspectorModelClass on: self newDebuggerContext).
 	inspector label: 'Receiver'
+]
+
+{ #category : #initialization }
+StDebugger >> initializePresenter [
+
+	super initializePresenter.
+	self whenDisplayDo: [ 
+		self updateToolbar.
+		self updateCodeFromContext ]
 ]
 
 { #category : #initialization }
@@ -723,10 +733,11 @@ StDebugger >> initializeStack [
 						  ifFalse: [ method selector ] ])
 				 sortFunction: nil;
 				 yourself);
-		addColumn: ((SpStringTableColumn
-				  title: 'Package'
-				  evaluated: [ :item | 
-					  item method methodClass package name asString ])
+		addColumn:
+			((SpStringTableColumn title: 'Package' evaluated: [ :item | 
+					  | package |
+					  package := item method package.
+					  package ifNil: [ '-' ] ifNotNil: [ package name asString ] ])
 				 sortFunction: nil;
 				 yourself).
 	stackTable transmitDo: [ :context | 
@@ -736,11 +747,19 @@ StDebugger >> initializeStack [
 			self expandStackIfLastItemIsSelected.
 			self updateWindowTitle ] ].
 	stackHeader := self instantiate: StHeaderBar.
-	stackHeader label: 'Stack'
+	stackHeader label: 'Stack'.
+	stackHeader toolbarActions: (CmCommandGroup new
+			 register:
+				 ((StDebuggerToggleFilterStackCommand forSpecContext: self) 
+					  iconName: #changeSorter);
+			 register:
+				 (StDebuggerSettingsCommand forSpecWithIconNamed: #configuration);
+			 asSpecGroup)
 ]
 
 { #category : #initialization }
 StDebugger >> initializeToolbar [
+
 	toolbar := self newToolbar.
 	toolbar displayMode: self application toolbarDisplayMode
 ]
@@ -779,6 +798,22 @@ StDebugger >> interruptedProcess [
 	^ self session interruptedProcess
 ]
 
+{ #category : #'instance creation' }
+StDebugger >> newDebuggerContext [
+
+	^ self class debuggerContextClass new
+		  exception: self session exception;
+		  yourself
+]
+
+{ #category : #'instance creation' }
+StDebugger >> newDebuggerContextFor: aContext [
+
+	^ self newDebuggerContext
+		  context: aContext;
+		  yourself
+]
+
 { #category : #'accessing context' }
 StDebugger >> newTitle [
 
@@ -799,14 +834,12 @@ StDebugger >> openWithFullView [
 	"Create and schedule a full debugger with the given label. Do not
 	terminate the current active process."
 
-	self
-		openWithSpec;
-		buildContextMenus;
-		updateCodeFromContext
+	self openWithSpec
 ]
 
 { #category : #opening }
 StDebugger >> openWithNotification: notificationString [
+
 	self openWithFullView
 ]
 
@@ -1038,12 +1071,14 @@ StDebugger >> stackIconForContext: context [
 
 { #category : #'command support' }
 StDebugger >> stackSelectionMethodContext [
+
 	^ [ stackTable selection selectedItem home method ]
 ]
 
 { #category : #'command support' }
 StDebugger >> stackSelectionMethodSelectorContext [
-	^[ stackTable selection selectedItem method selector ]
+
+	^ [ stackTable selection selectedItem method selector ]
 ]
 
 { #category : #'command support' }
@@ -1183,7 +1218,7 @@ StDebugger >> updateInspectorFromContext: aContext [
 		updateLayoutForContexts: self session interruptedContext
 		isAssertionFailure:
 		self debuggerActionModel isInterruptedContextAnAssertEqualsFailure.
-	inspector updateWith: (self debuggerContextClass context: aContext).
+	inspector updateWith: (self newDebuggerContextFor: aContext).
 	self flag: #DBG_INSPECTOR_UPDATE_BUG.
 	inspector getRawInspectorPresenterOrNil ifNotNil: [ :p | p update ]
 ]
@@ -1192,6 +1227,13 @@ StDebugger >> updateInspectorFromContext: aContext [
 StDebugger >> updatePredicatesForContext: aContext [
 
 	self debuggerActionModel updateContextPredicate
+]
+
+{ #category : #initialization }
+StDebugger >> updatePresenter [
+
+	self updateStackFromSession: self session.
+	self buildContextMenus
 ]
 
 { #category : #'updating actions' }
@@ -1228,6 +1270,7 @@ StDebugger >> updateStep [
 	self flag: #DBG_UPDATE_OF_MODEL_SHOULD_BE_AUTOMATED.
 	debuggerActionModel updateTopContext.
 	debuggerActionModel updateContextPredicate.	
+	debuggerActionModel updateDebugSession.
 		
 	self updateStackFromSession: self session.
 	self updateWindowTitle.

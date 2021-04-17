@@ -5,7 +5,7 @@ Object >> spotterPreviewRawIn: aComposite [
 	<spotterPreview: 40>
 
 	aComposite table
-		title: [ self gtDisplayString ];
+		title: [ self displayString ];
 		display: [ :anObject | (anObject gtInspectorVariableValuePairs asSortedCollection asOrderedCollection yourself) addFirst: 'self' -> anObject; yourself ];
 		column: 'Variable'
 			evaluated: [:assoc |	GTObjectPrinter asNonTruncatedTextFrom: assoc key ]

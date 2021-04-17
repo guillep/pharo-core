@@ -6,5 +6,5 @@ SharedQueue >> gtInspectorItemsIn: composite [
 	composite fastList
 		title: 'Items';
 		display: [ items copy ];
-		format: [ :each | each gtDisplayString ]
+		format: [ :each | each displayString ]
 ]

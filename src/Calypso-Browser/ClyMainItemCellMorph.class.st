@@ -154,7 +154,7 @@ ClyMainItemCellMorph >> buildWithLabelIndentation [
 
 { #category : #buttons }
 ClyMainItemCellMorph >> collapsedButton [
-	^ IconicButton new
+	^ IconicButtonMorph new
 		target: item;
 		actionSelector: #expand;
 		arguments: {};
@@ -207,7 +207,7 @@ ClyMainItemCellMorph >> emptyBarWithWidth: aNumber [
 
 { #category : #buttons }
 ClyMainItemCellMorph >> expandedButton [
-	^ IconicButton new
+	^ IconicButtonMorph new
 		target: item;
 		actionSelector: #collapse;
 		arguments: {};

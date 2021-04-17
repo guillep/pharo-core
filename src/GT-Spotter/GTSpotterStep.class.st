@@ -190,7 +190,7 @@ GTSpotterStep >> gtInspectorProcessorsIn: composite [
 	composite list
 		title: 'Processors';
 		display: [ self processors ];
-		format: #gtDisplayString;
+		format: #displayString;
 		when: [ self spotter notNil ]
 ]
 

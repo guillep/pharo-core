@@ -1,5 +1,5 @@
 "
-A PDReversePackageNode is a node to display a package in the tree during a reverse analysis.
+A DAReversePackageNode is a node to display a package in the tree during a reverse analysis.
 "
 Class {
 	#name : #DAReversePackageNode,

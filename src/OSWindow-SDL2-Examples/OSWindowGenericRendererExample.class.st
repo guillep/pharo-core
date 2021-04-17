@@ -29,14 +29,14 @@ OSWindowGenericRendererExample >> destroy [
 	"drawingProcess terminate"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OSWindowGenericRendererExample >> enqueueRender [
 	OSWindowRenderThread enqueueOperation: [ 
 		renderer ifNotNil: [ self redrawAndPresent ].
 	]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialize }
 OSWindowGenericRendererExample >> initializeWithRenderer [
 		"Here we put all the things that needs the renderer to be initialized."
 ]

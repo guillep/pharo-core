@@ -22,21 +22,17 @@ Form class >> fromBase64String: aBase64EncodedString [
 
 { #category : #'*Graphics-Files' }
 Form class >> fromBinaryStream: aBinaryStream [
-	"Read a Form or ColorForm from given file, using the first byte of the file to guess its format. Currently handles: GIF, uncompressed BMP, and both old and new DisplayObject writeOn: formats, JPEG, and PCX. Return nil if the file could not be read or was of an unrecognized format."
+
+	"Read a Form or ColorForm from given file, using the first byte of the file to guess its format. Currently handles: GIF, uncompressed BMP, and new DisplayObject writeOn: formats, JPEG, and PCX. Return nil if the file could not be read or was of an unrecognized format."
 
 	| firstByte |
 	firstByte := aBinaryStream peek.
-	firstByte = 1 ifTrue: [
-		"old Squeakform format"
-		^ self new readFromOldFormat: aBinaryStream].
-	firstByte = 2 ifTrue: [
-		"new Squeak form format"
-		^ self new readFrom: aBinaryStream].
+	firstByte = 1 ifTrue: [ ^ self error: 'old ST80 format not supported' ].
+	firstByte = 2 ifTrue: [ ^ self new readFrom: aBinaryStream ].
 
 	"Try for JPG, GIF, or PCX..."
 	"Note: The following call closes the stream."
 	^ ImageReadWriter formFromStream: aBinaryStream
-
 ]
 
 { #category : #'*Graphics-Files' }
@@ -113,7 +109,7 @@ Form >> resourceTag [
 { #category : #'*Graphics-Files-FileRegistry' }
 Form class >> serviceImageAsBackground [
 	"Answer a service for setting the desktop background from a given graphical file's contents"
-
+	<formService>
 	^ SimpleServiceEntry 
 		provider: self 
 		label: 'Use graphic as background'
@@ -125,7 +121,7 @@ Form class >> serviceImageAsBackground [
 { #category : #'*Graphics-Files-FileRegistry' }
 Form class >> serviceOpenImageInWindow [
 	"Answer a service for opening a graphic in a window"
-
+	<formService>
 	^ SimpleServiceEntry 
 		provider: self 
 		label: 'Open graphic in a window'
@@ -136,10 +132,15 @@ Form class >> serviceOpenImageInWindow [
 
 { #category : #'*Graphics-Files-FileRegistry' }
 Form class >> services [
-
-	^ Array 
-		with: self serviceOpenImageInWindow
-		with: self serviceImageAsBackground 
+	"Defines what options are available when a user drags and drop an image file (jpeg, png...) onto the pharo image. These options are defined by methods with the #formService pragma on this class."
+	| services |
+	services := OrderedCollection new.
+	(Pragma allNamed: #formService in: self class) do: [:pragma | 
+		pragma method selector isUnary ifTrue: [  
+			services add: (self perform: (pragma method selector))
+		]
+	].
+	^ services asArray.
 ]
 
 { #category : #'*Graphics-Files-FileRegistry' }

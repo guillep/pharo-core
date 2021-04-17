@@ -7,6 +7,12 @@ Class {
 	#category : #'Tool-DependencyAnalyser-UI-Nodes'
 }
 
+{ #category : #testing }
+DAAbstractPackageNode class >> isAbstract [
+
+	^ self == DAAbstractPackageNode
+]
+
 { #category : #accessing }
 DAAbstractPackageNode >> packageName [
 	^ self content target packageName

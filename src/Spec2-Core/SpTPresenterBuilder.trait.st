@@ -231,6 +231,12 @@ SpTPresenterBuilder >> newSlider [
 ]
 
 { #category : #'scripting widgets' }
+SpTPresenterBuilder >> newSpinner [
+
+	^ self instantiate: SpSpinnerPresenter
+]
+
+{ #category : #'scripting widgets' }
 SpTPresenterBuilder >> newStatusBar [
 
 	^ self instantiate: SpStatusBarPresenter

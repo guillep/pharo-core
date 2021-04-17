@@ -84,9 +84,9 @@ HEInstaller >> buildTrait: aTraitDefinition [
 	
 	(self existingTrait: aTraitDefinition) ifNotNil: [:x | ^ x ].
 	
-	traitComposition := (aTraitDefinition traitComposition asLiteralIn: environment) asTraitComposition.
-	
 	traitClass := Smalltalk globals at: #Trait ifAbsent: [ self error: 'Trait support is not installed' ].
+	
+	traitComposition := self buildTraitCompositionFor: aTraitDefinition traitComposition.	
 	
 	newTrait := traitClass
 		named: aTraitDefinition traitName
@@ -94,9 +94,15 @@ HEInstaller >> buildTrait: aTraitDefinition [
 		package: aTraitDefinition category
 		env: environment.
 
-	newTrait classTrait traitComposition: (aTraitDefinition classTraitComposition asLiteralIn: environment) asTraitComposition.
+	newTrait classTrait traitComposition: (self buildTraitCompositionFor: aTraitDefinition classTraitComposition).
 
 	^ newTrait
+]
+
+{ #category : #'creating traits' }
+HEInstaller >> buildTraitCompositionFor: traitComposition [
+
+	^ (traitComposition asLiteralIn: environment) asTraitComposition
 ]
 
 { #category : #accessing }
@@ -220,8 +226,8 @@ HEInstaller >> processTraitsFrom: aHEClass in: newClass [
 
 	hasTraits ifFalse: [ ^ self ].
 
-	newClass setTraitComposition: (aHEClass traitComposition asLiteralIn: environment) asTraitComposition.
-	newClass class setTraitComposition: (aHEClass classTraitComposition asLiteralIn: environment) asTraitComposition.
+	newClass setTraitComposition: (self buildTraitCompositionFor: aHEClass traitComposition).
+	newClass class setTraitComposition: (self buildTraitCompositionFor: aHEClass classTraitComposition).
 
 ]
 

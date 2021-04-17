@@ -16,7 +16,7 @@ RBPullUpInstanceVariableRefactoring >> preconditions [
 				anySatisfy: [:each | (each directlyDefinesInstanceVariable: variableName) not]) 
 				ifTrue: 
 					[self 
-						refactoringWarning: 'Not all subclasses have an instance variable named ' 
+						refactoringWarning: 'Not all subclasses have an instance variable named.<n> Do you want pull up this variable anyway?' 
 								, variableName , '.'].
 			true]
 ]

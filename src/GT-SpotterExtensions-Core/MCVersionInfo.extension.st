@@ -20,13 +20,3 @@ MCVersionInfo >> allAncestorsTo: aCollection [
 MCVersionInfo >> gtDisplayOn: stream [
 	stream nextPutAll: self name
 ]
-
-{ #category : #'*GT-SpotterExtensions-Core' }
-MCVersionInfo >> spotterAncestorsFor: aStep [
-	<spotterOrder: 1>
-	self flag: 'rewrite for direct streaming - get rid of recursion'.
-	aStep listProcessor
-		title: 'Ancestors';
-		allCandidates: [ self allAncestors ];
-		filter: GTFilterSubstring
-]

@@ -1,7 +1,7 @@
 Class {
 	#name : #RBUnfinishedStatementErrorNode,
 	#superclass : #RBEnglobingErrorNode,
-	#category : #'AST-Core-Nodes'
+	#category : #'AST-Core-Nodes - ErrorNodes'
 }
 
 { #category : #'as yet unclassified' }

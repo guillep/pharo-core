@@ -7,7 +7,7 @@ Class {
 	#name : #ReflectivityDemos,
 	#superclass : #Object,
 	#classVars : [
-		'Link'
+		'CachedLink'
 	],
 	#category : #'Reflectivity-Examples'
 }
@@ -15,7 +15,7 @@ Class {
 { #category : #cleanup }
 ReflectivityDemos >> cleanUp [
 	<script: 'self new cleanUp'>
-	Link ifNotNil: [ :link | link uninstall. Link := nil ]
+	CachedLink ifNotNil: [ :link | link uninstall. CachedLink := nil ]
 ]
 
 { #category : #demos }
@@ -35,7 +35,7 @@ ReflectivityDemos >> demoSelfSendLogging [
 	
 	| theClass |
 	theClass := SpDemoNotebookPresenter.
-	Link := MetaLink new
+	CachedLink := MetaLink new
 		metaObject: [ :context :object | context sender receiver == object
 				ifTrue: [ context crTrace ] ];
 		selector: #value:value:;
@@ -43,6 +43,6 @@ ReflectivityDemos >> demoSelfSendLogging [
 		arguments: #(context object);
 		control: #before.
 		
-	theClass methods do: [ :each | each ast link: Link ].
+	theClass methods do: [ :each | each ast link: CachedLink ].
 
 ]

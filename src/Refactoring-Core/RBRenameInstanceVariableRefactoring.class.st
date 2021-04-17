@@ -152,7 +152,7 @@ RBRenameInstanceVariableRefactoring >> renameAccessorsReferences [
 
 { #category : #transforming }
 RBRenameInstanceVariableRefactoring >> renameReferences [
-	| replacer |
+	| replacer classes |
 	replacer := self parseTreeRewriterClass 
 				rename: variableName
 				to: newName
@@ -160,8 +160,9 @@ RBRenameInstanceVariableRefactoring >> renameReferences [
 					[self 
 						refactoringError: ('<1s> is already defined as a method or block temporary <n> variable in this class or one of its subclasses' 
 								expandMacrosWith: newName)].
+	classes := class withAllSubclasses, (class isTrait ifTrue: [class users asArray ] ifFalse: [{}]).
 	self 
-		convertClasses: class withAllSubclasses
+		convertClasses: classes
 		select: [:aClass | aClass whichSelectorsReferToInstanceVariable: variableName]
 		using: replacer
 ]
@@ -188,8 +189,7 @@ RBRenameInstanceVariableRefactoring >> transform [
 	
 	class renameInstanceVariable: variableName to: newName around: [ self renameReferences ].
 	
-	renameAccessors ifTrue: [ 
-		self addNewAccessors.
-		self renameAccessorsReferences
-	]
+	renameAccessors ifFalse: [ ^ self ].
+	self addNewAccessors.
+	self renameAccessorsReferences.
 ]

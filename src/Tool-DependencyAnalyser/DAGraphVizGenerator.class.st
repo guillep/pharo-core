@@ -1,5 +1,5 @@
 "
-A PDGraphVizGenerator is a class able to generate a dot file to represent a graph.
+A class able to generate a dot file to represent a graph.
 "
 Class {
 	#name : #DAGraphVizGenerator,
@@ -11,6 +11,12 @@ Class {
 	],
 	#category : #'Tool-DependencyAnalyser-Core'
 }
+
+{ #category : #testing }
+DAGraphVizGenerator class >> isAbstract [
+
+	^ self == DAGraphVizGenerator
+]
 
 { #category : #'instance creation' }
 DAGraphVizGenerator class >> newWith: aContent named: aString [

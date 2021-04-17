@@ -160,6 +160,11 @@ Variable >> isLocalVariable [
 ]
 
 { #category : #testing }
+Variable >> isPoolVariable [
+	^ false
+]
+
+{ #category : #testing }
 Variable >> isReadIn: aCompiledCode [
 	^aCompiledCode ast readNodes
 		 anySatisfy: [ :node | node binding == self ]
@@ -184,6 +189,12 @@ Variable >> isSelfOrSuperVariable [
 { #category : #testing }
 Variable >> isSelfVariable [
 	^false
+]
+
+{ #category : #testing }
+Variable >> isShadowing [
+	"I shadow a variable if looking up my name in the outer scope returns a variable"
+	^(self scope outerScope ifNotNil: [:outer | outer lookupVar: self name]) notNil
 ]
 
 { #category : #testing }

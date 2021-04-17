@@ -490,6 +490,13 @@ GLMEmptyPopupBrick >> triggerBrick: aBrick [
 	self addBrickBack: self triggerBrick
 ]
 
+{ #category : #generated }
+GLMEmptyPopupBrick >> unsubscribeListeners [
+
+	self deprecated: 'Use #unsubscribeListeners: instead'.
+	self removeCloserListener
+]
+
 { #category : #'popup - listeners' }
 GLMEmptyPopupBrick >> unsubscribeListeners: anObject [
 

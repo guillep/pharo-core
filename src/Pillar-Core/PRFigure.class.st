@@ -61,7 +61,7 @@ PRFigure >> label: aString [
 	self parameters at: 'label' put: aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 PRFigure >> pathInternFile [
 	| path |
 	path := self reference.

@@ -54,6 +54,10 @@ UnhandledError >> exception: anError [
 
 { #category : #testing }
 UnhandledError >> isResumable [
-	
-	^ false
+
+	"UnhandledError can be signaled for more than non-resumable Errors.
+	If UnhandledError reflects the underlying Exception, we are able to
+	resume the underlying Exception."
+
+	^ self exception isResumable
 ]

@@ -271,6 +271,11 @@ Text >> deepCopy [
 	^ self copy "Both string and runs are assumed to be read-only"
 ]
 
+{ #category : #printing }
+Text >> displayStringOn: aStream [
+	self printOn: aStream
+]
+
 { #category : #emphasis }
 Text >> emphasisAt: characterIndex [
 	"Answer the fontfor characters in the run beginning at characterIndex."

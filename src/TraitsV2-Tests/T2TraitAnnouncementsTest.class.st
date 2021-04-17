@@ -17,10 +17,10 @@ T2TraitAnnouncementsTest >> testRPackageIsUpdatedInClassSide [
 	
 	| c1 t1 |
 	
-	t1 := self newTrait: #T1 with: #() uses: #() category: self packageName.
+	t1 := self newTrait: #T1 with: #() trait: TEmpty category: self packageName.
 	t1 class compile: 'msg ^ 1'.
 
-	c1 := self newClass: #C1 superclass: Object with: #() uses: t1 category: self packageName.
+	c1 := self newClass: #C1 superclass: Object with: #() trait: t1 category: self packageName.
 	c1 class compile: 'msg ^ 12'.
 	
 	self assert: self packageName asPackage methods size equals: 2.

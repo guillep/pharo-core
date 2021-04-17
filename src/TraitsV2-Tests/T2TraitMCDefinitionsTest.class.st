@@ -55,8 +55,8 @@ T2TraitMCDefinitionsTest >> testDefinitionOfClassSideTrait [
 T2TraitMCDefinitionsTest >> testDefinitionOfClassSideTraitHasCorrectString [
 	
 	| t1 definition |
-	t1 := self newTrait: #T1 with: #() uses: #().
-	t1 classTrait uses: {} slots: #(aSlot).
+	t1 := self newTrait: #T1 with: #() trait: {}.
+	t1 classTrait trait: { } slots: #(aSlot).
 
 	definition := t1 asClassDefinition.
 	
@@ -72,8 +72,8 @@ T2TraitMCDefinitionsTest >> testDefinitionOfClassSideTraitWithSpecialSlotHasCorr
 	
 	| t1 definition |
 	
-	t1 := self newTrait: #T1 with: #() uses: #().
-	t1 classTrait uses: {} slots: {#aSlot => WeakSlot.}.
+	t1 := self newTrait: #T1 with: #() trait: {}.
+	t1 classTrait trait: { } slots: {#aSlot => WeakSlot.}.
 
 	definition := t1 asClassDefinition.
 	

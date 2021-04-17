@@ -86,6 +86,11 @@ Behavior >> lookupVarForDeclaration: name [
 ]
 
 { #category : #'*OpalCompiler-Core' }
+Behavior >> outerScope [
+	^self environment
+]
+
+{ #category : #'*OpalCompiler-Core' }
 Behavior >> recompile [
 	self compileAll
 ]

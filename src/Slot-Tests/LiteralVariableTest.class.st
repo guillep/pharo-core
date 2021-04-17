@@ -24,7 +24,9 @@ LiteralVariableTest >> testComparison [
 
 { #category : #tests }
 LiteralVariableTest >> testIsReferenced [
-	self assert: (SmalltalkImage classVariableNamed: #CompilerClass) isReferenced
+	self assert: (SmalltalkImage classVariableNamed: #CompilerClass) isReferenced.
+	TestVariable.
+	self assert: (self class classVariableNamed: #TestVariable) isReferenced
 ]
 
 { #category : #tests }

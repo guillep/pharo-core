@@ -46,6 +46,31 @@ T2TraitTest >> createT2 [
 ]
 
 { #category : #tests }
+T2TraitTest >> createT3 [
+	| t3 |
+	
+	"This is a trait with a method with a pragma"
+	t3 := self newTrait: #T3 with: #().
+	t3
+		compile:
+			'aMethod
+			<aPragma>
+			
+			^ 42
+				'.
+
+	t3 class
+		compile:
+			'aClassMethod
+			<aPragma>
+			
+			^ 42
+				'.
+
+	^ t3
+]
+
+{ #category : #tests }
 T2TraitTest >> testClassHavingAnInstanceVariableUsersDifferenThanUsers [
 	| t1 aClass |
 
@@ -56,6 +81,22 @@ T2TraitTest >> testClassHavingAnInstanceVariableUsersDifferenThanUsers [
 	
 	self assert: (aClass class allSlots anySatisfy: [:e | e name = #users]).
 	self assert: (aClass class slotNamed: #users) definingClass equals: t1
+
+]
+
+{ #category : #tests }
+T2TraitTest >> testClassTraitThatHasAPragmaHasCorrectTraitSourceAfterRecompile [
+	| t3 aClass |
+
+	t3 := self createT3.
+
+	aClass := self newClass: #C1 superclass: Object with: #() uses: {t3}.
+	
+	self assert: (aClass class >> #aClassMethod) traitSource equals: t3 class asTraitComposition.
+	
+	(aClass class >> #aClassMethod) recompile.
+	
+	self assert: (aClass class >> #aClassMethod) traitSource equals: t3 class asTraitComposition.
 
 ]
 
@@ -113,6 +154,16 @@ T2TraitTest >> testClassUsingTraitsDoesNotHaveUsers [
 	aClass := self newClass: #C1 superclass: Object with: #() uses: {t1}.
 	
 	self assert: (aClass class allSlots noneSatisfy: [:e | e name = #users])
+
+]
+
+{ #category : #'tests - empty' }
+T2TraitTest >> testEmptyCompositionManagesTEmpty [
+	
+	| t1 |
+	t1 := self newTrait: #T1 with: {} trait: TEmpty.
+	
+	self assert: t1 hasEmptyComposition
 
 ]
 
@@ -352,6 +403,21 @@ T2TraitTest >> testTraitHaveUsersInstanceVariable [
 	self assert: (aClass allSlots anySatisfy: [:e | e name = #users]).
 	self assert: (aClass slotNamed: #users) definingClass equals: t1
 
+]
+
+{ #category : #tests }
+T2TraitTest >> testTraitThatHasAPragmaHasCorrectTraitSourceAfterRecompile [
+	| t3 aClass |
+
+	t3 := self createT3.
+
+	aClass := self newClass: #C1 superclass: Object with: #() uses: {t3}.
+	
+	self assert: (aClass >> #aMethod) traitSource equals: t3 asTraitComposition.
+	
+	(aClass >> #aMethod) recompile.
+	
+	self assert: (aClass >> #aMethod) traitSource equals: t3 asTraitComposition.
 ]
 
 { #category : #tests }

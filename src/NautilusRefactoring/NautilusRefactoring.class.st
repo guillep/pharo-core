@@ -76,7 +76,9 @@ NautilusRefactoring >> refactoringOptions: aRefactoring [
 		setOption: #alreadyDefined
 		toUse: [ :ref :class :selector | self shouldOverride: selector in: class ];
 		setOption: #useExistingMethod
-		toUse: [ :ref :selector | self shouldUseExistingMethod: selector ]
+		toUse: [ :ref :selector | self shouldUseExistingMethod: selector ];
+		setOption: #searchInWholeHierarchy
+		toUse: [ :ref :class | self shouldSearchInHierarchy: class ]
 ]
 
 { #category : #display }
@@ -156,6 +158,16 @@ NautilusRefactoring >> shouldInlineExpression: aString [
 { #category : #option }
 NautilusRefactoring >> shouldOverride: aSelector in: aClass [ 
 	^ self confirm: ('<1s> is already defined in the <2p> hierarchy. Extracting it to an existing selector may change behavior. Do you wish to use <1s> anyway?' expandMacrosWith: aSelector with: aClass)
+]
+
+{ #category : #option }
+NautilusRefactoring >> shouldSearchInHierarchy: class [
+	^ class subclasses 
+		ifNotEmpty: [ 
+			UIManager default 
+				confirm: 'Do you want to search occurrences in the whole hierarchy?'
+				label: 'Warning'
+		] ifEmpty: [ false ]
 ]
 
 { #category : #option }

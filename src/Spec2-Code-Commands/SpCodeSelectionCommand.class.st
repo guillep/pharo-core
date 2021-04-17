@@ -37,21 +37,11 @@ SpCodeSelectionCommand class >> order [
 SpCodeSelectionCommand >> evaluate: aString andDo: aBlock [
 	"Treat the current selection as an expression; evaluate it and invoke 
 	 aBlock with the result."
-	| stream result model receiver evaluationContext |
-	
-	stream := aString readStream.
-	model := self context interactionModel.
-	receiver := model doItReceiver.
-	evaluationContext := model doItContext.
-	result := receiver class compiler
-		source: stream;
-		context: evaluationContext;
-		receiver: receiver;
-		requestor: model;
-		failBlock:  [ ^ nil ];
-		evaluate.		
 
-	^ aBlock value: result
+	aBlock value: (self context 
+		evaluate: aString
+		onCompileError: [ ^ self ]
+		onError: [ :e | e pass ]).
 ]
 
 { #category : #private }

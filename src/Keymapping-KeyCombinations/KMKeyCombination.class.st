@@ -50,6 +50,12 @@ KMKeyCombination >> = aShortcut [
 	^ aShortcut isKindOf: self species
 ]
 
+{ #category : #printing }
+KMKeyCombination >> acceptVisitor: aKMShortcutPrinter [ 
+
+	^ aKMShortcutPrinter visitSingleShortcut: self
+]
+
 { #category : #converting }
 KMKeyCombination >> asKeyCombination [
 	^self
@@ -82,7 +88,9 @@ KMKeyCombination >> mac [
 
 { #category : #matching }
 KMKeyCombination >> matches: anEventBuffer [
-	^ self matchesCompletely: anEventBuffer first
+
+	^ anEventBuffer size = 1 and:
+		[self matchesCompletely: anEventBuffer first]
 ]
 
 { #category : #matching }

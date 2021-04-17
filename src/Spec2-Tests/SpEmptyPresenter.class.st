@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #initialization }
-SpEmptyPresenter >> initializeWidgets [
+SpEmptyPresenter >> initializePresenters [
 	
 	"Empty"
 	"This is required only because we are obliged to redefine initializeWidgets in SpPresenter"

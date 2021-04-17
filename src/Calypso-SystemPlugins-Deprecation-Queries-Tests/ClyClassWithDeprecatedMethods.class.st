@@ -7,17 +7,17 @@ Class {
 	#category : #'Calypso-SystemPlugins-Deprecation-Queries-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'protocol - deprecated' }
 ClyClassWithDeprecatedMethods >> deprecatedMethod1 [
 	self deprecated: 'it is deprecated method for testing deprecation analyzis'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'protocol - deprecated' }
 ClyClassWithDeprecatedMethods >> deprecatedMethod2 [
 	self deprecated: 'it is deprecated method for testing deprecation analyzis'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyClassWithDeprecatedMethods >> notDeprecatedMethod [
 
 ]

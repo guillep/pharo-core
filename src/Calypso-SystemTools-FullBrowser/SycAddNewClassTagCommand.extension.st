@@ -11,5 +11,5 @@ SycAddNewClassTagCommand class >> fullBrowserClassGroupMenuActivation [
 SycAddNewClassTagCommand class >> fullBrowserPackageMenuActivation [
 	<classAnnotation>
 	
-	^CmdContextMenuActivation byRootGroupItemFor: ClyFullBrowserPackageContext 
+	^CmdContextMenuActivation byRootGroupItemFor: ClyFullBrowserPackageContext
 ]

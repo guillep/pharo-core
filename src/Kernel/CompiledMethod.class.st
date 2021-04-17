@@ -394,6 +394,11 @@ CompiledMethod >> defaultSelector [
 	^ #DoIt numArgs: self numArgs
 ]
 
+{ #category : #printing }
+CompiledMethod >> displayStringOn: aStream [
+	aStream print: self methodClass; nextPutAll: '>>'; store: self selector.
+]
+
 { #category : #'source code management' }
 CompiledMethod >> embeddSourceInTrailer [
 	"When receiver is deinstalled from its class, its not managed anymore by development tools
@@ -1139,6 +1144,17 @@ CompiledMethod >> untagFrom: aSymbol [
 	And to remove tag from method we must change it protocol to Protocol unclassified"
 	self protocol = aSymbol ifTrue: [ 
 		self protocol: Protocol unclassified]
+]
+
+{ #category : #testing }
+CompiledMethod >> usesUndeclareds [
+	"this is mixing Undeclareds and Obsoletes, maybe we should have two methods"	
+	self withAllNestedLiteralsDo: [ :literal | 
+		literal class == UndeclaredVariable ifTrue: [ ^ true ].
+		(literal isBlock not and: [ 
+			 literal value isBehavior and: [ literal value isObsolete ] ]) 
+			ifTrue: [ ^ true ] ].
+	^ false
 ]
 
 { #category : #evaluating }

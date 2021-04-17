@@ -12,13 +12,13 @@ Class {
 	#category : #'Morphic-Widgets-List'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 ListItemWrapper class >> with: anObject [
 
 	^self new setItem: anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 ListItemWrapper class >> with: anObject model: aModel [
 
 	^self new setItem: anObject model: aModel

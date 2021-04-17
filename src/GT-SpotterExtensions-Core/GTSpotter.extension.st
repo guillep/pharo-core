@@ -63,14 +63,3 @@ GTSpotter >> fileReferencesBy: aSelector inContext: aSpotterContext usingFilter:
 	aSpotterContext cacheAt: #queryForFileReference put: query.
 	(rootDirectory perform: aSelector) do: aBlock
 ]
-
-{ #category : #'*GT-SpotterExtensions-Core' }
-GTSpotter class >> spotterExtensionsFor: aStep [
-	<spotterOrder: 50>
-	aStep listProcessor
-			allCandidates: [ self spotterExtendingMethods ];
-			title: 'Extensions';
-			itemName:[ :each | each gtDisplayString ];
-			filter: GTFilterSubstring;
-			wantsToDisplayOnEmptyQuery: true
-]

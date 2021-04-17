@@ -83,7 +83,7 @@ ReleaseTest >> knownProcesses [
 		TFCallbackQueue uniqueInstance callbackProcess } asSet
 ]
 
-{ #category : #tests }
+{ #category : #'tests - variables' }
 ReleaseTest >> testAllClassPoolBindingAreClassVariables [
 	| wrong |
 	wrong := OrderedCollection new.
@@ -91,7 +91,7 @@ ReleaseTest >> testAllClassPoolBindingAreClassVariables [
 	self assertEmpty: wrong
 ]
 
-{ #category : #tests }
+{ #category : #'tests - variables' }
 ReleaseTest >> testAllClassPoolBindingHaveDefiningClass [
 	| wrong |
 	wrong := OrderedCollection new.
@@ -99,11 +99,35 @@ ReleaseTest >> testAllClassPoolBindingHaveDefiningClass [
 	self assertEmpty: wrong
 ]
 
-{ #category : #tests }
+{ #category : #'tests - variables' }
 ReleaseTest >> testAllGlobalBindingAreGlobalVariables [
 	| wrong |
 	wrong := testingEnvironment associations reject: [ :each | each isKindOf: GlobalVariable ].
 	self assertEmpty: wrong
+]
+
+{ #category : #'tests - variables' }
+ReleaseTest >> testAllInstanceVariablesStartLowercase [
+	"Make sure that all class instance variable names start with a lowercase letter"
+	| violating |
+
+	violating := Smalltalk globals allBehaviors select: [ :class | 
+		class slots anySatisfy: [:var | var name first isUppercase]].
+
+	self 
+		assert: violating isEmpty 
+		description: 'Instance variable names must start with a lowercase letter: ', violating asArray asString
+]
+
+{ #category : #'tests - variables' }
+ReleaseTest >> testClassesShadow [
+
+	| classes |
+	classes := Smalltalk globals allBehaviors select: [ :class | 
+		           class definedVariables anySatisfy: [ :var | 
+			           var isShadowing ] ].
+
+	self assert: classes isEmpty description: classes asArray asString
 ]
 
 { #category : #tests }
@@ -209,7 +233,7 @@ ReleaseTest >> testMethodsContainNoHalt [
 				print: methods ] ]
 ]
 
-{ #category : #tests }
+{ #category : #'tests - variables' }
 ReleaseTest >> testMethodsWithUnboundGlobals [
 	| methodsWithUnboundGlobals |
 	"Ensure the environment is clean"
@@ -240,6 +264,30 @@ ReleaseTest >> testNoNilAssignmentInInitializeMethod [
 	
 	self assertValidLintRule: ReNoNilAssignationInInitializeRule new
 	
+]
+
+{ #category : #'tests - variables' }
+ReleaseTest >> testNoShadowedVariablesInMethods [
+	"Fail if there are methods who define shadowed temps or args"
+	| found validExceptions remaining |
+	found := SystemNavigation default allMethodsSelect: [ :m | 
+		m ast variableDefinitionNodes anySatisfy: [ :node | node variable isShadowing ] ].
+	"Make sure to not waste memory with all the ASTs"
+	ASTCache reset.
+	"No other exceptions beside the ones mentioned here should be allowed"	
+	validExceptions := { 
+		RBDummyRefactoryTestDataApp>>#tempVarOverridesInstVar.
+		RBRefactoryTestDataApp>>#tempVarOverridesInstVar.
+		RBSmalllintTestObject>>#tempVarOverridesInstVar.
+		ReTempVarOverridesInstVarRuleTest>>#sampleMethod:}.	
+	
+	remaining := found asOrderedCollection 
+								removeAll: validExceptions;
+								yourself.
+								
+	self 
+		assert: remaining isEmpty 
+		description: ('the following methods have shadowing variable definitions and should be cleaned: ', remaining asString)
 ]
 
 { #category : #tests }
@@ -340,20 +388,35 @@ ReleaseTest >> testThatAllMethodsArePackaged [
 	self assertEmpty: methodsWithoutPackageInfo
 ]
 
-{ #category : #tests }
+{ #category : #'tests - variables' }
 ReleaseTest >> testUndeclared [
-	| undeclaredBindings |
+	| undeclaredVariables validExceptions remaining description |
 	
 	Smalltalk cleanOutUndeclared. 
-	undeclaredBindings := Undeclared keys reject: [:each |
-			each includesSubstring: 'undeclaredStub' caseSensitive: false].
+	undeclaredVariables := Undeclared associations select: [:each |
+			each isUndeclaredVariable].
 	
-	self 
-		assert: undeclaredBindings isEmpty 
-		description: (String streamContents: [ :s|
-			s 
-				nextPutAll: 'Found undeclared references: ';
-				print: undeclaredBindings ])
+	validExceptions := { #undeclaredStubInstVar1 . #undeclaredStubInstVar2 }.
+	
+	"for now we filter by name, maybe filtering by variable would be better"
+	remaining := undeclaredVariables reject: [ :each | validExceptions includes: each name  ].
+	
+	"we look for one of the using methods of the undeclared var and report that, 
+	this should be enough to fix it quickly"							
+	description := String streamContents: [ :stream |
+			stream nextPutAll: 'Found undeclared Variables: '.
+			remaining do: [ :variable  |
+				| method |
+				method := variable usingMethods first.
+				stream 
+					cr
+					nextPutAll: variable name;
+					nextPutAll: ' in: ';
+					print: method methodClass;
+					nextPutAll: '>>';
+					print: method selector]].
+
+	self assert: remaining isEmpty description: description
 ]
 
 { #category : #tests }

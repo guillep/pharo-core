@@ -7,7 +7,7 @@ Class {
 	#category : #'OpalCompiler-Tests-IR'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 IRBuilderTest class >> compilerClass [
 	^ OpalCompiler
 ]
@@ -275,14 +275,16 @@ IRBuilderTest >> testLiteralVariableClass [
 IRBuilderTest >> testLiteralVariableClassVariable [
 	| iRMethod aCompiledMethod |
 	iRMethod := IRBuilder new
-		pushLiteralVariable: (DateAndTime bindingOf: #LocalTimeZone);
+		pushLiteralVariable: (OCOpalExamples classVariableNamed: #ExampleClassVariable);
 		returnTop;
 		ir.
 
 	aCompiledMethod := iRMethod compiledMethod.
 
 	self assert: (aCompiledMethod isKindOf: CompiledMethod).
-	self assert: (aCompiledMethod valueWithReceiver: nil arguments: #()) equals: DateAndTime localTimeZone.
+	OCOpalExamples new classVariable: #tag.
+	self assert: (aCompiledMethod valueWithReceiver: nil arguments: #()) equals: #tag.
+	OCOpalExamples reset.
 	^ iRMethod
 ]
 

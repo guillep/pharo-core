@@ -130,3 +130,10 @@ SpToolbarButtonMorph >> normalFillStyle [
 
 	^ Color transparent
 ]
+
+{ #category : #style }
+SpToolbarButtonMorph >> pressedBorderStyle [
+	"Return the pressed borderStyle of the receiver."
+
+	^ self normalBorderStyle
+]

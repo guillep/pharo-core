@@ -4,9 +4,6 @@ Text converter for ISO 8859-7.  An international encoding used for Greek.
 Class {
 	#name : #ISO88597TextConverter,
 	#superclass : #ByteTextConverter,
-	#classVars : [
-		'FromTable'
-	],
 	#category : #Deprecated90
 }
 

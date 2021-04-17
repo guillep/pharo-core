@@ -8,16 +8,16 @@ Class {
 	#category : #'Calypso-SystemQueries-Tests-P1WithHierarchy'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ClySubclassN2OfClass1FromP1 class >> classSideMethodFromSubclassN2 [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ClySubclassN2OfClass1FromP1 >> subclassN2VarReaderMethod [
 	^subclassN2Var
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ClySubclassN2OfClass1FromP1 >> subclassN2VarWriterMethod [
 	subclassN2Var := #subclassN2VarValue
 ]
@@ -28,12 +28,12 @@ ClySubclassN2OfClass1FromP1 >> subclassSameVar [
 	^ subclassSameVar
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ClySubclassN2OfClass1FromP1 >> superclassVar1ReaderMethod [
 	^instanceSideVar1 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ClySubclassN2OfClass1FromP1 >> superclassVar1WriterMethod [
 	instanceSideVar1 := #subclassVar1Value 
 ]

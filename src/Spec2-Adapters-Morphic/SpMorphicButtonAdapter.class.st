@@ -36,7 +36,7 @@ SpMorphicButtonAdapter >> buildLabel: text withIcon: icon [
 	icon ifNil: [ 
 		^ (text localizedForPresenter: self presenter) ifNil: [ '' ] ].
 	
-	iconLabel := IconicListItem new.
+	iconLabel := IconicListItemMorph new.
 	iconLabel icon: icon.
 	text isEmptyOrNil ifFalse: [ 
 		iconLabel morph: (text asMorph 

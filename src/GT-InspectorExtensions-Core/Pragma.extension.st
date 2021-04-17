@@ -2,7 +2,7 @@ Extension { #name : #Pragma }
 
 { #category : #'*GT-InspectorExtensions-Core' }
 Pragma >> gtDisplayOn: stream [
-	self method gtDisplayOn: stream.
+	self method displayStringOn: stream.
 	stream space.
 	self printOn: stream
 ]

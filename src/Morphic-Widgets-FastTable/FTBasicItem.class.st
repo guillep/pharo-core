@@ -115,7 +115,7 @@ FTBasicItem >> collapseAndRefresh [
 
 { #category : #button }
 FTBasicItem >> collpasedButton [
-	^ IconicButton new
+	^ IconicButtonMorph new
 		target: self;
 		actionSelector: #expandAndRefresh;
 		arguments: {};
@@ -187,7 +187,7 @@ FTBasicItem >> expandWithoutChange [
 
 { #category : #button }
 FTBasicItem >> expandedButton [
-	^ IconicButton new
+	^ IconicButtonMorph new
 		target: self;
 		actionSelector: #collapseAndRefresh;
 		arguments: {};

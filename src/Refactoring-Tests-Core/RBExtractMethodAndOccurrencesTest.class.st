@@ -1,7 +1,7 @@
 Class {
 	#name : #RBExtractMethodAndOccurrencesTest,
 	#superclass : #RBRefactoringTest,
-	#category : #'Refactoring-Tests-Core'
+	#category : #'Refactoring-Tests-Core-Refactorings'
 }
 
 { #category : #running }

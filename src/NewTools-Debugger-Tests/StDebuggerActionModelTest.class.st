@@ -5,7 +5,8 @@ Class {
 		'session',
 		'debugActionModel',
 		'debugger',
-		'result'
+		'result',
+		'shouldFilterStack'
 	],
 	#category : #'NewTools-Debugger-Tests-Model'
 }
@@ -120,7 +121,8 @@ StDebuggerActionModelTest >> setUp [
 		session.
 	session
 		stepIntoUntil: [ :currentContext | currentContext method == method ].
-	debugActionModel := StDebuggerActionModel on: session
+	debugActionModel := StDebuggerActionModel on: session.
+	shouldFilterStack := StDebuggerActionModel shouldFilterStack.
 ]
 
 { #category : #running }
@@ -133,6 +135,7 @@ StDebuggerActionModelTest >> tearDown [
 	StDebuggerUsingSpecSelectorMock removeSelector: #unclassifiedMethod.
 	StTestDebuggerProvider removeSelector: #buildDebuggerWithMissingClassContext.
 	StTestDebuggerProvider removeSelector: #foobar.
+	StDebuggerActionModel shouldFilterStack: shouldFilterStack.
 	super tearDown
 ]
 
@@ -173,13 +176,80 @@ StDebuggerActionModelTest >> testCopyStackToClipboard [
 StDebuggerActionModelTest >> testCreateMissingMethod [
 ]
 
+{ #category : #'tests - stack filtering' }
+StDebuggerActionModelTest >> testDefaultShouldFilterStack [
+
+	self assert: StDebuggerActionModel shouldFilterStack
+]
+
+{ #category : #'tests - stack filtering' }
+StDebuggerActionModelTest >> testDynamicShouldFilterStack [
+
+	|mockDebugActionModel|
+	mockDebugActionModel := StMockDebuggerActionModel new.
+	
+	self assert: mockDebugActionModel filterStack.
+	
+	StDebuggerActionModel shouldFilterStack: true.
+	self assert: mockDebugActionModel shouldFilterStack.
+	
+	StDebuggerActionModel shouldFilterStack: false.
+	self deny: mockDebugActionModel shouldFilterStack 
+]
+
+{ #category : #'tests - stack filtering' }
+StDebuggerActionModelTest >> testDynamicShouldFilterStackUpdate [
+
+	|mockDebugActionModel context|
+	mockDebugActionModel := StMockDebuggerActionModel new.		
+	self assert: mockDebugActionModel filterStack.
+	self assert: mockDebugActionModel shouldFilterStack.
+	
+	context := Context
+		sender: nil
+		receiver: nil
+		method: Object >> #doesNotUnderstand:
+		arguments: #(#message).
+	mockDebugActionModel interruptedContext: context.
+	mockDebugActionModel stepInto: context.
+	self deny: mockDebugActionModel filterStack.
+	self deny: mockDebugActionModel shouldFilterStack.
+	
+	mockDebugActionModel stepOver: context.
+	self deny: mockDebugActionModel filterStack.
+	self deny: mockDebugActionModel shouldFilterStack.
+	
+	mockDebugActionModel := StMockDebuggerActionModel new.		
+	self assert: mockDebugActionModel filterStack.
+	self assert: mockDebugActionModel shouldFilterStack.
+	
+	context := Context
+		sender: nil
+		receiver: nil
+		method: Object >> #asString
+		arguments: #().
+	mockDebugActionModel interruptedContext: context.
+	mockDebugActionModel stepInto: context.
+	self deny: mockDebugActionModel filterStack.
+	self deny: mockDebugActionModel shouldFilterStack.
+	
+	mockDebugActionModel stepOver: context.
+	self assert: mockDebugActionModel filterStack.
+	self assert: mockDebugActionModel shouldFilterStack.
+	
+	
+	
+	
+	
+]
+
 { #category : #'tests - actions' }
 StDebuggerActionModelTest >> testFileOutMethod [
 	debugActionModel fileOutMethod: self.
 	self assert: result equals: self selector
 ]
 
-{ #category : #tests }
+{ #category : #'tests - stack filtering' }
 StDebuggerActionModelTest >> testFilterDNUStack [
 
 	|stack filteredStack|
@@ -204,7 +274,7 @@ StDebuggerActionModelTest >> testFilterDNUStack [
 	
 ]
 
-{ #category : #tests }
+{ #category : #'tests - stack filtering' }
 StDebuggerActionModelTest >> testFilterMissingSubclassResponsibilityStack [
 
 	|stack filteredStack|	
@@ -224,21 +294,30 @@ StDebuggerActionModelTest >> testFilterMissingSubclassResponsibilityStack [
 	self assert: filteredStack second identicalTo: stack fifth
 ]
 
-{ #category : #tests }
+{ #category : #'tests - stack filtering' }
 StDebuggerActionModelTest >> testFilterStack [
 
 	|stack filteredStack|
-	
+	self changeSession: StTestDebuggerProvider new debuggerWithDNUContext session.
 	stack := OrderedCollection new.
 	
-	"First, the stack contains the interrupted context"	
+	"First, add to the stack a MNU context that has a method with the <debuggerCompleteToSender> pragma"
 	stack add: debugActionModel interruptedContext.	
 	
 	"Then we have an imaginary call stack"
 	stack add: (self emptyContextForMethod: (self class>>#method1:)).
 	stack add: (self emptyContextForMethod: (self class>>#method2:)).
 	
-	filteredStack := debugActionModel filterStack: stack copy
+	
+	StDebuggerActionModel shouldFilterStack: false.
+	filteredStack := debugActionModel filterStack: stack copy.
+	self assertCollection:  filteredStack equals: stack.
+	
+	StDebuggerActionModel shouldFilterStack: true.
+	filteredStack := debugActionModel filterStack: stack copy.
+	self assert: filteredStack size equals: 2.
+	self assert: filteredStack first identicalTo: stack second.
+	self assert: filteredStack second identicalTo: stack third
 ]
 
 { #category : #tests }
@@ -437,6 +516,7 @@ StDebuggerActionModelTest >> testStepInto [
 	|ctx|
 	ctx := session interruptedContext.
 	debugActionModel stepInto: ctx.
+	self assert: ctx stepIntoQuickMethod.
 	self assert: session interruptedContext sender identicalTo: ctx.
 	self assert: session stack second identicalTo: ctx
 ]
@@ -473,6 +553,19 @@ StDebuggerActionModelTest >> testStepThrough [
 		identicalTo: method ast statements second
 ]
 
+{ #category : #'tests - predicates' }
+StDebuggerActionModelTest >> testUpdateDebugSession [
+
+	| exception |
+	self changeSession:
+		StTestDebuggerProvider new debuggerWithErrorContext session.
+	exception := session exception.
+	session exception: nil.
+	debugActionModel updateDebugSession.
+	self assert: session exception notNil.
+	self assert: session exception identicalTo: exception
+]
+
 { #category : #'tests - contexts' }
 StDebuggerActionModelTest >> testUpdateTopContext [
 	
@@ -487,21 +580,22 @@ StDebuggerActionModelTest >> testUpdateTopContext [
 
 { #category : #'tests - contexts' }
 StDebuggerActionModelTest >> testUpdateTopContextAfterSessionOperation [
-	|mockDebugActionModel|
+	|mockDebugActionModel context|
+	context := [  ] asContext.
 	mockDebugActionModel := StMockDebuggerActionModel new.
-	mockDebugActionModel stepInto: nil.
+	mockDebugActionModel stepInto: context.
 	self assert: mockDebugActionModel tag equals: #updateTopContext.
 	
 	mockDebugActionModel := StMockDebuggerActionModel new.
-	mockDebugActionModel stepOver: nil.
+	mockDebugActionModel stepOver: context.
 	self assert: mockDebugActionModel tag equals: #updateTopContext.
 	
 	mockDebugActionModel := StMockDebuggerActionModel new.
-	mockDebugActionModel stepThrough: nil.
+	mockDebugActionModel stepThrough: context.
 	self assert: mockDebugActionModel tag equals: #updateTopContext.
 	
 	mockDebugActionModel := StMockDebuggerActionModel new.
-	mockDebugActionModel restartContext: nil.
+	mockDebugActionModel restartContext: context.
 	self assert: mockDebugActionModel tag equals: #updateTopContext.
 	
 	mockDebugActionModel := StMockDebuggerActionModel new.

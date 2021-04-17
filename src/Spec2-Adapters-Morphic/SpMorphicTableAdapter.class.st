@@ -69,7 +69,7 @@ SpMorphicTableAdapter >> addModelTo: tableMorph [
 { #category : #factory }
 SpMorphicTableAdapter >> buildWidget [
 
-	widget := FTTableMorph new
+	widget := SpFTTableMorph new
 		hResizing: #spaceFill;
 		vResizing: #spaceFill;
 		intercellSpacing: self class intercellSpacing;
@@ -257,6 +257,18 @@ SpMorphicTableAdapter >> strongSelectionChanged: aFTStrongSelectionChanged [
 
 	self presenter activatesOnDoubleClick ifFalse: [ ^ self ].	
 	self presenter doubleClickAtIndex: aFTStrongSelectionChanged selectedIndex
+]
+
+{ #category : #'drag and drop' }
+SpMorphicTableAdapter >> transferFrom: aTransferMorph event: anEvent [
+	| rowAndColumn |
+
+	rowAndColumn := self widget container rowAndColumnIndexContainingPoint: anEvent position.
+	^ SpDragAndDropTransferToTable new
+		passenger: aTransferMorph passenger;
+		row: (rowAndColumn first ifNil: [ 0 ]);
+		column: (rowAndColumn second ifNil: [ 0 ]);
+		yourself
 ]
 
 { #category : #updating }

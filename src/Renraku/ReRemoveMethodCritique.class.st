@@ -16,7 +16,9 @@ ReRemoveMethodCritique class >> for: anEntity selector: aSelector by: aRule [
 
 { #category : #accessing }
 ReRemoveMethodCritique >> change [
-	^ RBRemoveMethodChange remove: self tinyHint from: self entity
+	^ (RBRefactoryChangeFactory instance)
+		removeMethod: self tinyHint 
+		from: self entity
 ]
 
 { #category : #testing }

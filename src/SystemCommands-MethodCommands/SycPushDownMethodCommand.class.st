@@ -3,7 +3,7 @@ I am a command to push down given methods
 "
 Class {
 	#name : #SycPushDownMethodCommand,
-	#superclass : #SycMethodCommand,
+	#superclass : #SysRefactoringMethodCommand,
 	#category : #'SystemCommands-MethodCommands'
 }
 
@@ -11,10 +11,7 @@ Class {
 SycPushDownMethodCommand class >> methodContextMenuActivation [
 	<classAnnotation>
 	
-	^CmdContextMenuActivation 
-		byItemOf: ClyMoreRefactorsMenuGroup 
-		order: 20 
-		for: ClyMethod asCalypsoItemContext
+	^ SycMethodMenuActivation byRootGroupItemOrder: 20 for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #activation }
@@ -27,13 +24,11 @@ SycPushDownMethodCommand class >> methodShortcutActivation [
 { #category : #execution }
 SycPushDownMethodCommand >> asRefactorings [
 	"Return push down method refactoring using method"
-	|dialog refactoring|
-	refactoring :=  RBPushDownMethodRefactoring 
-		pushDown: methods  
+	| refactoring |
+	refactoring := RBPushDownMethodRefactoring 
+		model: model
+		pushDown: (methods collect: [ :each | each selector ])
 		from: methods first origin.
-	refactoring setOption: #selectorsFromView toUse: [ :ref |
-		dialog := RBPushDownPreviewPresenter on: ref.
-		dialog cancelled ifTrue: [ CmdCommandAborted signal ]].
 	^ OrderedCollection with: refactoring 
 ]
 
@@ -56,4 +51,23 @@ SycPushDownMethodCommand >> execute [
 { #category : #testing }
 SycPushDownMethodCommand >> isComplexRefactoring [
 	^true
+]
+
+{ #category : #execution }
+SycPushDownMethodCommand >> prepareFullExecutionInContext: aToolContext [
+	super prepareFullExecutionInContext: aToolContext.
+	self selectMethods.
+]
+
+{ #category : #execution }
+SycPushDownMethodCommand >> selectMethods [
+	|selectedMethods dialog class|
+	selectedMethods := methods copy asOrderedCollection.
+	class := methods first origin.
+	dialog := RBMethodsSelectionPresenter 
+		   label: 'Push down methods from ', class name
+			withItems: (class methods sort: [ :a :b | a asString < b asString ]) asOrderedCollection
+			selecting: selectedMethods. 
+	dialog cancelled ifTrue: [ CmdCommandAborted signal ].
+	methods := selectedMethods.
 ]

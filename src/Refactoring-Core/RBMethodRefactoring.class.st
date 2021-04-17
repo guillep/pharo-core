@@ -35,3 +35,8 @@ RBMethodRefactoring >> buildSelectorString: aSelector withPermuteMap: anIntegerC
 				nextPut: $ ].
 	^stream contents
 ]
+
+{ #category : #accessing }
+RBMethodRefactoring >> methodClass [ 
+	^ class
+]

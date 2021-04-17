@@ -40,7 +40,7 @@ SpMorphicListAdapter >> buildWidget [
 	
 	datasource := SpMorphicListDataSource new.
 	datasource model: self model.
-	widget := FTTableMorph new
+	widget := SpFTTableMorph new
 		dataSource: datasource;
 		hideColumnHeaders;
 		enableSearch;

@@ -9,7 +9,7 @@ Class {
 	#category : #'Calypso-SystemQueries-Domain'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'api - queries' }
 ClyProjectManager >> projectQueryFor: aClySystemEnvironmentScope [ 
 	
 	^ ClyUnknownQuery instance

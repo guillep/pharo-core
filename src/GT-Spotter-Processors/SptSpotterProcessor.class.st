@@ -15,7 +15,6 @@ Class {
 	#name : #SptSpotterProcessor,
 	#superclass : #AbstractSpotterProcessor,
 	#instVars : [
-		'order',
 		'filter',
 		'results',
 		'query',
@@ -87,7 +86,7 @@ SptSpotterProcessor class >> settingsDescription [
 
 { #category : #settings }
 SptSpotterProcessor class >> settingsOn: aBuilder [
-	<systemsettings>
+	"<systemsettings>
 
 	(aBuilder group: #spotterProcessors)
 		parent: #spotter;
@@ -103,7 +102,7 @@ SptSpotterProcessor class >> settingsOn: aBuilder [
 			target: aProcessorClass;
 			description: aProcessorClass settingsDescription;
 			label: aProcessorClass settingsTitle
-	].
+	]."
 ]
 
 { #category : #settings }

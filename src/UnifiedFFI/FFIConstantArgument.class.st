@@ -14,7 +14,7 @@ Class {
 	#category : #'UnifiedFFI-Arguments'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 FFIConstantArgument class >> value: aValue typeName: aTypeName arity: anInteger [
 	
 	^ self new

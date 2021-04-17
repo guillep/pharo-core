@@ -107,6 +107,11 @@ MCRepository >> description [
 	^ self class name
 ]
 
+{ #category : #printing }
+MCRepository >> displayStringOn: aStream [
+	aStream nextPutAll: self description
+]
+
 { #category : #'error handling' }
 MCRepository >> error: aString [ 
 	^ MCRepositoryError new signal: aString

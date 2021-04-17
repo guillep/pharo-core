@@ -7,14 +7,3 @@ SystemWindow >> spotterActDefault [
 		ifFalse:[	self activate].
 
 ]
-
-{ #category : #'*GT-SpotterExtensions-Core' }
-SystemWindow >> spotterWindowsFor: aStep [
-	<spotterOrder: 100>
-
-	aStep listProcessor
-			title: 'Windows';
-			allCandidates: [ self class allSubInstances ];
-			itemName: [ :window | '**', window label, '**' ];
-			filter: GTFilterSubstring
-]

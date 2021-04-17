@@ -8,11 +8,11 @@ Class {
 	#category : #'Calypso-SystemPlugins-InheritanceAnalysis-Queries-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyAbstractSubclassExample >> abstractMethod1 [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyAbstractSubclassExample >> abstractSubclassMethod [
 	self subclassResponsibility 
 ]

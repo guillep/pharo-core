@@ -6,7 +6,8 @@ Class {
 	#name : #StDebuggerContext,
 	#superclass : #Object,
 	#instVars : [
-		'context'
+		'context',
+		'exception'
 	],
 	#category : #'NewTools-Debugger-Model'
 }
@@ -33,6 +34,7 @@ StDebuggerContext >> buildInspectorNodes [
 	nodes addAll: self receiverNodes.
 	nodes add: self stackTopNode.
 	nodes add: self thisContextNode.
+	nodes addAll: self exceptionNodes.
 	^ nodes
 ]
 
@@ -45,6 +47,50 @@ StDebuggerContext >> context [
 { #category : #accessing }
 StDebuggerContext >> context: anObject [
 	context := anObject
+]
+
+{ #category : #building }
+StDebuggerContext >> doesNotUnderstandNodesFor: anException [
+
+	^ (self exceptionNodesFor: anException)
+		  add: (StInspectorDynamicNode
+				   hostObject: anException receiver
+				   label: 'DNU receiver'
+				   value: anException receiver);
+		  yourself
+]
+
+{ #category : #accessing }
+StDebuggerContext >> exception [
+	^ exception ifNil:[exception := OupsNullException new]
+]
+
+{ #category : #accessing }
+StDebuggerContext >> exception: anException [
+	exception := anException 
+]
+
+{ #category : #nodes }
+StDebuggerContext >> exceptionNodes [
+
+	^ self exception stDebuggerInspectorNodesFor: self
+]
+
+{ #category : #building }
+StDebuggerContext >> exceptionNodesFor: anException [
+
+	^ OrderedCollection new
+		  add: (StInspectorDynamicNode
+				   hostObject: anException
+				   label: 'Exception'
+				   value: anException);
+		  yourself
+]
+
+{ #category : #building }
+StDebuggerContext >> nullExceptionNodesFor: anException [
+
+	^ #(  )
 ]
 
 { #category : #printing }

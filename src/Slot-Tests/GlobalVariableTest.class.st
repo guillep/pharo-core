@@ -15,6 +15,11 @@ GlobalVariableTest >> testIsReadInMethod [
 							isReadIn: self class >> testSelector).
 ]
 
+{ #category : #tests }
+GlobalVariableTest >> testIsShadowing [
+	self deny: Object binding isShadowing
+]
+
 { #category : #'tests  - properties' }
 GlobalVariableTest >> testNotWrittenInMethod [
 

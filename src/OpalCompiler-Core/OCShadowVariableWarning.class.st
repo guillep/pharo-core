@@ -4,24 +4,22 @@ I get signalled when a variable in a block or method scope shadows a variable of
 Class {
 	#name : #OCShadowVariableWarning,
 	#superclass : #OCSemanticWarning,
-	#instVars : [
-		'shadowedVar'
-	],
 	#category : #'OpalCompiler-Core-Exception'
 }
 
 { #category : #correcting }
-OCShadowVariableWarning >> defaultAction [ 
+OCShadowVariableWarning >> defaultAction [
 
-	^ self resume: (self variable: self node shadows: self shadowedVar)
-	
+	^ self resume: (compilationContext interactive
+			   ifTrue: [ self raiseSemanticError ]
+			   ifFalse: [ self showWarningOnTranscript ])
 ]
 
 { #category : #accessing }
 OCShadowVariableWarning >> node: aVariableNode [
 
 	super node: aVariableNode.
-	messageText := 'Temp shadows: ', aVariableNode name.
+	messageText := 'Temp shadows: ', aVariableNode name
 
 ]
 
@@ -30,16 +28,14 @@ OCShadowVariableWarning >> openMenuIn: aBlock [
 	self error: 'should not be called'
 ]
 
-{ #category : #accessing }
-OCShadowVariableWarning >> shadowedVar [
+{ #category : #correcting }
+OCShadowVariableWarning >> raiseSemanticError [
 
-	^ shadowedVar
-]
-
-{ #category : #accessing }
-OCShadowVariableWarning >> shadowedVar: aVar [
-
-	shadowedVar := aVar
+	^OCSemanticError new
+		node: node;
+		compilationContext: compilationContext;
+		messageText: self stringMessage;
+		signal
 ]
 
 { #category : #correcting }
@@ -50,19 +46,6 @@ OCShadowVariableWarning >> showWarningOnTranscript [
 { #category : #accessing }
 OCShadowVariableWarning >> stringMessage [
 	^ 'Name already defined'
-]
-
-{ #category : #correcting }
-OCShadowVariableWarning >> variable: varNode shadows: semVar [
-	compilationContext interactive
-		ifTrue: [ 
-			OCSemanticError new
-				node: node;
-				compilationContext: compilationContext;
-				messageText: self stringMessage;
-				signal ]
-		ifFalse: [ self showWarningOnTranscript ].
-
 ]
 
 { #category : #accessing }

@@ -1063,7 +1063,7 @@ SHRBTextStyler >> style: aText ast: ast [
 	charAttr := Array new: aText size withAll: (self attributesFor: #default).
 	bracketLevel := 0.
 	parentheseLevel:=0.
-	ast acceptVisitor: self.
+	self visitNode: ast.
 	^aText runs: (RunArray newFrom: charAttr)	
 
 ]

@@ -86,6 +86,17 @@ SpCommand >> initialize [
 ]
 
 { #category : #accessing }
+SpCommand >> innerCommand [
+	| innerCommand |
+
+	innerCommand := self decoratedCommand.
+	[ innerCommand isKindOf: CmCommandDecorator ]
+	whileTrue: [ innerCommand := innerCommand decoratedCommand ].
+
+	^ innerCommand
+]
+
+{ #category : #accessing }
 SpCommand >> presenter [
 	^ presenter
 ]

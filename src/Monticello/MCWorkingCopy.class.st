@@ -208,6 +208,17 @@ MCWorkingCopy >> description [
 	^ self packageNameWithStar, ' (', (ancestry ancestorStringWithout: self packageName), ')'
 ]
 
+{ #category : #printing }
+MCWorkingCopy >> displayStringOn: stream [
+	ancestry ancestors isEmpty 
+		ifTrue: [ 
+			super displayStringOn: stream. stream nextPutAll: ' (unsaved)' ]
+		ifFalse: [ 
+			ancestry ancestors first displayStringOn: stream.
+			self needsSaving ifTrue: [ stream nextPutAll: ' (modified)' ] ]
+		
+]
+
 { #category : #private }
 MCWorkingCopy >> findSnapshotWithVersionInfo: aVersionInfo [
     "when an ancestor inside the ancestor chain is not found, does not pass nil instead.

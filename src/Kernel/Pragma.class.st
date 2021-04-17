@@ -193,6 +193,13 @@ Pragma >> arguments: anArray [
 	arguments := anArray
 ]
 
+{ #category : #printing }
+Pragma >> displayStringOn: stream [
+	self method displayStringOn: stream.
+	stream space.
+	self printOn: stream
+]
+
 { #category : #testing }
 Pragma >> hasLiteral: aLiteral [
 	^self selector == aLiteral 

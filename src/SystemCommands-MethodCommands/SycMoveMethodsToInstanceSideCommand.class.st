@@ -17,10 +17,7 @@ SycMoveMethodsToInstanceSideCommand class >> canBeExecutedInContext: aToolContex
 SycMoveMethodsToInstanceSideCommand class >> methodContextMenuActivation [
 	<classAnnotation>
 	
-	^CmdContextMenuActivation 
-		byItemOf: ClyMoreRefactorsMenuGroup 
-		order: 50
-		for: ClyMethod asCalypsoItemContext
+	^ SycMethodMenuActivation byRootGroupItemOrder: 50 for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #activation }
@@ -44,6 +41,6 @@ SycMoveMethodsToInstanceSideCommand >> defaultMenuItemName [
 SycMoveMethodsToInstanceSideCommand >> execute [
 	
 	methods 
-		collect: [ :each | RBMoveMethodToClassRefactoring method: each class: each origin instanceSide]
+		collect: [ :each | RBMoveMethodToClassRefactoring model: model method: each class: each origin instanceSide]
 		thenDo: [ :each | each execute ]
 ]

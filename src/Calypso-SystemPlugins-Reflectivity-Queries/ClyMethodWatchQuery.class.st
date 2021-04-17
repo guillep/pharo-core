@@ -9,7 +9,7 @@ Class {
 
 { #category : #printing }
 ClyMethodWatchQuery >> description [
-	^'Method watchpoints'
+	^'Method Watchpoints'
 ]
 
 { #category : #testing }

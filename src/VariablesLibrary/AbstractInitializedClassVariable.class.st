@@ -14,6 +14,12 @@ Class {
 	#category : #'VariablesLibrary-ClassVariables'
 }
 
+{ #category : #testing }
+AbstractInitializedClassVariable class >> isAbstract [
+
+	^self == AbstractInitializedClassVariable
+]
+
 { #category : #accessing }
 AbstractInitializedClassVariable >> default: anObject [
 	default := anObject

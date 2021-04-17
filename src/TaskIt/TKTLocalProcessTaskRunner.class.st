@@ -28,17 +28,17 @@ Class {
 	#category : #'TaskIt-Kernel'
 }
 
-{ #category : #schedulling }
+{ #category : #scheduling }
 TKTLocalProcessTaskRunner >> isLocalThreadRunner [
 	^ true
 ]
 
-{ #category : #schedulling }
+{ #category : #scheduling }
 TKTLocalProcessTaskRunner >> scheduleTaskExecution: aTaskExecution [
 	self executeTask: aTaskExecution
 ]
 
-{ #category : #polimorfism }
+{ #category : #polymorphism }
 TKTLocalProcessTaskRunner >> start [
 
 ]

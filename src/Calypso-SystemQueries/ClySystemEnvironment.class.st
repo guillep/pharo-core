@@ -86,6 +86,16 @@ ClySystemEnvironment >> changesAnnouncer: anObject [
 	changesAnnouncer := anObject
 ]
 
+{ #category : #'class compilation' }
+ClySystemEnvironment >> classCompilerFor: aClass [
+
+	"Use aClass superclass because it knows the definerClass of aClass."
+
+	^ aClass
+		  ifNil: [ self defaultClassCompiler ]
+		  ifNotNil: [ aClass superclass subclassDefinerClass new ]
+]
+
 { #category : #'class management' }
 ClySystemEnvironment >> classNamed: aString [
 	^globals classNamed: aString
@@ -111,61 +121,55 @@ ClySystemEnvironment >> classes [
 ]
 
 { #category : #compiling }
-ClySystemEnvironment >> compileANewClassFrom: aString notifying: aController startingFrom: aClass [
-	" Copied from Browser "
+ClySystemEnvironment >> compileANewClassFrom: newClassDefinitionString notifying: aController startingFrom: oldClass [
 
 	"The receiver's textual content is a request to define a new class. The
 	source code is defString. If any errors occur in compilation, notify
 	aController."
 
-	| oldClass class newClassName defTokens keywdIx classCompiler |
-	"for now make it work!"
-	ClassDefinitionPrinter showFluidClassDefinition
-		ifTrue: [ ^ self defineNewClassFrom: aString notifying: aController  startingFrom: aClass ].
-	self flag: #todo. "What horrible horrible logic."
-	oldClass := aClass.
-	defTokens := aString findTokens: Character separators.
-	((defTokens first = 'Trait' and: [ defTokens second = 'named:' ])
-		or: [ defTokens second = 'classTrait' ])
-		ifTrue: [ ^ self
-				defineTrait: aString
-				notifying: aController
-				startingFrom: aClass ].
-	keywdIx := defTokens findFirst: [ :x | x beginsWith: 'category' ].
-	keywdIx := defTokens findFirst: [ :x | '*subclass*' match: x ].
-	newClassName := (defTokens at: keywdIx + 1) copyWithoutAll: '#()'.
-	((oldClass isNil
-		or: [ oldClass instanceSide name asString ~= newClassName ])
-		and: [ self includesClassNamed: newClassName asSymbol ])
-		ifTrue: [ "Attempting to define new class over existing one when
-				not looking at the original one in this browser..."
-			(self
-				confirm:
-					((newClassName
-						,
-							' is an existing class in this system.
+	| newClassName |
+	newClassName := self extractNameFrom: newClassDefinitionString.
+	((self
+		  isOverridingExistingClassWhenDefiningClassNamed: newClassName
+		  startingFrom: oldClass) and: [ 
+		 (self confirmToOverrideExistingClassNamed: newClassName) not ]) 
+		ifTrue: [ ^ nil ].
+
+	(self isFluidDefinition: newClassDefinitionString)
+		ifTrue: [ 
+			ClassDefinitionPrinter showFluidClassDefinition: true.
+			^ self
+				  defineNewFluidClassOrTraitFrom: newClassDefinitionString
+				  notifying: aController
+				  startingFrom: oldClass ]
+		ifFalse: [ 
+			(self isTraitDefinition: newClassDefinitionString)
+				ifTrue: [ 
+					^ self
+						  defineTrait: newClassDefinitionString
+						  notifying: aController
+						  startingFrom: oldClass ]
+				ifFalse: [ 
+					(self isClassDefinition: newClassDefinitionString)
+						ifTrue: [
+							^ self
+							  defineNewClassFrom: newClassDefinitionString
+							  notifying: aController
+							  startingFrom: oldClass ]
+						ifFalse: [ ^ nil ] ] ]
+]
+
+{ #category : #'class management' }
+ClySystemEnvironment >> confirmToOverrideExistingClassNamed: newClassName [
+
+	"Attempting to define new class/trait over existing one when not looking at the original one in this browser..."
+
+	^ self confirm:
+		((newClassName , ' is an existing class/trait in this system.
 Redefining it might cause serious problems.
 Is this really what you want to do?') asText
-						makeBoldFrom: 1
-						to: newClassName size))
-				ifFalse: [ ^ nil ] ].
-	"Use oldClass superclass for defining oldClass since oldClass superclass knows the definerClass of oldClass."
-	oldClass
-		ifNil: [ classCompiler := self defaultClassCompiler ]
-		ifNotNil: [ classCompiler := oldClass superclass subclassDefinerClass new ].
-	[class := classCompiler
-		source: aString;
-		requestor: aController;
-		failBlock: [ ^ nil ];
-		logged: true;
-		evaluate] on: OCUndeclaredVariableWarning do: [ :ex | 
-			"we are only interested in class definitions"
-			ex compilationContext noPattern ifFalse: [ex pass ].
- 			"Undeclared Vars should not lead to the standard dialog to define them but instead should not accept"
- 			self inform: 'Undeclared Variable in Class Definition' . ^nil ].
-	^ class isBehavior
-		ifTrue: [ class ]
-		ifFalse: [ nil ]
+			 makeBoldFrom: 1
+			 to: newClassName size)
 ]
 
 { #category : #'package management' }
@@ -175,31 +179,57 @@ ClySystemEnvironment >> createPackageNamed: packageName [
 
 { #category : #'class compilation' }
 ClySystemEnvironment >> defaultClassCompiler [
-	^self class compiler
+
+	^ self class compiler
 ]
 
 { #category : #compiling }
-ClySystemEnvironment >> defineNewClassFrom: aString notifying: aController startingFrom: aClass [
-	"Precondition: aString is a fluid class"
+ClySystemEnvironment >> defineNewClassFrom: newClassDefinitionString notifying: aController startingFrom: oldClass [
 
-	| class classCompiler |
-	"the logic of erasing an existing class will be added back later."
-	aClass
-		ifNil: [ classCompiler := self defaultClassCompiler ]
-		ifNotNil: [ classCompiler := aClass superclass subclassDefinerClass new ].
-	[class := classCompiler
-		"for now a super ugly patch"
-		source: '(', aString ,') install';
-		requestor: aController;
-		logged: true;
-		evaluate] on: OCUndeclaredVariableWarning do: [ :ex | 
-			"we are only interested in class definitions"
-			ex compilationContext noPattern ifFalse: [ex pass ].
- 			"Undeclared Vars should not lead to the standard dialog to define them but instead should not accept"
- 			self inform: 'Undeclared Variable in Class Definition' . ^nil ].
-	^ class isBehavior
-		ifTrue: [ class ]
-		ifFalse: [ nil ]
+	"Precondition: newClassDefinitionString is not a fluid class"
+
+	| newClass |
+	[ 
+	newClass := (self classCompilerFor: oldClass)
+		            source: newClassDefinitionString;
+		            requestor: aController;
+		            failBlock: [ ^ nil ];
+		            logged: true;
+		            evaluate ]
+		on: OCUndeclaredVariableWarning
+		do: [ :ex | "we are only interested in class definitions"
+			ex compilationContext noPattern ifFalse: [ ex pass ].
+			"Undeclared Vars should not lead to the standard dialog to define them but instead should not accept"
+			self inform: 'Undeclared Variable in Class Definition'.
+			^ nil ].
+
+	^ newClass isBehavior
+		  ifTrue: [ newClass ]
+		  ifFalse: [ nil ]
+]
+
+{ #category : #compiling }
+ClySystemEnvironment >> defineNewFluidClassOrTraitFrom: newClassDefinitionString notifying: aController startingFrom: oldClass [
+
+	"Precondition: newClassDefinitionString is a fluid class or trait"
+
+	| newClass |
+	[ 
+	newClass := (self classCompilerFor: oldClass)
+		            source: '(' , newClassDefinitionString , ') install';
+		            requestor: aController;
+		            logged: true;
+		            "for now a super ugly patch"evaluate ]
+		on: OCUndeclaredVariableWarning
+		do: [ :ex | "we are only interested in class definitions"
+			ex compilationContext noPattern ifFalse: [ ex pass ].
+			"Undeclared Vars should not lead to the standard dialog to define them but instead should not accept"
+			self inform: 'Undeclared Variable in Class Definition'.
+			^ nil ].
+
+	^ newClass isBehavior
+		  ifTrue: [ newClass ]
+		  ifFalse: [ nil ]
 ]
 
 { #category : #'package management' }
@@ -210,6 +240,28 @@ ClySystemEnvironment >> ensureExistAndRegisterPackageNamed: packageName [
 { #category : #accessing }
 ClySystemEnvironment >> environment [
 	^ RBBrowserEnvironment new
+]
+
+{ #category : #'class management' }
+ClySystemEnvironment >> extractNameFrom: aDefinitionString [
+
+	| defTokens keywdIx |
+	(self isFluidDefinition: aDefinitionString)
+		ifFalse: [ 
+			defTokens := aDefinitionString findTokens: Character separators.
+			(self isTraitDefinition: aDefinitionString)
+				ifFalse: [ 
+					keywdIx := defTokens findFirst: [ :x | x beginsWith: 'category' ].
+					keywdIx := defTokens findFirst: [ :x | '*subclass*' match: x ] ]
+				ifTrue: [ 
+					keywdIx := defTokens findFirst: [ :x | x = 'category' ].
+					keywdIx := defTokens findFirst: [ :x | x = 'named:' ] ].
+			^ (defTokens at: keywdIx + 1 ifAbsent: [ '' ]) copyWithoutAll:
+				  '#()' ]
+		ifTrue: [ 
+			defTokens := aDefinitionString findTokens:
+				             Character separators , '<#'.
+			^ defTokens at: 2 ifAbsent: [ '' ] ]
 ]
 
 { #category : #accessing }
@@ -231,6 +283,72 @@ ClySystemEnvironment >> includesClassNamed: aSymbol [
 ClySystemEnvironment >> initialize [
 	super initialize.
 	projectManager := ClyProjectManagerRegistry new
+]
+
+{ #category : #compiling }
+ClySystemEnvironment >> isClassDefinition: newClassDefinitionString [
+	| defTokens |
+	defTokens := newClassDefinitionString findTokens: Character separators.
+	^ (self class environment classNamed: defTokens first) isNotNil.
+	
+ 
+]
+
+{ #category : #testing }
+ClySystemEnvironment >> isFluidClassDefinition: classDefinitionString [
+
+	| splitted |
+	splitted := classDefinitionString splitOn: '<<'.
+	^ splitted size = 2 and: [ 
+		  splitted first trim ~= 'Trait' and: [ 
+			  '#*' match:
+				  (splitted second findTokens: Character separators) first ] ]
+]
+
+{ #category : #testing }
+ClySystemEnvironment >> isFluidDefinition: aDefinitionString [
+
+	^ (self isFluidClassDefinition: aDefinitionString) or: [ 
+		  self isFluidTraitDefinition: aDefinitionString ]
+]
+
+{ #category : #testing }
+ClySystemEnvironment >> isFluidTraitDefinition: traitDefinitionString [
+
+	| splitted |
+	splitted := traitDefinitionString splitOn: '<<'.
+	^ splitted size = 2 and: [ 
+		  splitted first trim = 'Trait' and: [ 
+			  '#*' match:
+				  (splitted second findTokens: Character separators) first ] ]
+]
+
+{ #category : #testing }
+ClySystemEnvironment >> isOldTraitDefinition: traitDefinitionString [
+
+	| defTokens |
+	defTokens := traitDefinitionString findTokens:
+		             Character separators.
+	^ defTokens size >= 2 and: [ 
+		  (defTokens first = 'Trait' and: [ defTokens second = 'named:' ]) 
+			  or: [ defTokens second = 'classTrait' ] ]
+]
+
+{ #category : #'class management' }
+ClySystemEnvironment >> isOverridingExistingClassWhenDefiningClassNamed: newClassName startingFrom: oldClass [
+
+	"Attempting to define new class over existing one when not looking at the original one in this browser..."
+
+	^ (oldClass isNil or: [ 
+		   oldClass instanceSide name asString ~= newClassName ]) and: [ 
+		  self includesClassNamed: newClassName asSymbol ]
+]
+
+{ #category : #testing }
+ClySystemEnvironment >> isTraitDefinition: newClassDefinitionString [
+
+	^ (self isFluidTraitDefinition: newClassDefinitionString) or: [ 
+		  self isOldTraitDefinition: newClassDefinitionString ]
 ]
 
 { #category : #accessing }

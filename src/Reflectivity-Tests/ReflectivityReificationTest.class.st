@@ -857,6 +857,26 @@ ReflectivityReificationTest >> testReifyIvarVariable [
 ]
 
 { #category : #'tests - misc' }
+ReflectivityReificationTest >> testReifyLiteralArrayContext [
+	| literalArrayNode instance |
+	literalArrayNode := (ReflectivityExamples >> #exampleLiteralArray) ast body statements first value.
+	link := MetaLink new
+		metaObject: self;
+		selector: #tagExec:;
+		control: #before;
+		arguments: #(context).
+	literalArrayNode link: link.
+	self assert: literalArrayNode hasMetalink.
+	self
+		assert: (ReflectivityExamples >> #exampleLiteralArray) class
+		equals: ReflectiveMethod.
+	self assert: tag isNil.
+	instance := ReflectivityExamples new.
+	self assert: instance exampleLiteralArray equals: #(1).
+	self assert: tag class identicalTo: Context.
+]
+
+{ #category : #'tests - misc' }
 ReflectivityReificationTest >> testReifyLiteralArrayOperation [
 	| sendNode instance |
 	sendNode := (ReflectivityExamples >> #exampleLiteralArray) ast body statements first value.
@@ -878,15 +898,15 @@ ReflectivityReificationTest >> testReifyLiteralArrayOperation [
 
 { #category : #'tests - misc' }
 ReflectivityReificationTest >> testReifyLiteralArrayValue [
-	| sendNode instance |
-	sendNode := (ReflectivityExamples >> #exampleLiteralArray) ast body statements first value.
+	| literalArrayNode instance |
+	literalArrayNode := (ReflectivityExamples >> #exampleLiteralArray) ast body statements first value.
 	link := MetaLink new
 		metaObject: self;
 		selector: #tagExec:;
 		control: #after;
 		arguments: #(value).
-	sendNode link: link.
-	self assert: sendNode hasMetalink.
+	literalArrayNode link: link.
+	self assert: literalArrayNode hasMetalink.
 	self
 		assert: (ReflectivityExamples >> #exampleLiteralArray) class
 		equals: ReflectiveMethod.

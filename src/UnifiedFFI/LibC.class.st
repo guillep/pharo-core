@@ -1,6 +1,7 @@
 "
 I'm a module defining access to standard LibC. 
-I'm available under Linux and OSX, but not under Windows for obvious reasons :)
+I'm available under Linux and OSX.
+Under windows I provide similar functionality through the functions defined in msvcrt.dll
 "
 Class {
 	#name : #LibC,

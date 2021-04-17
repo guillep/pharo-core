@@ -37,29 +37,29 @@ Class {
 	#category : #'Glamour-Morphic-Brick-Widgets-Scrollpane'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 GLMScrollPaneBrick class >> defaultMaxVelocity [
 	^ self defaultScrollVelocity * 4
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 GLMScrollPaneBrick class >> defaultScrollAcceleration [
 
 	^ 4
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 GLMScrollPaneBrick class >> defaultScrollTimeReset [
 	^ 350
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 GLMScrollPaneBrick class >> defaultScrollTurboTime [
 
 	^ 30
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 GLMScrollPaneBrick class >> defaultScrollVelocity [
 	^ 15
 ]
@@ -460,6 +460,13 @@ GLMScrollPaneBrick >> scrollpaneBackgroundColor: aColor [
 
 	self setProperty: #brickScrollpaneBackgroundColor toValue: aColor.
 	self updateStyle
+]
+
+{ #category : #generated }
+GLMScrollPaneBrick >> unsubscribeListeners [
+
+	self deprecated: 'Use #unsubscribeListeners: instead'.
+	self activeHand removeEventListener: self
 ]
 
 { #category : #initialization }

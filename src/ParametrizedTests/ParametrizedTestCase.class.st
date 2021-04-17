@@ -1,21 +1,37 @@
 "
-I am a subclass of TestCase that implements support for parametrized tests.
-
+I am a subclass of `TestCase` that implements support for parametrized tests.
 A parametrized tests is a test that is run with different configurations.
 These configurations are generated from a Matrix.
 
-To Parametrized tests just extend this class as a normal tests, 
-add accessors for the properties to configure and implement the class side method #testParameters.
+### How to 
+To define parametrized tests just extend this class as a normal test, 
+add accessors for the properties to configure and implement the class side method `testParameters`.
 
-When the test class is executed a TestSuite is generated with an instance for each of the configured cases. This instances are populated using the accessors to the described properties. 
+When the test class is executed a `TestSuite` is generated with an instance for each of the configured cases. These instances are populated using the accessors to the described properties. 
 
-The class side method #testParameters returns a test matrix. 
+The class side method `testParameters` returns a test matrix. 
+A Matrix offers two protocols: 
+- `addCase:` to define an explicit configuration of parameters 
+- `forSelector: addOptions:` to define all possible value of a parameter
+
+#### Matrix with some configurations
+
+```
+PaSelectedCasesExampleTest class >> testParameters
+
+	^ ParametrizedTestMatrix new
+		addCase: { #number1 -> 2. #number2 -> 1.0. #result -> 3 };
+		addCase: { #number1 -> (2/3). #number2 -> (1/3). #result -> 1 };
+		yourself
+```
+
+#### Matrix with all combinations
 This test matrix can be generated with cartesian product configurations or a set of well known cases.
 
 An example of #testParameters is: 
 
 ```
-testParameters
+PaSimpleMatrixExampleTest class >> testParameters
 
 	^ ParametrizedTestMatrix new
 		forSelector: #option1 addOptions: #(a b c);
@@ -30,7 +46,7 @@ Also each option can be a literal or a block to generate that value. The block h
 In this example the generated cases will be 9. One per each combination of #option1 and #option2. 
 The test Case should have a setter for 
 
-Check the Examples to see how to use the different possible configurations.
+Check the `PaSimpleMatrixExampleTest` and  `PaSelectedCasesExampleTest` to see how to use the different possible configurations.
 "
 Class {
 	#name : #ParametrizedTestCase,
@@ -67,7 +83,9 @@ ParametrizedTestCase class >> isAbstract [
 
 { #category : #'building suites' }
 ParametrizedTestCase class >> testParameters [
-
+	"I'm the main hook to define configuration.
+	See addCase and forSelector:addOptions: on ParametrizedTestMatrix."
+	
 	^ ParametrizedTestMatrix new
 ]
 
@@ -75,6 +93,17 @@ ParametrizedTestCase class >> testParameters [
 ParametrizedTestCase >> instanceVariablesToKeep [
 
 	^ super instanceVariablesToKeep, #('testSelector' 'parametersToUse')
+]
+
+{ #category : #accessing }
+ParametrizedTestCase >> nameForReport [
+
+	parametersToUse ifNil: [ ^ super nameForReport ].
+
+	^ String streamContents: [ :s |
+		s nextPutAll: self selector asString.
+		parametersToUse printElementsOn: s ]
+
 ]
 
 { #category : #accessing }

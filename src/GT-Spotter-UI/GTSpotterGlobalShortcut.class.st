@@ -14,20 +14,8 @@ GTSpotterGlobalShortcut class >> isGlobalCategory [
 
 { #category : #accessing }
 GTSpotterGlobalShortcut class >> openGlobalSpotter [
-	| spotterModel |
-		
-	self reset.
-	spotterModel := GTSpotter new.
-		
-	GTSpotterMorph new
-		extent: (self currentWorld width / 2.4 @ (self currentWorld height / 1.6)) asIntegerPoint;
-		spotterModel: spotterModel;
-		doLayout;
-		openCenteredInWorld;
-		initializeListeners;
-		takeKeyboardFocus.
-		
-	spotterModel class markOpened.
+
+	Smalltalk tools spotter open
 ]
 
 { #category : #accessing }

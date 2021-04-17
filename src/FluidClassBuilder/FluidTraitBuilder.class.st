@@ -49,9 +49,10 @@ FluidTraitBuilder >> fillShiftClassBuilder [
 
 { #category : #building }
 FluidTraitBuilder >> install [
+
 	"Install the trait in the system environment"
-	
-	ShiftClassInstaller new makeWithBuilder: shiftClassBuilder 
+
+	^ ShiftClassInstaller new makeWithBuilder: shiftClassBuilder
 ]
 
 { #category : #accessing }
@@ -99,6 +100,12 @@ FluidTraitBuilder >> tag: anObject [
 ]
 
 { #category : #API }
+FluidTraitBuilder >> trait: anArray [
+	"To replace the uses: which will be deprecated"
+	uses := anArray
+]
+
+{ #category : #deprecated }
 FluidTraitBuilder >> uses: anArray [
 
 	uses := anArray

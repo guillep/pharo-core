@@ -42,12 +42,12 @@ OSWindowRenderer >> initialize [
 	lastExposeTime := 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #operating }
 OSWindowRenderer >> onRenderThread: aBlock [
 	OSWindowRenderThread enqueueOperation: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #operating }
 OSWindowRenderer >> onRenderThreadBlocking: aBlock [
 	OSWindowRenderThread enqueueBlockingOperation: aBlock
 ]
@@ -85,4 +85,13 @@ OSWindowRenderer >> updateRectangle: rectangle [
 { #category : #'updating screen' }
 OSWindowRenderer >> updateRectangles: aCollectionOfRectangles [
 	aCollectionOfRectangles do: [ :rectangle | self updateRectangle: rectangle ]
+]
+
+{ #category : #generated }
+OSWindowRenderer >> window: anObject [
+
+	self
+		deprecated: 'Use #backendWindow: instead'
+		transformWith: '`@rec window: `@arg' -> '`@rec backendWindow: `@arg'.
+	^ self backendWindow: anObject
 ]

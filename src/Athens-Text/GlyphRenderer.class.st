@@ -7,7 +7,7 @@ Class {
 	#category : #'Athens-Text'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 GlyphRenderer class >> forFont: aFont [
 	^ self basicNew initForFont: aFont
 ]

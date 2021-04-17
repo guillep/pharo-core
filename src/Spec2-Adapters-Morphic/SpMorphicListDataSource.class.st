@@ -10,6 +10,7 @@ Class {
 { #category : #accessing }
 SpMorphicListDataSource >> cellColumn: column row: rowIndex [
 	| displayValue cell item |
+	
 	item := self model itemAt: rowIndex.
 	displayValue := column readObject: item.
 	cell := FTCellMorph new
@@ -18,6 +19,7 @@ SpMorphicListDataSource >> cellColumn: column row: rowIndex [
 	self model hasIcons ifTrue: [ 
 		(self model iconFor: item) ifNotNil: [ :icon | cell addMorphBack: icon asMorph ] ].
 	cell addMorphBack: displayValue asMorph asReadOnlyMorph.
+	
 	^ cell
 ]
 
@@ -51,6 +53,7 @@ SpMorphicListDataSource >> headerColumn: column [
 
 { #category : #accessing }
 SpMorphicListDataSource >> listModel [
+
 	^ model model
 ]
 
@@ -119,5 +122,11 @@ SpMorphicListDataSource >> searchText: aString [
 
 { #category : #'drag and drop' }
 SpMorphicListDataSource >> transferFor: passenger from: aMorph [
-    ^(self model transferFor: passenger from: self table) buildWithSpec
+
+	^ (self model adapter 
+		transferFor: passenger 
+		from: self table) 
+		buildWithSpec
+		  dragHand: aMorph currentHand;
+		  yourself
 ]

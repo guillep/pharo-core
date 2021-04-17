@@ -10,7 +10,7 @@ Class {
 	#category : #'UnifiedFFI-Tests-Test-Data'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'field definition' }
 FFITestNestingStructureWithArray class >> fieldsDesc [
 " self rebuildFieldAccessors "
 	^ #(

@@ -13,6 +13,14 @@ SpAbstractMorphicListAdapter class >> isAbstract [
 	^ self = SpAbstractMorphicListAdapter
 ]
 
+{ #category : #'drag and drop' }
+SpAbstractMorphicListAdapter >> acceptDroppingMorph: aTransferMorph event: anEvent [ 
+	
+	self presenter acceptDrop cull: (self 
+		transferFrom: aTransferMorph 
+		event: anEvent)
+]
+
 { #category : #initialization }
 SpAbstractMorphicListAdapter >> addActivationKeyBindings: aWidget [
 
@@ -108,6 +116,17 @@ SpAbstractMorphicListAdapter >> showContextMenu [
 		w showMenuForIndex: { self presenter selection selectedIndex. 1 } ]
 ]
 
+{ #category : #'drag and drop' }
+SpAbstractMorphicListAdapter >> transferFrom: aTransferMorph event: anEvent [
+	| rowAndColumn |
+
+	rowAndColumn := self widget container rowAndColumnIndexContainingPoint: anEvent position.
+	^ SpDragAndDropTransferToList new
+		passenger: aTransferMorph passenger;
+		index: (rowAndColumn first ifNil: [ 0 ]);
+		yourself
+]
+
 { #category : #private }
 SpAbstractMorphicListAdapter >> triggerActivationAction [
 
@@ -132,4 +151,12 @@ SpAbstractMorphicListAdapter >> updateSearch [
 	self presenter isSearchEnabled
 		ifTrue: [ widget enableSearch ]
 		ifFalse: [ widget disableFunction ]
+]
+
+{ #category : #'drag and drop' }
+SpAbstractMorphicListAdapter >> wantsDroppedMorph: aTransferMorph event: anEvent [ 
+	
+	^ self presenter wantsDrop cull: (self 
+		transferFrom: aTransferMorph 
+		event: anEvent)
 ]

@@ -15,6 +15,12 @@ Class {
 	#category : #'AST-Core-Tokens'
 }
 
+{ #category : #testing }
+RBValueToken class >> isAbstract [
+
+	^ self == RBValueToken
+]
+
 { #category : #'instance creation' }
 RBValueToken class >> value: aString start: anInteger [ 
 	^self new value: aString start: anInteger

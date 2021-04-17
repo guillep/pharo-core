@@ -71,10 +71,10 @@ SpMorphicPanedAdapter >> layout [
 SpMorphicPanedAdapter >> layout: aLayout [
 
 	layout := aLayout.
-	widget
-		ifNil: [ widget := aLayout direction newWidgetOn: self.
-			widget layoutPolicy position: aLayout position.
-			self selector: self splitterNewSelector ].
+	widget ifNil: [ 
+		widget := aLayout direction newWidgetOn: self.
+		widget layoutPolicy position: aLayout position.
+		self selector: self splitterNewSelector ].
 
 	layout whenChildrenAddedDo: [ :ann |
 		self 

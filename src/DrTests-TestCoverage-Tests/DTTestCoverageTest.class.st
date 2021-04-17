@@ -17,7 +17,7 @@ DTTestCoverageTest >> setUp [
 		packageNamed: 'DrTests-TestCoverage-Tests-Mocks'.
 	"The test classes are in the same package as classes under test."
 	pluginConfiguration := DTPluginConfiguration items: {package} packages: {package}.
-	plugin := DTTestCoverage new
+	plugin := DTTestCoveragePlugin new
 ]
 
 { #category : #running }

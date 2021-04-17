@@ -11,17 +11,17 @@ Class {
 	#category : #'Compression-Archives'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 ArchiveMember class >> newDirectoryNamed: aString [
 	self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 ArchiveMember class >> newFromFile: aFileName [
 	self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 ArchiveMember class >> newFromString: aString [
 	self subclassResponsibility
 ]

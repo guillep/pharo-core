@@ -21,6 +21,7 @@ KMShortcutPrinterTest class >> testParameters [
 
 	^ super testParameters
 		"linux"
+		addCase: { #platform -> UnixPlatform new. #shortcut -> $n meta. #result -> 'Ctrl+N' };
 		addCase: { #platform -> UnixPlatform new. #shortcut -> $n command. #result -> 'Cmd+N' };
 		addCase: { #platform -> UnixPlatform new. #shortcut -> $n control. #result -> 'Ctrl+N' };
 		addCase: { #platform -> UnixPlatform new. #shortcut -> $n alt. #result -> 'Alt+N' };
@@ -34,6 +35,7 @@ KMShortcutPrinterTest class >> testParameters [
 			#shortcut -> Character cr shift. 
 			#result -> 'Shift+Enter' };
 		"windows"
+		addCase: { #platform -> WinPlatform new. #shortcut -> $n meta. #result -> 'Ctrl+N' };
 		addCase: { #platform -> WinPlatform new. #shortcut -> $n command. #result -> 'Cmd+N' };
 		addCase: { #platform -> WinPlatform new. #shortcut -> $n control. #result -> 'Ctrl+N' };
 		addCase: { #platform -> WinPlatform new. #shortcut -> $n alt. #result -> 'Alt+N' };
@@ -58,7 +60,14 @@ KMShortcutPrinterTest class >> testParameters [
 		addCase: { 
 			#platform -> MacOSPlatform new. 
 			#shortcut -> Character cr shift. 
-			#result -> (shift, enter) }			
+			#result -> (shift, enter) };
+		addCase: { #platform -> MacOSPlatform new. #shortcut -> ($n shift , $m shift). #result -> (shift, 'N' , ',' , shift , 'M') };
+		addCase: { #platform -> UnixPlatform new. #shortcut -> ($n shift , $m shift). #result -> 'Shift+N,Shift+M' };
+		addCase: { #platform -> WinPlatform new. #shortcut -> ($n shift , $m shift). #result -> 'Shift+N,Shift+M' };
+		addCase: { #platform -> MacOSPlatform new. #shortcut -> ($n control , $m control). #result -> (ctrl, 'N' , ',' , ctrl , 'M') };
+		addCase: { #platform -> UnixPlatform new. #shortcut -> ($n control , $m control). #result -> 'Ctrl+N,Ctrl+M' };
+		addCase: { #platform -> WinPlatform new. #shortcut -> ($n control , $m control). #result -> 'Ctrl+N,Ctrl+M' }
+
 ]
 
 { #category : #accessing }
@@ -95,9 +104,6 @@ KMShortcutPrinterTest >> shortcut: anObject [
 KMShortcutPrinterTest >> testPrintShortcut [
 	| printed |
 
-	printed := platform accept: (KMShortcutPrinter new
-		shortcut: shortcut;
-		yourself).
-
+	printed := shortcut acceptVisitor: platform shortcutPrinter.
 	self assert: printed equals: result
 ]

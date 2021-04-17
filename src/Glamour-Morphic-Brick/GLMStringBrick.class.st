@@ -47,7 +47,7 @@ Class {
 	#category : #'Glamour-Morphic-Brick-Widgets-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 GLMStringBrick class >> example [
 
 	| brick brick1 brick2 brick3|

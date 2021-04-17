@@ -115,14 +115,22 @@ SpComponentListDataSource >> searchText: aString [
 
 { #category : #'drag and drop' }
 SpComponentListDataSource >> transferFor: passenger from: aMorph [
-    ^(self model transferFor: passenger from: self table) buildWithSpec
+
+	^ (self model adapter 
+		transferFor: passenger 
+		from: self table) 
+		buildWithSpec
 ]
 
 { #category : #private }
 SpComponentListDataSource >> widgetFor: aPresenter [
+	| widget |
 
 	aPresenter adapter ifNotNil: [ :adapter | ^ adapter widget ].
-	^ aPresenter buildWithSpec
+	widget := aPresenter buildWithSpec
 		vResizing: #shrinkWrap;
-		yourself
+		yourself.
+	aPresenter adapter applyStyle: widget. 
+		
+	^ widget
 ]

@@ -36,6 +36,12 @@ ReAbstractCritique class >> for: anEntity by: aRule [
 		yourself
 ]
 
+{ #category : #testing }
+ReAbstractCritique class >> isAbstract [ 
+
+	^self == ReAbstractCritique
+]
+
 { #category : #'instance creation' }
 ReAbstractCritique class >> withAnchor: anAnchor by: aRule [
 

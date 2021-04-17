@@ -81,8 +81,8 @@ Finder >> computeListOfClasses: aString [
 Finder >> computeWithMethodFinder: aString [
 	"Compute the selectors for the single example of receiver and args, in the very top pane"
 
-	| data result resultArray dataObjects |
-(aString includes: $.)
+	| data result dataObjects |
+	(aString includes: $.)
 		ifFalse: [ ^ #() ].	"delete trailing period. This should be fixed in the Parser!"
 	data := aString trimRight: [ :char | char isSeparator or: [ char = $. ] ].
 
@@ -102,9 +102,7 @@ Finder >> computeWithMethodFinder: aString [
 		
 	result := MethodFinder new findMethodsByExampleInput: dataObjects allButLast andExpectedResult: dataObjects last.
 	result isEmpty ifTrue: [ self inform: 'no single method'. ^ #()].
-	
-	resultArray := result collect: [ :send | send asString , ' --> ', dataObjects last asString. ].
-	^ resultArray.
+	^ result.
 ]
 
 { #category : #'private-class' }
@@ -159,17 +157,17 @@ Finder >> constructDictionaryWithMessagesNameSearch: aString [
 Finder >> constructDictionaryWithMethodFinder: aString [
 	"construct dictionary when searching patterns"
 
-	| result listOfStrings listOfSelectors |
+	| result listOfResults listOfSelectors |
 	result := Dictionary new.
-	listOfStrings := self computeWithMethodFinder: aString.
-	listOfSelectors := listOfStrings collect: [ :each | self findSelector: each ].
+	listOfResults := self computeWithMethodFinder: aString.
+	listOfSelectors := listOfResults collect: [ :each | each selector ].
 	self packagesSelection classesDo:[ :class | 
 			class methodsDo:  [ :method | 
 					| index |
 					(index := listOfSelectors indexOf: method selector) = 0
 						ifFalse: [ 
 							| key value |
-							key := listOfStrings at: index.
+							key := listOfResults at: index.
 							value := method methodClass.
 							(result includesKey: key)
 								ifTrue: [ (result at: key) add: value ]
@@ -279,20 +277,6 @@ Finder >> environment [
 Finder >> environment: aCollection [
 
 	 environment := aCollection
-]
-
-{ #category : #private }
-Finder >> findSelector: aString [
-	"Answer the selector of aString."
-
-	| example tokens |
-	example := aString.
-	tokens := example parseLiterals.
-	tokens size = 1 ifTrue: [^ tokens first].
-	tokens first == #'^' ifTrue: [^ nil].
-	(tokens second includes: $:) ifTrue: [^ example findSelector].
-	Symbol hasInterned: tokens second ifTrue: [:aSymbol | ^ aSymbol].
-	^ nil
 ]
 
 { #category : #initialization }

@@ -13,7 +13,7 @@ Class {
 { #category : #running }
 DTTestProfilingTest >> setUp [
 	super setUp.
-	plugin := DTTestsProfiling  new.
+	plugin := DTTestsProfilingPlugin  new.
 	package := RPackage organizer
 		packageNamed: 'DrTests-TestCoverage-Tests-Mocks'.
 	classes := plugin itemsToBeAnalysedFor: {package}.
@@ -75,7 +75,7 @@ DTTestProfilingTest >> testDTTestCoverageResultTheSecondNodeSubResultsAreLeafs [
 	self
 		assert:
 			(leafs subResults
-				allSatisfy: [ :subResult | subResult class = DTTreeLeaf  ])
+				allSatisfy: [ :subResult | subResult class = DTTreeLeafNode  ])
 ]
 
 { #category : #running }

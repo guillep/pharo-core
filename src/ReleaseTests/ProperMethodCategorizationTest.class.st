@@ -119,6 +119,19 @@ ProperMethodCategorizationTest >> testNoEmptyProtocols [
 	self assertEmpty: violating
 ]
 
+{ #category : #tests }
+ProperMethodCategorizationTest >> testNoUncategorizedMethods [
+
+	"Check that we have no #'as yet unclassified' protocols left"
+
+	| violating |
+	violating := Smalltalk globals allBehaviors select: [ :class | 
+		             class protocols includes: #'as yet unclassified' ].
+
+	"we lock in the number of problematic classes, this way it can only improve"
+	self assert: violating size <= 151
+]
+
 { #category : #'tests - object' }
 ProperMethodCategorizationTest >> testPostCopyMethodNeedsToBeInCopyingProtocol [
 	"The #postCopy methods should be in method protocol 'copying'"

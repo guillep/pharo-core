@@ -110,8 +110,8 @@ RBAbstractClass2 >> renameInstanceVariable: oldName to: newName around: aBlock [
 		put: newName asString.
 		
 	^ self model 
-		performChange: (RBRenameInstanceVariableChange   
-							rename: oldName
+		performChange: (changeFactory   
+							renameInstanceVariable: oldName
 							to: newName
 							in: self)
 		around: aBlock

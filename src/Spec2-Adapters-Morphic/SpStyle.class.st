@@ -61,6 +61,7 @@ SpStyle class >> defaultStyleSheetData [
 .application [
 	Font { #name : EnvironmentFont(#default) },
 	Geometry { #height: 25 },
+	.box [ Geometry { #height: Reset, #vResizing: true, #hResizing: true } ],
 	.label [
 		Geometry { #hResizing: true, #height: 18 },
 		.headerError [ Draw { #color:  #red }  ],
@@ -97,7 +98,7 @@ SpStyle class >> defaultStyleSheetData [
 		.icons [ Geometry { #height: 30 } ],
 		.iconsAndLabel [ Geometry { #height: 45 } ]
 	],
-	.text [ Geometry { #height: 0 } ],
+	.text [ Geometry { #height: Reset } ],
 	.code [ Font { #name: EnvironmentFont(#code) } ],
 	.codePopover [ 
 		Draw { #color : #transparent },

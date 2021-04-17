@@ -21,7 +21,7 @@ OSWindowClipboard >> chooseRecentClipping [
 
 { #category : #accessing }
 OSWindowClipboard >> clipboardText [
-	^ self worldRenderer clipboardText
+	^ self worldRenderer clipboardText withInternalLineEndings
 ]
 
 { #category : #accessing }

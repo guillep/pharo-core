@@ -47,7 +47,7 @@ ClyMethodTagsAndPackageEditorMorph >> build [
 
 { #category : #building }
 ClyMethodTagsAndPackageEditorMorph >> buildEditButton [
-	editButton := IconicButton new
+	editButton := IconicButtonMorph new
 		target: self;
 		actionSelector: #openEditor;
 		arguments: #();
@@ -82,7 +82,7 @@ ClyMethodTagsAndPackageEditorMorph >> buildLabel [
 { #category : #building }
 ClyMethodTagsAndPackageEditorMorph >> buildResetButton [
 
-	resetButton := IconicButton new
+	resetButton := IconicButtonMorph new
 		target: self;
 		actionSelector: #resetTagsAndPackage;
 		arguments: #();

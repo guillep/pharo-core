@@ -29,7 +29,7 @@ ClyActiveBreakpointsQuery >> = anObject [
 
 { #category : #printing }
 ClyActiveBreakpointsQuery >> description [
-	^'active breakpoints'
+	^'Active Breakpoints'
 ]
 
 { #category : #accessing }

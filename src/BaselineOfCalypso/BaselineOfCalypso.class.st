@@ -146,6 +146,8 @@ BaselineOfCalypso >> baseline: spec [
 
 			package: #'Calypso-SystemTools-Core' with: [
 				spec requires: #(#'Calypso-SystemQueries' #'Calypso-Browser' 'SystemCommands' ). ];
+			package: #'Calypso-SystemTools-Core-Tests' with: [
+				spec requires: #(#'Calypso-SystemTools-Core' ). ];
 			 
 			package: #'Calypso-SystemTools-FullBrowser' with: [
 				spec requires: #(#'Calypso-SystemTools-Core' ). ];

@@ -25,6 +25,12 @@ Class {
 }
 
 { #category : #testing }
+ReNodeRewriteRule class >> isAbstract [ 
+
+	^self == ReNodeRewriteRule
+]
+
+{ #category : #testing }
 ReNodeRewriteRule class >> isVisible [
 	
 	^ self name ~=  #ReNodeRewriteRule

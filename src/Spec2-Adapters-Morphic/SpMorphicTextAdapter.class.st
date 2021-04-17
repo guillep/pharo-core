@@ -25,7 +25,7 @@ SpMorphicTextAdapter >> bindKeyCombination: aShortcut toAction: aBlock [
 SpMorphicTextAdapter >> buildWidget [
 	| newWidget |
 	
-	newWidget := (RubScrolledTextMorph on: self)
+	newWidget := (SpRubScrolledTextMorph on: self)
 		getTextSelector: #getText;
 		setTextSelector: #accept:notifying:;
 		getSelectionSelector: #readSelection;
@@ -196,7 +196,7 @@ SpMorphicTextAdapter >> updateExtentPropagationOf: string on: aWidget [
 	"This is an incredible ugly hack because what should be the correct way of doing it: 
 	 Font>>widthOfString: does not works (because it fails to take into account kerning).
 	 Why it works on the Editing area is a mystery. 
-	 BUT! It does not works for monospaced fonts! (again, no idea why)"
+	 BUT! It does not work for monospaced fonts! (again, no idea why)"
 	stringMorph := RubEditingArea new 
 		font: aWidget font;
 		updateTextWith: string asString.
@@ -210,6 +210,6 @@ SpMorphicTextAdapter >> updateExtentPropagationOf: string on: aWidget [
 			height := ((stringMorph
 				beWrapped;
 				width: width;
-				yourself) height + 2)" min: self currentWorld height / 3". 
+				yourself) height + 2)"min: self currentWorld height / 3". 
 			aWidget height: height ]
 ]

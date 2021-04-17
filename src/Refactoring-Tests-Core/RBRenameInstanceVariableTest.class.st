@@ -51,6 +51,27 @@ RBRenameInstanceVariableTest >> testRenameInstVar [
 ]
 
 { #category : #tests }
+RBRenameInstanceVariableTest >> testRenameInstVarFromTrait [
+	| refactoring class |
+	refactoring := RBRenameInstanceVariableRefactoring rename: 'var1' to: 'var11' in: RBDummy.
+	self executeRefactoring: refactoring.
+	class := refactoring model classNamed: #RBDummy.
+	self assert: (class directlyDefinesInstanceVariable: 'var11').
+	self deny: (class directlyDefinesInstanceVariable: 'var1').
+	self
+		assert: (class parseTreeFor: #var1)
+		equals: (self parseMethod: 'var1 ^ var11').
+	class := refactoring model classNamed: #RBClassUsingSharedPoolForTestData.
+	self
+		assert: (class parseTreeFor: #msg1)
+		equals: (self parseMethod: 'msg1 var11 asString').
+	"TODO"
+	"self
+		assert: (class parseTreeFor: #msg2)
+		equals: (self parseMethod: 'msg2 var11')"
+]
+
+{ #category : #tests }
 RBRenameInstanceVariableTest >> testRenameInstVarNotAccessors [
 	| refactoring class |
 	refactoring := RBRenameInstanceVariableRefactoring rename: 'result' to: 'whatever' in: RBBasicLintRuleTestData renameAccessors: false.

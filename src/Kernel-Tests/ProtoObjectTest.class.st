@@ -200,9 +200,12 @@ ProtoObjectTest >> testNextObject [
 	self assert: (nil nextObject notNil).
 	self assert: ('test' nextObject notNil).
 	
-	self should: [42 nextObject notNil] raise: ShouldNotImplement .
-	self should: [$x nextObject notNil] raise: ShouldNotImplement .
-	self should: [3.14 nextObject notNil] raise: ShouldNotImplement .
+	self should: [42 nextObject notNil] raise: ShouldNotImplement.
+	self should: [$x nextObject notNil] raise: ShouldNotImplement.
+
+	"Small Floats are only available in 64 bits VMs"	
+	Smalltalk vm hasSmallFloats 
+		ifTrue: [self should: [3.14 nextObject notNil] raise: ShouldNotImplement].
 
 ]
 

@@ -18,11 +18,11 @@ Class {
 	#name : #MessageList,
 	#superclass : #SpPresenter,
 	#instVars : [
-		'listModel',
 		'cachedHierarchy',
 		'topologySort',
 		'model',
-		'method'
+		'method',
+		'listPresenter'
 	],
 	#category : #'NewTools-MethodBrowsers-Base'
 }
@@ -31,7 +31,7 @@ Class {
 MessageList class >> defaultSpec [
 
 	^ SpBoxLayout newVertical
-		add: #listModel;
+		add: #listPresenter;
 		yourself
 ]
 
@@ -97,7 +97,7 @@ MessageList >> cacheHierarchyForClasses: aCollection [
 
 { #category : #api }
 MessageList >> contextMenu: aMenuPresenter [
-	listModel contextMenu: aMenuPresenter
+	listPresenter contextMenu: aMenuPresenter
 ]
 
 { #category : #private }
@@ -126,9 +126,9 @@ MessageList >> initialize [
 
 { #category : #initialization }
 MessageList >> initializePresenters [
-	listModel := self newTable.
+	listPresenter := self newTable.
 
-	listModel
+	listPresenter
 		sortingBlock: [ :a :b | self sortClassesInCachedHierarchy: a b: b ];
 		addColumn: (SpStringTableColumn title: 'Location' evaluated: [ :item | self locationOf: item ]);
 		addColumn: (SpStringTableColumn title: 'Selector' evaluated: [ :item | self selectorOf: item ]);
@@ -145,8 +145,9 @@ MessageList >> inspectMethod [
 ]
 
 { #category : #accessing }
-MessageList >> listModel [
-	^ listModel
+MessageList >> listPresenter [
+
+	^ listPresenter
 ]
 
 { #category : #accessing }
@@ -209,14 +210,14 @@ MessageList >> messageListMenu [
 
 { #category : #accessing }
 MessageList >> messages [
-	^ listModel items
+	^ listPresenter items
 ]
 
 { #category : #accessing }
 MessageList >> messages: aCollection [
 	self cacheHierarchyForClasses: aCollection.
-	listModel items: cachedHierarchy keys asOrderedCollection.
-	listModel listSize > 0 ifTrue: [ listModel selectIndex: 1 ]
+	listPresenter items: cachedHierarchy keys asOrderedCollection.
+	listPresenter listSize > 0 ifTrue: [ listPresenter selectIndex: 1 ]
 ]
 
 { #category : #private }
@@ -231,7 +232,7 @@ MessageList >> model [
 
 { #category : #accessing }
 MessageList >> numberOfElements [
-	^ listModel listSize
+	^ listPresenter listSize
 ]
 
 { #category : #private }
@@ -258,22 +259,23 @@ MessageList >> removeMethods [
 
 { #category : #selecting }
 MessageList >> selectIndex: anInteger [
-	listModel selectIndex: anInteger
+
+	listPresenter selectIndex: anInteger
 ]
 
 { #category : #accessing }
 MessageList >> selectMessage: aMessage [
-	listModel selectItem: aMessage
+	listPresenter selectItem: aMessage
 ]
 
 { #category : #selecting }
 MessageList >> selectedIndex [
-	^ listModel selection selectedIndex
+	^ listPresenter selection selectedIndex
 ]
 
 { #category : #accessing }
 MessageList >> selectedMessage [
-	^ listModel selection selectedItem
+	^ listPresenter selection selectedItem
 ]
 
 { #category : #accessing }
@@ -315,7 +317,7 @@ MessageList >> sortClassesInCachedHierarchy: aMethodDefinition b: otherMethodDef
 
 { #category : #api }
 MessageList >> sortingBlock: aBlock [
-	listModel sortingBlock: aBlock
+	listPresenter sortingBlock: aBlock
 ]
 
 { #category : #accessing }
@@ -328,12 +330,19 @@ MessageList >> topologicSort: anObject [
 	topologySort := anObject
 ]
 
-{ #category : #enumerating }
+{ #category : #'api-events' }
 MessageList >> whenModelChangedDo: aBlock [
-	listModel whenModelChangedDo: aBlock
+	listPresenter whenModelChangedDo: aBlock
 ]
 
-{ #category : #enumerating }
+{ #category : #'api-events' }
+MessageList >> whenSelectedDo: aBlock [
+
+	listPresenter whenSelectedDo: aBlock
+]
+
+{ #category : #'api-events' }
 MessageList >> whenSelectionChangedDo: aBlock [
-	listModel whenSelectionChangedDo: aBlock
+
+	listPresenter whenSelectionChangedDo: aBlock
 ]

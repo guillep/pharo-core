@@ -5,7 +5,7 @@ Class {
 	#name : #PoolDefiner2,
 	#superclass : #SharedPool,
 	#classVars : [
-		'Author',
+		'AnAuthor',
 		'VariableInPoolDefiner2'
 	],
 	#category : #'Kernel-Tests-Classes'
@@ -16,5 +16,5 @@ PoolDefiner2 class >> initialize [
 	"self initialize"
 	
 	VariableInPoolDefiner2 := 33.
-	Author := 'NotDucasse'.
+	AnAuthor := 'NotDucasse'.
 ]

@@ -18,6 +18,14 @@ ClassVariableTest >> testIsReadInMethod [
 	self assert: ((TestCase classVariableNamed: #DefaultTimeLimit) isReadIn: self class >> testSelector)
 ]
 
+{ #category : #tests }
+ClassVariableTest >> testIsShadowing [
+	| variable |
+	variable := SmalltalkImage classVariableNamed: #CompilerClass.
+	self deny: variable isShadowing
+
+]
+
 { #category : #'tests  - properties' }
 ClassVariableTest >> testIsWrittenInMethod [
 
@@ -104,4 +112,13 @@ ClassVariableTest >> testWritingToContext [
 	classVariable write: #testValue inContext: thisContext.
 	
 	self assert: TestVariable equals: #testValue
+]
+
+{ #category : #tests }
+ClassVariableTest >> testisPoolVariable [
+	| variable |
+	variable := SmalltalkImage classVariableNamed: #CompilerClass.
+	self deny: variable isPoolVariable.
+	variable := TextConstants classVariableNamed: #Basal.
+	self assert: variable isPoolVariable.
 ]

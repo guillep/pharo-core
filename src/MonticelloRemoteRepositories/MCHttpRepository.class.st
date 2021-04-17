@@ -179,6 +179,11 @@ MCHttpRepository >> displayProgress: label during: workBlock [
 
 ]
 
+{ #category : #printing }
+MCHttpRepository >> displayStringOn: aStream [
+	aStream nextPutAll: self location
+]
+
 { #category : #private }
 MCHttpRepository >> entityStreamContents: aBlock [
 	"Generate output in a buffer because we need the length"

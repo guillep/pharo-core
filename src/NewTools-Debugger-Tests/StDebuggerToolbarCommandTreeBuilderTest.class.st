@@ -24,8 +24,8 @@ StDebuggerToolbarCommandTreeBuilderTest >> testBuildCommandGroupFromNamedDescrip
 	self assert: group description equals: #testDescription.
 	spCommands := group allCommands.
 	self assert: spCommands size equals: 2.
-	self assert: spCommands first decoratedCommand class equals: StMockDebugCommand.
-	self assert: spCommands second decoratedCommand class equals: StMockDebugCommand.
+	self assert: spCommands first innerCommand class equals: StMockDebugCommand.
+	self assert: spCommands second innerCommand class equals: StMockDebugCommand.
 	self assert: spCommands first context identicalTo: debugger.
 	self assert: spCommands second context identicalTo: debugger
 ]

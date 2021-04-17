@@ -442,21 +442,27 @@ SetTest >> testIntersection [
 
 { #category : #'tests - integrity' }
 SetTest >> testIsHealthy [
+
 	"we use associations as keys on purpose, because they changing
 	hash depending on the key"
-	| a1 a2 set |
 
-	set := Set new.
-	[
-		a1 := 3 -> nil.
-		a2 := nil -> 3.
-		set add: a1; add: a2.
-		self assert: set isHealthy.
-		a1 key: 0.
-		a2 key: 0.
-		self assert: set isHealthy not
-	
-	] ensure: [set removeAll]
+	| a1 a2 set |
+	"There is a probability that nil will hash to 0 in some builds,
+	so the nil key will still be in the correct position after
+	it is changed to 0. The larger the set's capacity, the lower the
+	probability of this failure. Also, the default size of a set
+	happens to have the same correct position for 3 and 0."
+	set := Set new: 50000.
+	[ 
+	a1 := 3 -> nil.
+	a2 := nil -> 3.
+	set
+		add: a1;
+		add: a2.
+	self assert: set isHealthy.
+	a1 key: 0.
+	a2 key: 0.
+	self assert: set isHealthy not ] ensure: [ set removeAll ]
 ]
 
 { #category : #'tests - some' }

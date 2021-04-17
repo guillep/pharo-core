@@ -950,10 +950,10 @@ Behavior >> instancesSizeInMemory [
 ]
 
 { #category : #testing }
-Behavior >> isAbstract [
-	
+Behavior >> isAbstract [	
 	"By default a class is not abstract.
 	Hook to mark your own subclasses as abstract."
+	
 	^false
 ]
 

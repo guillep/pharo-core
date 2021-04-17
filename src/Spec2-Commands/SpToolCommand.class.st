@@ -68,11 +68,13 @@ SpToolCommand class >> shortName [
 { #category : #converting }
 SpToolCommand >> asSpecCommand [
 	| command |
+	
 	command := super asSpecCommand.
 	self shortcutKey ifNotNil: [ :key | command shortcutKey: key ].
 	self defaultIconName
 		ifNotNil: [ :iconName | command iconName: iconName ].
-	^ command
+	
+	^ SpToolCurrentApplicationCommand decorate: command
 ]
 
 { #category : #accessing }

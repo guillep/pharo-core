@@ -12,25 +12,11 @@ ReIvarNeitherReadNorWrittenRule class >> checksClass [
 	^ true
 ]
 
-{ #category : #enumerating }
+{ #category : #running }
 ReIvarNeitherReadNorWrittenRule >> check: aClass forCritiquesDo: aCriticBlock [
 	aClass slots
 		select: [ :slot | slot isReferenced not ]
-		thenDo: [ :slot | aCriticBlock cull: (self critiqueFor: aClass about: slot) ]
-]
-
-{ #category : #enumerating }
-ReIvarNeitherReadNorWrittenRule >> critiqueFor: aClass about: aSlot [
-
-	| crit |
-	crit := ReTrivialCritique
-		withAnchor: (ReVarSearchSourceAnchor
-			entity: aClass
-			string: aSlot name)
-		by: self.
-	
-	crit tinyHint: aSlot name.
-	^ crit
+		thenDo: [ :slot | aCriticBlock cull: (self critiqueFor: aClass about: slot name) ]
 ]
 
 { #category : #accessing }

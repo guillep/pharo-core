@@ -90,7 +90,7 @@ MenuTitleMorph >> icon: aForm [
 { #category : #'private-creation' }
 MenuTitleMorph >> iconButtonCalling: aSelector withForm: aForm helpText: aText [
 
-	^IconicButton new target: self;
+	^IconicButtonMorph new target: self;
 		actionSelector: aSelector;
 		labelGraphic: aForm;
 		color: Color transparent;

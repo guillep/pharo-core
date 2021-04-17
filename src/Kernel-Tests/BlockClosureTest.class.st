@@ -474,6 +474,11 @@ BlockClosureTest >> testValueWithArgumentsWithOrderedCollection [
 ]
 
 { #category : #'tests - evaluating' }
+BlockClosureTest >> testValueWithExit [
+	self assert: [:exit | 1 ] valueWithExit equals: 1
+]
+
+{ #category : #'tests - evaluating' }
 BlockClosureTest >> testValueWithExitBreak [
 	| val |
 	[ :break | 

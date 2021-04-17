@@ -59,9 +59,10 @@ StDebuggerStackCommandTreeBuilderTest >> testGroupName [
 
 { #category : #tests }
 StDebuggerStackCommandTreeBuilderTest >> testNavigationCommandForContext [
-	|cmd|
+	| cmd |
+	
 	cmd := builder buildSpecCommand: StMockDebugCommand forContext: self.
-	self assert: cmd decoratedCommand class identicalTo: StMockDebugCommand.
+	self assert: cmd innerCommand class identicalTo: StMockDebugCommand.
 	self assert: cmd context identicalTo: self
 ]
 
@@ -128,8 +129,10 @@ StDebuggerStackCommandTreeBuilderTest >> testStackContextMenuBrowseCommands [
 { #category : #tests }
 StDebuggerStackCommandTreeBuilderTest >> testStackContextMenuExplorationCommands [
 	|  cmdGroup cmdEntries |
+	
 	cmdGroup := builder stackContextMenuExplorationCommands.
-	cmdEntries := cmdGroup allCommands collect:[:spCmd| spCmd decoratedCommand].
+	cmdEntries := cmdGroup allCommands 
+		collect:[ :spCmd| spCmd innerCommand ].
 	self deny: cmdGroup isRoot.
 	self assert: cmdEntries size equals: 3.
 	self assert: cmdGroup name equals: builder stackContextMenuExplorationGroupName.
@@ -175,11 +178,11 @@ StDebuggerStackCommandTreeBuilderTest >> testStackContextMenuStackEditionsComman
 
 { #category : #tests }
 StDebuggerStackCommandTreeBuilderTest >> testStackContextNavigationCommands [
-	|cmdGroup commands|
+	| cmdGroup commands |
 
 	cmdGroup := builder stackContextNavigationCommands.
 	commands := cmdGroup allCommands
-		collect: [ :spCommand | spCommand decoratedCommand ].
+		collect: [ :spCommand | spCommand innerCommand ].
 		
 	self deny: cmdGroup isRoot.
 	

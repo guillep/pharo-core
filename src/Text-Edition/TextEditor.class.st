@@ -2383,13 +2383,12 @@ TextEditor >> performCmdActionsWith: aKeyboardEvent shifted: aBoolean return: re
 
 { #category : #'pluggable menus' }
 TextEditor >> pluggableYellowButtonActivity: shiftKeyState [
+
 	"Invoke the model's popup menu."
 
 	^ (self getPluggableYellowButtonMenu: shiftKeyState)
-		ifNil: [ false ]
-		ifNotNil: [ :menu | 
-			menu invokeOn: model orSendTo: self.
-			true ]
+		  ifNil: [ false ]
+		  ifNotNil: [ true ]
 ]
 
 { #category : #'accessing-selection' }

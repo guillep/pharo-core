@@ -71,6 +71,11 @@ ClySpotterModel >> commandListProcessorForContext: aContext step: aStep [
 ]
 
 { #category : #printing }
+ClySpotterModel >> displayStringOn: stream [
+	stream << self browser newWindowTitle
+]
+
+{ #category : #printing }
 ClySpotterModel >> gtDisplayOn: stream [
 	stream << self browser newWindowTitle
 ]

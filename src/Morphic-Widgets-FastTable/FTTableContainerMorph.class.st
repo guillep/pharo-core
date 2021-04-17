@@ -77,7 +77,6 @@ FTTableContainerMorph >> adjustToHorizontalScrollBarValue: aNumber [
 
 { #category : #private }
 FTTableContainerMorph >> calculateColumnWidths [
-
 	"do three runs 
 	- first collect defined columnwidth that fit
 	- collect remaining undefined columnwidth 
@@ -87,10 +86,9 @@ FTTableContainerMorph >> calculateColumnWidths [
    the method was adjusted to distribute space starting from startColumnIndex 
 	to enable horizontal scrolling when columns do not fit the window,
 	see #columnOrderOfWidthDistribution"
-	
-
 	| undefinedColumnWidths widths remainingWidth |
-	remainingWidth := self table bounds width.
+	
+	remainingWidth := self table width - self table verticalScrollBarWidth.
 
 	widths := Array new: self table numberOfColumns withAll: 0.
 	self columnOrderOfWidthDistribution do: [ :idx || column columnWidth |

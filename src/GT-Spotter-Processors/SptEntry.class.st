@@ -44,6 +44,12 @@ SptEntry >> content: anObject [
 	content := anObject
 ]
 
+{ #category : #'spotter-extensions' }
+SptEntry >> displayString [
+
+	^ self asString
+]
+
 { #category : #evaluating }
 SptEntry >> doEvaluate [ 
 
@@ -55,12 +61,6 @@ SptEntry >> evaluateFor: aGTSpotterStep [
 
 	self doEvaluate.
 	aGTSpotterStep exit.
-]
-
-{ #category : #'spotter-extensions' }
-SptEntry >> gtDisplayString [
-
-	^ self asString
 ]
 
 { #category : #comparing }

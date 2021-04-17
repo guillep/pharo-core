@@ -35,67 +35,67 @@ Class {
 	#category : #'OSWindow-Core-OpenGL'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultAlphaSize [
 	^ DefaultAlphaSize
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultBlueSize [
 	^ DefaultBlueSize
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultDepthSize [
 	^ DefaultDepthSize
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultDoubleBuffer [
 	^ DefaultDoubleBuffer
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultGreenSize [
 	^ DefaultGreenSize
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultMajorVersion [
 	^ DefaultMajorVersion
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultMinorVersion [
 	^ DefaultMinorVersion
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultProfileType [
 	^ DefaultProfileType
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultRedSize [
 	^ DefaultRedSize
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultSRGBFramebuffer [
 	^ DefaultSRGBFramebuffer
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultStencilSize [
 	^ DefaultStencilSize
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #defaults }
 OSWindowGLAttributes class >> defaultSwapControl [
 	^ DefaultSwapControl
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'class initialization' }
 OSWindowGLAttributes class >> initialize [
 	DefaultRedSize := 5.
 	DefaultGreenSize := 5.

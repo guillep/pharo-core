@@ -8,14 +8,14 @@ Class {
 	#category : #'Glamour-Morphic-Renderer'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #rendering }
 GLMMorphicDropDownRenderer >> actOnContextChanged: ann [ 
 	ann property = #selection ifTrue: [ 
 		listModel announcer suspendAllWhile: [
 			dropDownMorph listSelectionIndex: (listModel glamourPresentation displayValue indexOf: ann value) ] ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #rendering }
 GLMMorphicDropDownRenderer >> actOnPresentationUpdated: ann [
 
 	listModel resetData.
@@ -25,7 +25,7 @@ GLMMorphicDropDownRenderer >> actOnPresentationUpdated: ann [
 	 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #rendering }
 GLMMorphicDropDownRenderer >> render: aDropListPresentation [
 	listModel := GLMDropListModel new glamourPresentation: aDropListPresentation.	"When the morph changes, we want to update the glamour model"
 	listModel announcer

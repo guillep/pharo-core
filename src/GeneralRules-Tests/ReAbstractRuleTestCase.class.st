@@ -4,6 +4,12 @@ Class {
 	#category : #'GeneralRules-Tests-Migrated'
 }
 
+{ #category : #testing }
+ReAbstractRuleTestCase class >> isAbstract [ 
+
+	^self == ReAbstractRuleTestCase 
+]
+
 { #category : #'test-support' }
 ReAbstractRuleTestCase >> critiguesFor: ruleClass onMethod: method [
 	| critiques |

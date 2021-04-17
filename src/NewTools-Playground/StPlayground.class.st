@@ -47,9 +47,6 @@ See *class:StPlaygroundPagesPresenter*
 Class {
 	#name : #StPlayground,
 	#superclass : #StInspector,
-	#instVars : [
-		'page'
-	],
 	#classVars : [
 		'CacheDirectory'
 	],
@@ -124,6 +121,12 @@ StPlayground class >> registerToolsOn: registry [
 
 	registry register: self as: #workspace
 
+]
+
+{ #category : #accessing }
+StPlayground >> contents: aString [ 
+
+	self firstPage contents: aString
 ]
 
 { #category : #'api-focus' }

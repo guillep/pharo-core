@@ -4,7 +4,7 @@ Class {
 	#category : #'Glamour-Morphic-Pager-Theme'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GLMPagerWidgetThemer >> defaultScrollButtonStyleFor: aButton [
 
 	aButton checkedIcon: GLMUIThemeExtraIcons glamorousGrayCircleEmpty.
@@ -15,13 +15,13 @@ GLMPagerWidgetThemer >> defaultScrollButtonStyleFor: aButton [
 	aButton checkedImage: aButton checkedIcon.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GLMPagerWidgetThemer >> previewPaneStyleFor: aMorph [
 
 	aMorph borderColor: (Color lightGray)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GLMPagerWidgetThemer >> selectedPaneStyleFor: aMorph [
 
 	aMorph borderColor: (Color transparent)

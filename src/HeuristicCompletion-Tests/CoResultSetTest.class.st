@@ -14,7 +14,9 @@ CoResultSetTest >> setUp [
 	self completionClass addInstanceVariable: 'ba'.
 	completion := CoResultSet
 		fetcher: (CoInstanceVariableFetcher new
-			completionClass: self completionClass)
+			completionClass: self completionClass).
+			
+	completion caseSensitive: true.
 ]
 
 { #category : #tests }
@@ -28,10 +30,35 @@ CoResultSetTest >> testBroadenFilterAfterFetchCompletionShouldBroadenResults [
 ]
 
 { #category : #tests }
+CoResultSetTest >> testBroadenFilterAfterFetchCompletionShouldBroadenResultsWhenCaseInsensitve [
+
+	completion caseSensitive: false.
+	
+	completion filterWithString: 'BA'.
+	completion fetch: 1.
+	completion filterWithString: 'B'.
+
+	self
+		assertEntry: completion first
+		equals: (NECInstVarEntry contents: 'b' node: nil)
+]
+
+{ #category : #tests }
 CoResultSetTest >> testBroaderFilterCompletionShouldBroadenResults [
 
 	completion filterWithString: 'ba'.
 	completion filterWithString: 'b'.
+	
+	self assertEntry: completion first equals: (NECInstVarEntry contents: 'b' node: nil)
+]
+
+{ #category : #tests }
+CoResultSetTest >> testBroaderFilterCompletionShouldBroadenResultsWhenCaseInsensitive [
+
+	completion caseSensitive: false.
+
+	completion filterWithString: 'ba'.
+	completion filterWithString: 'B'.
 	
 	self assertEntry: completion first equals: (NECInstVarEntry contents: 'b' node: nil)
 ]

@@ -21,6 +21,13 @@ There is no special handling for already existing accessors methods, their direc
 ]
 
 { #category : #pages }
+RBBrowserVariableRefactoringHelp class >> accessorForLazyInitializationRefactoring [
+	^HelpTopic
+		title: 'Accessor with lazy initialization'
+		contents: RBCreateAccessorsWithLazyInitializationForVariableRefactoring comment
+]
+
+{ #category : #pages }
 RBBrowserVariableRefactoringHelp class >> accessorVariableRefactoring [
 	^HelpTopic
 		title: 'Accessor'
@@ -47,6 +54,14 @@ RBBrowserVariableRefactoringHelp class >> bookName [
 ]
 
 { #category : #pages }
+RBBrowserVariableRefactoringHelp class >> mergeVariableIntoAnotherRefactoring [
+	^HelpTopic
+		title: 'Merge variable'
+		contents: RBMergeInstanceVariableIntoAnother comment
+
+]
+
+{ #category : #pages }
 RBBrowserVariableRefactoringHelp class >> moveToVariableRefactoring [
 	^HelpTopic
 		title: 'Move to class'
@@ -60,7 +75,7 @@ Another dialog for choosing the instance variable to move. If there are any meth
 
 { #category : #accessing }
 RBBrowserVariableRefactoringHelp class >> pages [
-	^ #(addVariableRefactoring renameVariableRefactoring removeVariableRefactoring abstractVariableRefactoring  accessorVariableRefactoring moveToVariableRefactoring pullUpVariableRefactoring pushDownVariableRefactoring)
+	^ #(addVariableRefactoring renameVariableRefactoring removeVariableRefactoring abstractVariableRefactoring  accessorVariableRefactoring accessorForLazyInitializationRefactoring moveToVariableRefactoring pullUpVariableRefactoring pushDownVariableRefactoring #mergeVariableIntoAnotherRefactoring)
 ]
 
 { #category : #pages }

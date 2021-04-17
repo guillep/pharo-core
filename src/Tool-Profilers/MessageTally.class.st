@@ -453,6 +453,15 @@ MessageTally >> copyWithTally: hitCount [
 ]
 
 { #category : #printing }
+MessageTally >> displayStringOn: aStream [
+	self displayIdentifierOn: aStream.
+	aStream 
+		nextPutAll: ' (';
+		nextPutAll: self tally printString;
+		nextPutAll: ')'
+]
+
+{ #category : #printing }
 MessageTally >> fullPrintExactOn: aStream [
 	aStream nextPutAll: '**Tree**'; cr.
 	self

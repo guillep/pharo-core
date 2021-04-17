@@ -160,6 +160,13 @@ GLMTransmission >> destination: aPort [
 	destination := aPort
 ]
 
+{ #category : #printing }
+GLMTransmission >> displayStringOn: stream [
+	self origins asArray displayStringOn: stream.
+	stream nextPutAll: '->'.
+	self destination displayStringOn: stream
+]
+
 { #category : #accessing }
 GLMTransmission >> ensurePresentIfNoneStrategy [
 	self transmissionStrategy class = GLMPresentIfNoneStrategy ifFalse: [

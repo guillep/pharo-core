@@ -18,7 +18,7 @@ DrTestsUITest >> setUp [
 	"Hooks that subclasses may override to define the fixture of test."
 
 	super setUp.
-	plugin1 := DTTestsRunner.
+	plugin1 := DTTestsRunnerPlugin.
 	plugin2 := DTMockPlugin.
 	plugins := {plugin1. plugin2}.
 	drTestsUI := DrTests on: plugins

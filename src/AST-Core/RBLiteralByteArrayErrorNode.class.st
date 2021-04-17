@@ -8,7 +8,7 @@ Forgetting the opening will be assumed to be a block node.
 Class {
 	#name : #RBLiteralByteArrayErrorNode,
 	#superclass : #RBEnglobingErrorNode,
-	#category : #'AST-Core-Nodes'
+	#category : #'AST-Core-Nodes - ErrorNodes'
 }
 
 { #category : #construction }

@@ -86,7 +86,7 @@ Process class >> forContext: aContext priority: anInteger [
 
 	| newProcess |
 	newProcess := self new.
-	newProcess suspendedContext: aContext.
+	newProcess suspendedContext: aContext asContext.
 	newProcess priority: anInteger.
 	Processor activeProcess installEnvIntoForked: newProcess.
 	^newProcess
@@ -218,7 +218,7 @@ Process >> doTerminationFromAnotherProcess [
 	It assumes that self is not the active process
 	and the termination is requested from another process"
 	| ctxt oldList |
-	self isTerminating ifTrue: [ ^ ProcessAlreadyTerminating signal ].
+	self isTerminating ifTrue: [ ProcessAlreadyTerminating signal. ^self ].
 	terminating := true.
 	"Always suspend the process first so it doesn't accidentally get woken up"
 	oldList := self suspend.

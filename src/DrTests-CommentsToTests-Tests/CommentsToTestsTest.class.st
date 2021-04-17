@@ -9,51 +9,25 @@ Class {
 
 { #category : #tests }
 CommentsToTestsTest >> testErrorComment [
-	| stringComment commentTestCase |
-	stringComment := '(1+3)+6/0>>>4'.
-	commentTestCase := CommentTestCase
-		comment: stringComment
-		class: self class
-		selector: self selector.
-	self
-		assert: commentTestCase currentValue
-		equals: commentTestCase expectedValue
-]
+	"(1+3)+6/0>>>4"
+	
+	| docComment commentTestCase |
 
-{ #category : #tests }
-CommentsToTestsTest >> testMultipleComments [
-	| stringComment commentTestCase |
-	stringComment := '(1+3)>>>4'.
-	commentTestCase := CommentTestCase
-		comment: stringComment
-		class: self class
-		selector: self selector.
-	self
-		assert: commentTestCase currentValue
-		equals: commentTestCase expectedValue
-]
-
-{ #category : #tests }
-CommentsToTestsTest >> testOneComment [
-	| stringComment commentTestCase |
-	stringComment := '(1+3)>>>4'.
-	commentTestCase := CommentTestCase
-		comment: stringComment
-		class: self class
-		selector: self selector.
-	self
-		assert: commentTestCase currentValue
-		equals: commentTestCase expectedValue
+	docComment := thisContext method ast pharoDocCommentNodes first.
+	commentTestCase := CommentTestCase for: docComment.	
+	self assert: commentTestCase hasError
 ]
 
 { #category : #tests }
 CommentsToTestsTest >> testSimpleComment [
-	| stringComment commentTestCase |
-	stringComment := '(1+3)>>>4'.
-	commentTestCase := CommentTestCase
-		comment: stringComment
-		class: self class
-		selector: self selector.
+	"(1+3)>>>4"
+	
+	| docComment commentTestCase |
+
+	docComment := thisContext method ast pharoDocCommentNodes first.
+	commentTestCase := CommentTestCase for: docComment.
+		
+	self deny: commentTestCase hasError.	
 	self
 		assert: commentTestCase currentValue
 		equals: commentTestCase expectedValue

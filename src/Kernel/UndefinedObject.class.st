@@ -98,7 +98,7 @@ UndefinedObject >> doesNotUnderstand: aMessage [
 	| exception resumeValue node |
 	[ 
 	node := self findUndeclaredVariableIn:
-		        thisContext sender sourceNodeExecuted ] onErrorDo: [ :ex | 
+		        thisContext outerContext sender sourceNodeExecuted ] onErrorDo: [ :ex | 
 				"This is ugly, but we have a dependency with Opal compiler and 
 				it should be extracted. If there is a failure during the bootstrap, this
 				dependency produces an infinite loop"

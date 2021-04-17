@@ -38,7 +38,7 @@ EyePointerExplorer class >> openStrongOn: anObject [
 		inspect: anObject) openWithSpec
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #registration }
 EyePointerExplorer class >> registerToolsOn: registry [
 	"Add ourselves to registry. See [Smalltalk tools class]
 	self registerToolsOn: Smalltalk tools

@@ -27,7 +27,7 @@ GLMTreeBrick class >> gtExample [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GLMTreeBrick >> collapsableFor: anObject [
 	|collapsable|
 	
@@ -58,7 +58,7 @@ GLMTreeBrick >> hasChildren: anObject [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GLMTreeBrick >> headerFor: anObject in: aCollapsable [
 	|header|
 	

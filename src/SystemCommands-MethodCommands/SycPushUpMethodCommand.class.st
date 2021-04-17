@@ -3,7 +3,10 @@ I am a command to push up given methods
 "
 Class {
 	#name : #SycPushUpMethodCommand,
-	#superclass : #SycMethodCommand,
+	#superclass : #SysRefactoringMethodCommand,
+	#instVars : [
+		'superclass'
+	],
 	#category : #'SystemCommands-MethodCommands'
 }
 
@@ -11,10 +14,7 @@ Class {
 SycPushUpMethodCommand class >> methodContextMenuActivation [
 	<classAnnotation>
 	
-	^CmdContextMenuActivation 
-		byItemOf: ClyMoreRefactorsMenuGroup 
-		order: 10 
-		for: ClyMethod asCalypsoItemContext
+	^ SycMethodMenuActivation byRootGroupItemOrder: 10 for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #activation }
@@ -26,13 +26,12 @@ SycPushUpMethodCommand class >> methodShortcutActivation [
 
 { #category : #execution }
 SycPushUpMethodCommand >> asRefactorings [
-	|dialog refactoring|
+	| refactoring |
 	refactoring :=  RBPullUpMethodRefactoring 
-		pullUp: methods  
+		model: model
+		pullUp: (methods collect: [ :each | each selector ])
 		from: methods first origin.
-	refactoring setOption: #superClass toUse: [ :ref |
-		dialog := RBPushUpPreviewPresenter on: ref.
-		dialog cancelled ifTrue: [ CmdCommandAborted signal ]].
+	refactoring superClass: superclass.
 	^ OrderedCollection with: refactoring 
 ]
 
@@ -55,4 +54,27 @@ SycPushUpMethodCommand >> execute [
 { #category : #testing }
 SycPushUpMethodCommand >> isComplexRefactoring [
 	^true
+]
+
+{ #category : #execution }
+SycPushUpMethodCommand >> prepareFullExecutionInContext: aToolContext [
+	super prepareFullExecutionInContext: aToolContext.
+	self selectMethodsAndSuperclass.
+]
+
+{ #category : #execution }
+SycPushUpMethodCommand >> selectMethodsAndSuperclass [
+	| selectedMethods dialog class classes |
+	selectedMethods := methods copy asOrderedCollection.
+	class := methods first origin.
+	classes := class allSuperclasses removeAllSuchThat: [ :each | each == Object or: [ each == ProtoObject ] ].
+	dialog := RBSelectClassAndMethodsPresenter 
+			label: 'Methods to be pull up'
+			dropLabel: 'Pull up methods of ', class name, ' to:'
+			withItems: (class methods sort: [ :a :b | a asString < b asString ]) asOrderedCollection
+			selecting: selectedMethods
+			dropItems: classes
+			acceptBlock: [ :item :items | superclass := item.
+				methods := items ].
+	dialog cancelled ifTrue: [ CmdCommandAborted signal ].
 ]

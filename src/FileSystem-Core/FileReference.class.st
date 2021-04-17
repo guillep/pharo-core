@@ -177,6 +177,11 @@ FileReference >> deviceId [
 	^ filesystem deviceIdOf: path
 ]
 
+{ #category : #printing }
+FileReference >> displayStringOn: stream [
+	filesystem printPath: path on: stream
+]
+
 { #category : #operations }
 FileReference >> ensureCreateDirectory [
 	"Create if necessary a directory for the receiver."

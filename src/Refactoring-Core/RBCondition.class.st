@@ -26,6 +26,7 @@ Class {
 
 { #category : #'instance creation' }
 RBCondition class >> canUnderstand: aSelector in: aClass [
+
 	^self new
 		type: (Array with: #understandsSelector with: aClass with: aSelector)
 		block: [aClass canUnderstand: aSelector]
@@ -98,6 +99,17 @@ RBCondition class >> definesSelector: aSelector in: aClass [
 	^self new
 		type: (Array with: #definesSelector with: aClass with: aSelector)
 		block: [aClass directlyDefinesMethod: aSelector]
+		errorString: aClass printString , ' <1?:does not >define<1?s:> ' , aSelector printString
+]
+
+{ #category : #'instance creation' }
+RBCondition class >> definesSelector: aSelector in: aClass orIsSimilarTo: rbMethod [
+	^self new
+		type: (Array with: #definesSelector with: aClass with: aSelector)
+		block: [(aClass directlyDefinesMethod: aSelector)
+			ifTrue: [ (aClass parseTreeFor: aSelector) ~= rbMethod parseTree ]
+			ifFalse: [ false ]
+			]
 		errorString: aClass printString , ' <1?:does not >define<1?s:> ' , aSelector printString
 ]
 
@@ -217,18 +229,23 @@ RBCondition class >> hierarchyOf: aClass definesVariable: aString [
 ]
 
 { #category : #'instance creation' }
-RBCondition class >> hierarchyOf: aClass referencesInstanceVariable: aString [ 
-	^self new 
-		type: (Array 
-				with: #hierarchyReferencesInstVar
-				with: aClass
-				with: aString)
-		block: 
-			[(aClass withAllSubclasses 
-				detect: [:each | (each whichSelectorsReferToInstanceVariable: aString) isEmpty not]
-				ifNone: [nil]) notNil]
-		errorString: aClass printString 
-				, ' or subclass <1?:does not >reference<1?s:> instance variable ' , aString
+RBCondition class >> hierarchyOf: aClass referencesInstanceVariable: aString [
+
+	^ self new
+		  type:
+		  (Array
+			   with: #hierarchyReferencesInstVar
+			   with: aClass
+			   with: aString)
+		  block: [ 
+			  (aClass withAllSubclasses
+				   detect: [ :each | 
+					   (each whichSelectorsReferToInstanceVariable: aString)
+						   isNotEmpty ]
+				   ifNone: [ nil ]) notNil ]
+		  errorString: aClass printString
+			  , ' or subclass <1?:does not >reference<1?s:> instance variable '
+			  , aString
 ]
 
 { #category : #'instance creation' }
@@ -257,7 +274,7 @@ RBCondition class >> isEmptyClass: anObject [
 ]
 
 { #category : #'instance creation' }
-RBCondition class >> isGlobal: aString in: aRBSmalltalk [ 
+RBCondition class >> isGlobal: aString in: aRBSmalltalk [
 	^self new 
 		type: (Array with: #isLiteralVariable with: aString)
 		block: [aRBSmalltalk includesGlobal: aString asSymbol]
@@ -350,12 +367,14 @@ RBCondition class >> methodDefiningTemporary: aString in: aClass ignore: aBlock 
 ]
 
 { #category : #'instance creation' }
-RBCondition class >> referencesInstanceVariable: aString in: aClass [ 
-	^self new 
-		type: (Array with: #referencesInstVar with: aClass with: aString)
-		block: [(aClass whichSelectorsReferToInstanceVariable: aString) isEmpty not]
-		errorString: aClass printString 
-				, ' <1?:does not >reference<1?s:> instance variable ' , aString
+RBCondition class >> referencesInstanceVariable: aString in: aClass [
+
+	^ self new
+		  type: (Array with: #referencesInstVar with: aClass with: aString)
+		  block: [ 
+		  (aClass whichSelectorsReferToInstanceVariable: aString) isNotEmpty ]
+		  errorString: aClass printString
+			  , ' <1?:does not >reference<1?s:> instance variable ' , aString
 ]
 
 { #category : #utilities }

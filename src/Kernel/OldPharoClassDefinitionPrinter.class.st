@@ -155,6 +155,16 @@ OldPharoClassDefinitionPrinter >> poolOn: stream [
 			store: poolString ]
 ]
 
+{ #category : #template }
+OldPharoClassDefinitionPrinter >> testClassDefinitionTemplateInPackage: aString [
+
+	^ String streamContents: [ :s |
+			s nextPutAll: 'TestCase subclass: #MyTest' ; crtab.
+			s nextPutAll: 'instanceVariableNames: '''' '; crtab. 
+			s nextPutAll: 'classVariableNames: '''''; crtab.
+			s nextPutAll: 'package: ''', aString, '''' ]
+]
+
 { #category : #'low-level elements' }
 OldPharoClassDefinitionPrinter >> traitCompositionOn: stream [
 

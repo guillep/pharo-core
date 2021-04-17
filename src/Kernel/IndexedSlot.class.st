@@ -49,11 +49,38 @@ IndexedSlot >> isVirtual [
 ]
 
 { #category : #'meta-object-protocol' }
+IndexedSlot >> object: anObject instVarAt: anIndex [
+	"Primitive. Answer a fixed variable in an object. The numbering of the 
+	 variables corresponds to the named instance variables. Fail if the index 
+	 is not an Integer or is not the index of a fixed variable. Essential for the
+	 debugger. See  Object documentation whatIsAPrimitive."
+
+	<primitive: 73>
+	"instead of copying the fail code here, just call the method that has it"
+	^thisContext object: anObject instVarAt: anIndex
+]
+
+{ #category : #'meta-object-protocol' }
+IndexedSlot >> object: anObject instVarAt: anIndex put: aValue [ 
+	"Primitive. Store a value into a fixed variable in the argument anObject.
+	 The numbering of the variables corresponds to the named instance
+	 variables.  Fail if the index is not an Integer or is not the index of a
+	 fixed variable.  Answer the value stored as the result. Using this
+	 message violates the  principle that each object has sovereign control
+	 over the storing of values into its instance variables. Essential for the
+	 debugger. See Object documentation whatIsAPrimitive."
+
+	<primitive: 74>
+	"instead of copying the fail code here, just call the method that has it"
+	^thisContext object: anObject instVarAt: anIndex put: aValue 
+]
+
+{ #category : #'meta-object-protocol' }
 IndexedSlot >> read: anObject [
-	^ thisContext object: anObject instVarAt: index
+	^ self object: anObject instVarAt: index
 ]
 
 { #category : #'meta-object-protocol' }
 IndexedSlot >> write: aValue to: anObject [
-	^ thisContext object: anObject instVarAt: index put: aValue
+	^ self object: anObject instVarAt: index put: aValue
 ]

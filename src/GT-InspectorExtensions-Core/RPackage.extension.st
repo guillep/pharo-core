@@ -6,7 +6,7 @@ RPackage >> gtInspectorDefinedClassesIn: composite [
 	composite list
 		title: 'Classes';
 		display: #classes;
-		format: #gtDisplayString;
+		format: #displayString;
 		tags: [ :each | each category ]
 ]
 
@@ -16,6 +16,6 @@ RPackage >> gtInspectorTagsIn: composite [
 	composite list
 		title: 'Tags';
 		display: #classTags;
-		format: #gtDisplayString;
+		format: #displayString;
 		when: [ self classTags notEmpty ]
 ]

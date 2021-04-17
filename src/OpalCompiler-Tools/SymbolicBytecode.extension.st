@@ -32,7 +32,7 @@ SymbolicBytecode >> gtInspectorTreeIn: composite [
 SymbolicBytecode >> gtSpotterCodePreviewIn: aComposite [
 	<spotterPreview: 1>
 	^ (aComposite pharoMethod
-			title: [ self gtDisplayString ]; 
+			title: [ self displayString ]; 
 			display: [ :entity | self method sourceCode ];
 			smalltalkClass: [ self method methodClass ];
 			selectionInterval: [ self sourceInterval ];

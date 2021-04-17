@@ -25,10 +25,7 @@ SycRemoveMessageArgumentCommand class >> canBeExecutedInContext: aToolContext [
 SycRemoveMessageArgumentCommand class >> methodContextMenuActivation [
 	<classAnnotation>
 	
-	^CmdContextMenuActivation 
-		byItemOf: ClyMoreRefactorsMenuGroup 
-		order: 40
-		for: ClyMethod asCalypsoItemContext
+	^ SycMethodMenuActivation byRootGroupItemOrder: 40 for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #accessing }
@@ -45,6 +42,7 @@ SycRemoveMessageArgumentCommand >> argumentName: anObject [
 SycRemoveMessageArgumentCommand >> createRefactoring [
 
 	^RBRemoveParameterRefactoring
+		model: model
 		removeParameter: argumentName
 		in: (SycMessageOriginHack of: originalMessage) "look at SycMessageOriginHack comment"
 		selector: originalMessage selector

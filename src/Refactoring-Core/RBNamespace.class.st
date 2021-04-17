@@ -45,7 +45,10 @@ Class {
 		'changedClasses',
 		'rootClasses',
 		'implementorsCache',
-		'sendersCache'
+		'sendersCache',
+		'newPackages',
+		'changedPackages',
+		'removedPackages'
 	],
 	#category : #'Refactoring-Core-Model'
 }
@@ -59,7 +62,7 @@ RBNamespace class >> onEnvironment: aBrowserEnvironment [
 ]
 
 { #category : #'private-changes' }
-RBNamespace >> addChangeToClass: aRBClass [ 
+RBNamespace >> addChangeToClass: aRBClass [
 	^ changedClasses 
 		at: aRBClass name
 		put: (Array 
@@ -75,6 +78,17 @@ RBNamespace >> addClassVariable: aString to: aRBClass [
 { #category : #'private-changes' }
 RBNamespace >> addInstanceVariable: aString to: aRBClass [ 
 	^changes addInstanceVariable: aString to: aRBClass
+]
+
+{ #category : #'private-changes' }
+RBNamespace >> addPackageNamed: aSymbol [
+	| change pkg |
+	change := changes addPackageNamed: aSymbol.
+	self flushCaches.
+	pkg := self packageNamed: aSymbol.
+	self unmarkPackageAsRemoved: aSymbol.
+	newPackages at: aSymbol put: pkg.
+	^change
 ]
 
 { #category : #'private-changes' }
@@ -115,6 +129,38 @@ RBNamespace >> allClassesDo: aBlock [
 ]
 
 { #category : #accessing }
+RBNamespace >> allClassesInPackages: aColl do: aBlock [
+
+	| seen evalBlock |
+
+	seen := Set new.
+	evalBlock := [ :each | 
+	seen add: each first name.
+	aBlock
+		value: each first;
+		value: each last
+	].
+	(newClasses select: [ :e | aColl anySatisfy: [ :cat | cat, '*' match: e first category ]]) do: evalBlock.
+	(changedClasses select: [ :e | aColl anySatisfy: [ :cat | cat, '*' match: e first category ]]) do: evalBlock.
+	self environment
+		classesInPackages: aColl do: [ :each | 
+			each isObsolete
+				ifFalse: [ | class |
+
+					class := each instanceSide.
+					( ( seen includes: class name ) or: [ self hasRemoved: ( self classNameFor: class ) ] )
+						ifFalse: [ ( class := self classFor: each )
+								ifNotNil: [ seen add: class name.
+									aBlock
+										value: class;
+										value: class classSide
+									]
+							]
+					]
+			]
+]
+
+{ #category : #accessing }
 RBNamespace >> allImplementorsOf: aSelector [ 
 	^ implementorsCache at: aSelector ifAbsentPut: [ self privateImplementorsOf: aSelector ]
 ]
@@ -122,6 +168,11 @@ RBNamespace >> allImplementorsOf: aSelector [
 { #category : #accessing }
 RBNamespace >> allImplementorsOf: aSelector do: aBlock [
 	(self allImplementorsOf: aSelector) do: aBlock
+]
+
+{ #category : #accessing }
+RBNamespace >> allImplementorsOf: aSelector inPackages: aColl [
+	^ implementorsCache at: aSelector ifAbsentPut: [ self privateImplementorsOf: aSelector in: aColl ]
 ]
 
 { #category : #accessing }
@@ -142,8 +193,28 @@ RBNamespace >> allReferencesTo: aSymbol in: classes [
 ]
 
 { #category : #accessing }
+RBNamespace >> allReferencesTo: aSymbol inPackages: aColl [
+	^ sendersCache at: aSymbol ifAbsentPut: [ self privateReferencesTo: aSymbol inPackages: aColl ]
+]
+
+{ #category : #accessing }
+RBNamespace >> allReferencesTo: aSymbol inPackages: aColl do: aBlock [
+	(self allReferencesTo: aSymbol inPackages: aColl) do: aBlock
+]
+
+{ #category : #accessing }
 RBNamespace >> allReferencesToClass: aRBClass do: aBlock [ 
 	self allClassesDo: 
+			[:each |
+			(each whichSelectorsReferToClass: aRBClass) 
+				do: [:sel | aBlock value: (each methodFor: sel)].
+			(each classSide whichSelectorsReferToClass: aRBClass) 
+				do: [:sel | aBlock value: (each classSide methodFor: sel)]]
+]
+
+{ #category : #accessing }
+RBNamespace >> allReferencesToClass: aRBClass inPackages: aColl do: aBlock [ 
+	self allClassesInPackages: aColl do:
 			[:each |
 			(each whichSelectorsReferToClass: aRBClass) 
 				do: [:sel | aBlock value: (each methodFor: sel)].
@@ -216,18 +287,33 @@ RBNamespace >> compile: aString in: aRBClass classified: aSymbol [
 
 { #category : #'accessing-classes' }
 RBNamespace >> createNewClassFor: aBehavior [ 
-	| nonMeta meta className |
+	| nonMeta meta className rbType rbMetaType |
 	className := aBehavior instanceSide name.
-	nonMeta := modelFactory rbClass existingNamed: className model: self.
-	meta := modelFactory rbMetaclass existingNamed: className model: self.
+	aBehavior isTrait 
+		ifTrue: [ 
+			rbType := modelFactory rbTrait.
+			rbMetaType := modelFactory rbTraitMetaclass.
+		] ifFalse: [ 
+			rbType := modelFactory rbClass.
+			rbMetaType := modelFactory rbMetaclass.
+		].
+	nonMeta := rbType existingNamed: className model: self.
+	meta := rbMetaType existingNamed: className model: self.
+	nonMeta category: aBehavior category.
 	^changedClasses at: className put: (Array with: nonMeta with: meta)
+]
+
+{ #category : #'accessing-classes' }
+RBNamespace >> createNewPackageFor: aPackage [
+	| package |
+	package := modelFactory rbPackage existingNamed: aPackage model: self.
+	^changedPackages at: aPackage put: (Array with: package)
 ]
 
 { #category : #changes }
 RBNamespace >> defineClass: aString [
 
 	| change newClass newClassName |
-
 	change := changes defineClass: aString.
 	newClassName := change changeClassName.
 	newClass := self classNamed: newClassName.
@@ -289,6 +375,11 @@ RBNamespace >> hasCreatedClassFor: aBehavior [
 ]
 
 { #category : #testing }
+RBNamespace >> hasPackageRemoved: aSymbol [ 
+	^removedPackages includes: aSymbol
+]
+
+{ #category : #testing }
 RBNamespace >> hasRemoved: aSymbol [ 
 	^removedClasses includes: aSymbol
 ]
@@ -306,13 +397,21 @@ RBNamespace >> includesGlobal: aSymbol [
 	^true
 ]
 
+{ #category : #testing }
+RBNamespace >> includesPackageNamed: aSymbol [ 
+	^(self packageNamed: aSymbol) notNil
+]
+
 { #category : #initialization }
 RBNamespace >> initialize [
 	super initialize.
 	changes := changeFactory compositeRefactoryChange onSystemDictionary: self environment.
 	newClasses := IdentityDictionary new.
+	newPackages := IdentityDictionary new.
 	changedClasses := IdentityDictionary new.
+	changedPackages := IdentityDictionary new.
 	removedClasses := Set new.
+	removedPackages := Set new.
 	implementorsCache := IdentityDictionary new.
 	sendersCache := IdentityDictionary new
 ]
@@ -323,6 +422,13 @@ RBNamespace >> markAsRemoved: aClassName [
 	removedClasses
 		add: aClassName;
 		add: aClassName, ' class'
+]
+
+{ #category : #private }
+RBNamespace >> markPackageAsRemoved: aPackageName [
+
+	removedPackages
+		add: aPackageName
 ]
 
 { #category : #'accessing-classes' }
@@ -354,6 +460,15 @@ RBNamespace >> name: aString [
 	^changes name: aString
 ]
 
+{ #category : #'accessing-classes' }
+RBNamespace >> packageNamed: aSymbol [
+	aSymbol ifNil: [ ^ nil ].
+	(self hasPackageRemoved: aSymbol) ifTrue: [ ^ nil ].
+	(newPackages includesKey: aSymbol) ifTrue: [ ^ newPackages at: aSymbol ].
+	(changedPackages includesKey: aSymbol) ifTrue: [ ^ (changedPackages at: aSymbol) first ].
+	^ (self createNewPackageFor: aSymbol) first
+]
+
 { #category : #'private-changes' }
 RBNamespace >> performChange: aCompositeRefactoryChange around: aBlock [ 
 	| oldChanges |
@@ -377,6 +492,18 @@ RBNamespace >> privateImplementorsOf: aSelector [
 ]
 
 { #category : #private }
+RBNamespace >> privateImplementorsOf: aSelector in: packages [
+	| classes |
+	classes := Set new.
+	self allClassesInPackages: packages do: [ :class |
+		(class directlyDefinesLocalMethod: aSelector)
+			ifTrue: [ classes add: class ].
+		(class classSide directlyDefinesLocalMethod: aSelector)
+			ifTrue: [ classes add: class classSide ] ].
+	^ classes
+]
+
+{ #category : #private }
 RBNamespace >> privateReferencesTo: aSelector [ 
 	| methods |
 	methods := OrderedCollection new.
@@ -392,6 +519,17 @@ RBNamespace >> privateReferencesTo: aSelector in: classes [
 	| methods |
 	methods := OrderedCollection new.
 	classes do: [ :class |
+		(class whichSelectorsReferToSymbol: aSelector)
+			do: [ :selector |
+				methods add: (class methodFor: selector) ] ].
+	^ methods
+]
+
+{ #category : #private }
+RBNamespace >> privateReferencesTo: aSelector inPackages: aColl [
+	| methods |
+	methods := OrderedCollection new.
+	self allClassesInPackages: aColl do: [ :class |
 		(class whichSelectorsReferToSymbol: aSelector)
 			do: [ :selector |
 				methods add: (class methodFor: selector) ] ].
@@ -455,6 +593,13 @@ RBNamespace >> removeMethod: aSelector from: aRBClass [
 	^changes removeMethod: aSelector from: aRBClass
 ]
 
+{ #category : #'private-changes' }
+RBNamespace >> removePackageNamed: aString [
+
+	self flushCaches.
+	^ changes removePackageNamed: aString.
+]
+
 { #category : #changes }
 RBNamespace >> renameClass: aRBClass to: aSymbol around: aBlock [
 	| change value dict |
@@ -495,6 +640,22 @@ RBNamespace >> renameInstanceVariable: oldName to: newName in: aRBClass around: 
 ]
 
 { #category : #changes }
+RBNamespace >> renamePackage: aRBPackage to: aSymbol [
+	| change value dict |
+	change := changeFactory renamePackage: aRBPackage to: aSymbol.
+	self performChange: change around: [].
+	self flushCaches.
+	dict := changedPackages.
+	self markPackageAsRemoved: aRBPackage name.
+	self unmarkPackageAsRemoved: aSymbol.
+	value := dict at: aRBPackage name.
+	dict removeKey: aRBPackage name.
+	dict at: aSymbol put: value.
+	value first name: aSymbol.
+	^ change
+]
+
+{ #category : #changes }
 RBNamespace >> reparentClasses: aRBClassCollection to: newClass [ 
 	aRBClassCollection do: 
 			[:aClass | 
@@ -520,6 +681,12 @@ RBNamespace >> unmarkAsRemoved: newClassName [
 	removedClasses
 		remove: newClassName ifAbsent: [  ];
 		remove: newClassName , ' class' ifAbsent: [  ]
+]
+
+{ #category : #private }
+RBNamespace >> unmarkPackageAsRemoved: newPackageName [
+	removedPackages
+		remove: newPackageName ifAbsent: [  ]
 ]
 
 { #category : #'accessing-classes' }

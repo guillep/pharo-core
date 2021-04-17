@@ -47,6 +47,9 @@ TraitedMetaclass >> addSelector: selector withMethod: compiledMethod [
 { #category : #'accessing method dictionary' }
 TraitedMetaclass >> addSelector: selector withRecompiledMethod: compiledMethod [ 
 
+	compiledMethod isFromTrait 
+		ifTrue: [ ^ super addSelector: selector withRecompiledMethod: compiledMethod ].
+
 	self localMethodDict at: selector put: compiledMethod.
 	super addSelector: selector withRecompiledMethod: compiledMethod.
 	TraitChange addSelector: selector on: self
@@ -304,6 +307,27 @@ TraitedMetaclass >> recategorizeSelector: selector from: oldCategory to: newCate
 		self notifyOfRecategorizedSelector: e from: oldCategory to: newCategory ].
 	
 	self organization removeEmptyCategories
+]
+
+{ #category : #recompilation }
+TraitedMetaclass >> recompile: selector from: oldClass [
+	"Compile the method associated with selector in the receiver's method dictionary."
+
+	| method newMethod |
+	method := oldClass compiledMethodAt: selector.
+	newMethod := self compiler
+				source: (oldClass sourceCodeAt: selector);
+				class: self;
+				failBlock: [^ self];
+				compiledMethodTrailer: method trailer;
+				compile.   "Assume OK after proceed from SyntaxError"
+	selector == newMethod selector ifFalse: [self error: 'selector changed!'].
+	
+	method properties 
+		at: #traitSource 
+		ifPresent: [ :aSource | newMethod propertyAt: #traitSource put: aSource].
+	
+	self addSelector: selector withRecompiledMethod: newMethod.
 ]
 
 { #category : #traits }

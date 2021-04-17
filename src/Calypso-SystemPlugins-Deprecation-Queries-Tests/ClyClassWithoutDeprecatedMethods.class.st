@@ -7,6 +7,6 @@ Class {
 	#category : #'Calypso-SystemPlugins-Deprecation-Queries-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyClassWithoutDeprecatedMethods >> someNotDeprecatedMethod [
 ]

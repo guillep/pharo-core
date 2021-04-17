@@ -83,10 +83,3 @@ StNodeCollector >> slotNodes [
 				hostObject: self object 
 				slot: each ]
 ]
-
-{ #category : #building }
-StNodeCollector >> tempNodesForContext: aContext [
-
-	^ aContext astScope allTemps collect: [ :temp | 
-		  (StInspectorTempNode hostObject: aContext) tempVariable: temp ]
-]

@@ -47,6 +47,41 @@ Win32Environment >> at: aKey put: aValue [
 ]
 
 { #category : #private }
+Win32Environment >> doGetEnvVariable: aVariableName bufferSize: aSize ifAbsent: aBlock isRetry: isRetry [
+	| name buffer return lastErrCode |
+
+	name := aVariableName asWin32WideString.
+	buffer := Win32WideString new: aSize.
+
+	"This Windows API to get the environment variable has ambigous behavior when handling environment variables with empty values.
+	In the case of a empty string, the API call to get the environment variable returns 0. 
+	We need to differenciate the 0 in the case of an empty string and when there is an error.
+	To do so, we are clearing the last error variable, and also we are retrying.
+	The retrying is needed because we can have a race condition between different API calls."
+
+	lastErrCode := OSPlatform current setLastError: 0.
+	return := OSPlatform current getEnvironmentVariable: name into: buffer size: aSize + 1.
+	lastErrCode := OSPlatform current lastError.
+	
+	"From MSDN: If the function fails, the return value is zero. If the specified environment variable was not found in the environment block, GetLastError returns ERROR_ENVVAR_NOT_FOUND."
+	return = 0 ifTrue: [ 
+		lastErrCode = 0 ifTrue: [ ^ String new ].
+		lastErrCode = "ERROR_ENVVAR_NOT_FOUND" 16r000000CB ifTrue: [ ^ aBlock value ].
+		
+		isRetry
+			ifTrue: [ 
+				self error: 'Error ', lastErrCode printString, 
+					' occurred while fetching environment variable ', aVariableName asString ]
+			ifFalse: [ ^ self doGetEnvVariable: aVariableName bufferSize: aSize ifAbsent: aBlock isRetry: true ] ].
+	
+	"From MSDN: If lpBuffer is not large enough to hold the data, the return value is the buffer size, in characters,
+	required to hold the string and its terminating null character and the contents of lpBuffer are undefined."
+	return > aSize ifTrue: [ ^ self doGetEnvVariable: aVariableName bufferSize: return ifAbsent: aBlock isRetry: false ].
+	
+	^ buffer asString
+]
+
+{ #category : #private }
 Win32Environment >> environmentStrings [
 	 ^ self ffiCall: #( void * GetEnvironmentStrings () )
 ]
@@ -59,25 +94,9 @@ Win32Environment >> ffiLibraryName [
 
 { #category : #private }
 Win32Environment >> getEnvVariable: aVariableName bufferSize: aSize ifAbsent: aBlock [
-	| name buffer return |
 
-	name := aVariableName asWin32WideString.
-	buffer := Win32WideString new: aSize.
-	return := OSPlatform current getEnvironmentVariable: name into: buffer size: aSize + 1.
-	
-	"From MSDN: If the function fails, the return value is zero. If the specified environment variable was not found in the environment block, GetLastError returns ERROR_ENVVAR_NOT_FOUND."
-	return = 0 ifTrue: [ | lastErrCode |
-		lastErrCode := OSPlatform current lastError.
-		lastErrCode = 0 ifTrue: [ ^ String new ].
-		lastErrCode = "ERROR_ENVVAR_NOT_FOUND" 16r000000CB
-			ifTrue: [ ^ aBlock value ]
-			ifFalse: [ self error: 'Error ', lastErrCode printString, ' occurred while fetching environment variable ', aVariableName asString ] ].
-	
-	"From MSDN: If lpBuffer is not large enough to hold the data, the return value is the buffer size, in characters,
-	required to hold the string and its terminating null character and the contents of lpBuffer are undefined."
-	return > aSize ifTrue: [ ^ self getEnvVariable: aVariableName bufferSize: return ifAbsent: aBlock ].
-	
-	^ buffer asString
+	^ self doGetEnvVariable: aVariableName bufferSize: aSize ifAbsent: aBlock isRetry: false
+
 ]
 
 { #category : #enumeration }

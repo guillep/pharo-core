@@ -43,7 +43,7 @@ OverflowRowMorph >> adoptPaneColor: paneColor [
 		m adoptPaneColor: paneColor]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OverflowRowMorph >> baseMorph: aRowMorph [
 	"Configure the receiver to match the specifications for the given morph and
 	store the given morph's submorphs for later reallocation."
@@ -78,7 +78,7 @@ OverflowRowMorph >> buttonWidth [
 	^self theme scrollbarThickness + 3
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OverflowRowMorph >> desiredMoreMorphPosition [
 	"Answer the position the more morph should be placed."
 
@@ -97,7 +97,7 @@ OverflowRowMorph >> extent: aPoint [
 		"since possibly changing actual submorphs during layout processing"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #geometry }
 OverflowRowMorph >> fitBaseMorphs [
 	"Replace the receiver's submorphs with the base morphs that
 	can fit in the receiver's bounds. Critically, morphs must be replaced in
@@ -127,7 +127,7 @@ OverflowRowMorph >> fitBaseMorphs [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #showing }
 OverflowRowMorph >> hideMore [
 	"Hide the morphs that don't fit."
 
@@ -164,7 +164,7 @@ OverflowRowMorph >> moreButton: anObject [
 	moreButton := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OverflowRowMorph >> moreButtonLabel [
 	"Answer the label for the more button."
 
@@ -189,7 +189,7 @@ OverflowRowMorph >> moreMorph: anObject [
 	moreMorph := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OverflowRowMorph >> moreMorphs [
 	"Answer those base morphs that are not currently part of the
 	receiver's submorphs."
@@ -199,7 +199,7 @@ OverflowRowMorph >> moreMorphs [
 		ifNotEmpty: [self baseMorphs copyFrom: self submorphs size to: self baseMorphs size]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OverflowRowMorph >> moreVisible [
 	"Answer whether the more column is visible."
 
@@ -240,7 +240,7 @@ OverflowRowMorph >> outOfWorld: aWorld [
 	^super outOfWorld: aWorld
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OverflowRowMorph >> popMore [
 	"Hide / show the unshown base morphs."
 
@@ -249,7 +249,7 @@ OverflowRowMorph >> popMore [
 		ifFalse: [self hideMore]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 OverflowRowMorph >> recreateMoreMorph [
 	"Answer a new morph showing the undisplayed base morphs.
 	Assign to moreMorph."
@@ -266,7 +266,7 @@ OverflowRowMorph >> recreateMoreMorph [
 	^self moreMorph
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #showing }
 OverflowRowMorph >> showMore [
 	"Show the morphs that don't fit."
 

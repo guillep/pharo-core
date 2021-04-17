@@ -1050,11 +1050,10 @@ String >> deepCopy [
 	^self shallowCopy
 ]
 
-{ #category : #displaying }
+{ #category : #printing }
 String >> displayStringOn: aStream [
-	
+	"Make sure that this is not printOn: because we do not want to have multiple quotes."
 	aStream nextPutAll: self
-	
 ]
 
 { #category : #printing }

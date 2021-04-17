@@ -10,10 +10,10 @@ KMRepository >> gtInspectorGlobalsIn: composite [
 				flatCollect: [ :category | 
 					category allEntries keymaps collect: [ :key | key -> category ] ]
 				 ];
-		filterOn: [ :text :each | each gtDisplayString includesSubstring: text caseSensitive: false ];
-		column: 'Shortcut' evaluated: [ :assoc | assoc key shortcut gtDisplayString ] width: 120;
+		filterOn: [ :text :each | each displayString includesSubstring: text caseSensitive: false ];
+		column: 'Shortcut' evaluated: [ :assoc | assoc key shortcut displayString ] width: 120;
 		column: 'Description' evaluated: [ :assoc | assoc key description ];
-		column: 'Action' evaluated: [ :assoc | assoc key action gtDisplayString ];
+		column: 'Action' evaluated: [ :assoc | assoc key action displayString ];
 		column: 'Category' evaluated: [ :assoc | '' ] tags: [ :assoc | assoc value name ifNil: [ #() ] ifNotNil: [ { assoc value name }]];
 		send: #key
 ]
@@ -28,9 +28,9 @@ KMRepository >> gtInspectorMappingsIn: composite [
 				flatCollect: [ :category | 
 					category allEntries keymaps collect: [ :key | key -> category ] ]
 				 ];
-		filterOn: [ :text :each | each gtDisplayString includesSubstring: text caseSensitive: false ];
-		column: 'Shortcut' evaluated: [ :assoc | assoc key shortcut gtDisplayString ] width: 120;
-		column: 'Action' evaluated: [ :assoc | assoc key action gtDisplayString ];
+		filterOn: [ :text :each | each displayString includesSubstring: text caseSensitive: false ];
+		column: 'Shortcut' evaluated: [ :assoc | assoc key shortcut displayString ] width: 120;
+		column: 'Action' evaluated: [ :assoc | assoc key action displayString ];
 		column: 'Description' evaluated: [ :assoc | assoc key description ];
 		column: 'Category' evaluated: [ :assoc | '' ] tags: [ :assoc | assoc value name ifNil: [ #() ] ifNotNil: [ { assoc value name }]];
 		send: #key

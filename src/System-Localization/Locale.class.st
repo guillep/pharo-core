@@ -25,7 +25,6 @@ Class {
 		'CurrentPlatform',
 		'KnownLocales',
 		'LanguageSymbols',
-		'LocaleChangeListeners',
 		'PlatformEncodings'
 	],
 	#classInstVars : [

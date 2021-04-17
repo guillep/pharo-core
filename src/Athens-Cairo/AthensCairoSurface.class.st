@@ -208,7 +208,7 @@ AthensCairoSurface class >> findSurface: surfaceId [
 	buf := ByteArray new: 4.  "sizeof(int)"
 	
 	
-	(self ioFindSurface: surfaceId handle: buf) ifTrue: [
+	(self primFindSurface: surfaceId handle: buf) ifTrue: [
 		^ buf nbUlongAt: 1
 		].
 	
@@ -269,59 +269,22 @@ AthensCairoSurface class >> initializeForNewSession [
 ]
 
 { #category : #private }
-AthensCairoSurface class >> ioFindSurface: id dispatch: dispPtr handle: handlePtr [
-"	int ioFindSurface(int surfaceID, sqSurfaceDispatch *fn, int *surfaceHandle);
-		Find the surface with the given ID, and, optionally,
-		the given set of surface functions. The registered handle
-		is returned in surfaceHandle. Return true if successful
-		(e.g., the surface has been found), false otherwise.
-"
-
-	self ffiCall: #( bool ioFindSurface(int id, void * dispPtr, int *handlePtr) ) module: #SurfacePlugin
-]
-
-{ #category : #private }
-AthensCairoSurface class >> ioFindSurface: id handle: handlePtr [
-"	int ioFindSurface(int surfaceID, sqSurfaceDispatch *fn, int *surfaceHandle);
-		Find the surface with the given ID, and, optionally,
-		the given set of surface functions. The registered handle
-		is returned in surfaceHandle. Return true if successful
-		(e.g., the surface has been found), false otherwise.
-"
-
-	self ffiCall: #( bool ioFindSurface(int id, 0 , int *handlePtr) ) module: #SurfacePlugin
-]
-
-{ #category : #private }
-AthensCairoSurface class >> ioRegisterSurface: aCairoSurfaceHandle dispatch: sqSurfaceDispatchPtr surfaceId: idHolder [
-"
-	int ioRegisterSurface(int surfaceHandle, sqSurfaceDispatch *fn, int *surfaceID);
-
-	Register a new surface with the given handle and
-	the set of surface functions. The new ID is returned
-	in surfaceID. Returns true if successful, false 
-	otherwise.
-
-"
-	self ffiCall: #(bool ioRegisterSurface(void* aCairoSurfaceHandle, void *sqSurfaceDispatchPtr, void *idHolder)) module: #SurfacePlugin
-]
-
-{ #category : #private }
-AthensCairoSurface class >> ioUnregisterSurface: aCairoSurfaceId [
-"
-	ioUnregisterSurface:
-	Unregister the surface with the given id.
-	Returns true if successful, false otherwise. 
-
-"
-	
-	self ffiCall: #( int ioUnregisterSurface(ulong aCairoSurfaceId) ) module: #SurfacePlugin
-]
-
-{ #category : #private }
 AthensCairoSurface class >> primCreateFromFile: aFileName [
 	^ self ffiCall: #(AthensCairoSurface cairo_image_surface_create_from_png (char* aFileName)) 
 
+]
+
+{ #category : #private }
+AthensCairoSurface class >> primFindSurface: id handle: handlePtr [
+		"Find the surface with the given ID, and, optionally,
+		the given set of surface functions. The registered handle
+		is returned in surfaceHandle. Return true if successful
+		(e.g., the surface has been found), false otherwise."
+
+	<primitive: 'primitiveFindSurface' module: 'SurfacePlugin'>
+
+	"We keep the call to the FFI just in case we are running in an old VM"	
+	^ self ioFindSurface: id handle: handlePtr
 ]
 
 { #category : #private }
@@ -349,6 +312,36 @@ AthensCairoSurface class >> primImageFromData: data width: width height: height 
 ]
 
 { #category : #private }
+AthensCairoSurface class >> primRegisterSurface: aCairoSurfaceHandle dispatch: sqSurfaceDispatchPtr surfaceId: idHolder [
+"
+	Register a new surface with the given handle and
+	the set of surface functions. The new ID is returned
+	in surfaceID. Returns true if successful, false 
+	otherwise."
+
+	<primitive: 'primitiveRegisterSurface' module: 'SurfacePlugin'>
+
+	"We keep the call to the FFI just in case we are running in an old VM"	
+
+	^ self ioRegisterSurface: aCairoSurfaceHandle dispatch: sqSurfaceDispatchPtr surfaceId: idHolder
+]
+
+{ #category : #private }
+AthensCairoSurface class >> primUnregisterSurface: aCairoSurfaceId [
+"
+	ioUnregisterSurface:
+	Unregister the surface with the given id.
+	Returns true if successful, false otherwise. 
+
+"
+	<primitive: 'primitiveUnregisterSurface' module: 'SurfacePlugin'>
+
+	"We keep the call to the FFI just in case we are running in an old VM"	
+
+	^ self ioUnregisterSurface: aCairoSurfaceId
+]
+
+{ #category : #private }
 AthensCairoSurface class >> primWidth: aWidth height: aHeight [
 	^ self ffiCall: #( AthensCairoSurface cairo_image_surface_create (
 						CAIRO_FORMAT_ARGB32,
@@ -367,7 +360,7 @@ AthensCairoSurface class >> registerSurface: anAthensCairoSurface [
 
 	id := ByteArray new: 4.
 	address := anAthensCairoSurface getHandle.
-	(self ioRegisterSurface: address dispatch: dispatch surfaceId: id)
+	(self primRegisterSurface: address dispatch: dispatch surfaceId: id)
 		ifFalse: [ self error: 'Unable to register surface with SurfacePlugin' ].
 	id := id signedLongAt: 1.
 	
@@ -377,7 +370,7 @@ AthensCairoSurface class >> registerSurface: anAthensCairoSurface [
 { #category : #private }
 AthensCairoSurface class >> unregisterSurfaceWithId: anAthensCairoSurfaceId [
 
-	self ioUnregisterSurface: anAthensCairoSurfaceId
+	self primUnregisterSurface: anAthensCairoSurfaceId
 ]
 
 { #category : #'instance creation' }
@@ -585,7 +578,7 @@ AthensCairoSurface >> getFreetypeFontRendererFor: aFreetypeFont [
 	^ ftFontRenderer font: aFreetypeFont; advance: 0@0; yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 AthensCairoSurface >> getHandle [
 	
 	^ handle

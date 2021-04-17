@@ -346,6 +346,12 @@ RBMethodNode >> hasArgumentNamed: aString [
 ]
 
 { #category : #testing }
+RBMethodNode >> hasArguments [
+
+	^ arguments isNotEmpty
+]
+
+{ #category : #testing }
 RBMethodNode >> hasPragmaNamed: aSymbol [	
 	self pragmaNamed: aSymbol ifAbsent: [ ^ false ].
 	^ true

@@ -74,6 +74,16 @@ GLMAction >> condition: anObject [
 	condition := anObject
 ]
 
+{ #category : #printing }
+GLMAction >> displayStringOn: stream [
+	self hasTitle ifTrue: [
+		stream nextPutAll: self title; space ].
+	self hasShortcut ifTrue: [
+		self keymap displayStringOn: stream.
+		stream space ].
+	self action displayStringOn: stream
+]
+
 { #category : #accessing }
 GLMAction >> enabledCondition [
 	^ enabledCondition ifNil: [ true ]
@@ -89,9 +99,9 @@ GLMAction >> gtDisplayOn: stream [
 	self hasTitle ifTrue: [
 		stream nextPutAll: self title; space ].
 	self hasShortcut ifTrue: [
-		self keymap gtDisplayOn: stream.
+		self keymap displayStringOn: stream.
 		stream space ].
-	self action gtDisplayOn: stream
+	self action displayStringOn: stream
 ]
 
 { #category : #testing }

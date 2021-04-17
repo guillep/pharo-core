@@ -47,7 +47,8 @@ ReTempVarOverridesInstVarRuleTest >> testRule [
 	| critiques |
 	critiques := self myCritiquesOnMethod: self class >> #sampleMethod:.
 	
-	self assert: critiques size equals: 2.
+	self assert: critiques size equals: 3.
+	self assert: (self sourceAtChritique:  critiques first) equals: 'dummy1'.
 	self assert: (self sourceAtChritique:  critiques second) equals: 'dummy2'.
-	
+	self assert: (self sourceAtChritique:  critiques third) equals: 'dummy3'.
 ]

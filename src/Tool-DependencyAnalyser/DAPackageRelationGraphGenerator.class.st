@@ -1,5 +1,5 @@
 "
-A PDGraphVizGenerator is a class able to generate a dot file from a relationGraph (PDPackageRelationGraph)
+A class able to generate a dot file from a relationGraph (PDPackageRelationGraph)
 "
 Class {
 	#name : #DAPackageRelationGraphGenerator,

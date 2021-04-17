@@ -44,7 +44,7 @@ OupsDebuggerSelectionStrategy class >> debuggerSelectionStrategySettingsOn: aBui
 
 { #category : #settings }
 OupsDebuggerSelectionStrategy class >> defaultDebuggerSelectionStrategy [
-	^OupsDebuggerSelector
+	^OupsSingleDebuggerSelector
 ]
 
 { #category : #instance }

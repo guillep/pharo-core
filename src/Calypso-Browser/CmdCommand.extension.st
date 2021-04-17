@@ -48,7 +48,7 @@ CmdCommand >> createTableCellButtonUsing: aCommandActivator [
 { #category : #'*Calypso-Browser' }
 CmdCommand >> createTableCellButtonWith: anIcon using: aCommandActivator [
 
-	^IconicButton new
+	^IconicButtonMorph new
 		target: aCommandActivator;
 		actionSelector: #executeCommand;
 		color: Color transparent;

@@ -4,7 +4,7 @@ Extension { #name : #RGMethodDefinition }
 RGMethodDefinition >> spotterPreviewIn: aComposite [
 	<spotterPreview: 10>
 	aComposite pharoMethod
-		title: [ self gtDisplayString ];
+		title: [ self displayString ];
 		display: [ :methodDefinition | 
 			' ', methodDefinition sourceCode];
 		smalltalkClass: [self methodClass];

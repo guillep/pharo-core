@@ -66,7 +66,7 @@ PluggableIconListMorph >> itemMorphFor: anObject index: anIndex [
 	"Answer a morph for the object with the appropriate icon."
 
 	|item icon|
-	item := IconicListItem new
+	item := IconicListItemMorph new
 		originalObject: anObject;
 		yourself.
 		

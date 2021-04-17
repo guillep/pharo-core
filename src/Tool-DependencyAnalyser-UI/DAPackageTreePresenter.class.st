@@ -1,5 +1,5 @@
 "
-A PDPackageTreeModel is an abstract class. It's a the superclass of the two tree model vizualisations (package dependency and cycle detection).
+A DAPackageTreeModel is an abstract class. It's a the superclass of the two tree model vizualisations (package dependency and cycle detection).
 "
 Class {
 	#name : #DAPackageTreePresenter,
@@ -12,6 +12,12 @@ Class {
 	],
 	#category : #'Tool-DependencyAnalyser-UI-Core'
 }
+
+{ #category : #testing }
+DAPackageTreePresenter class >> isAbstract [
+
+	^self == DAPackageTreePresenter
+]
 
 { #category : #private }
 DAPackageTreePresenter >> actionOnRefresh [

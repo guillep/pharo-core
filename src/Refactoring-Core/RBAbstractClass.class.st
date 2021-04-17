@@ -37,9 +37,19 @@ Class {
 	#category : #'Refactoring-Core-Model'
 }
 
+{ #category : #accessing }
+RBAbstractClass class >> existingNamed: aString [
+	^ self subclassResponsibility
+]
+
 { #category : #'class initialization' }
 RBAbstractClass class >> initialize [
 	LookupSuperclass := Object new
+]
+
+{ #category : #accessing }
+RBAbstractClass class >> named: aString [
+	^ self subclassResponsibility
 ]
 
 { #category : #comparing }
@@ -141,6 +151,15 @@ RBAbstractClass >> canUnderstand: aSelector [
 	^self definesMethod: aSelector
 ]
 
+{ #category : #printing }
+RBAbstractClass >> canonicalArgumentName [
+	| prefix |
+	prefix := self name first isVowel
+		ifTrue: [ 'an' ]
+		ifFalse: [ 'a' ].
+	^ prefix, self name
+]
+
 { #category : #accessing }
 RBAbstractClass >> classBinding [
 	^ Smalltalk globals associationAt: self name
@@ -217,9 +236,8 @@ RBAbstractClass >> definesMethod: aSelector [
 { #category : #testing }
 RBAbstractClass >> definesPoolDictionary: aSymbol [ 
 	(self directlyDefinesPoolDictionary: aSymbol) ifTrue: [^true].
-	^self inheritsPoolDictionaries and: 
-			[self superclass notNil 
-				and: [self superclass definesPoolDictionary: aSymbol]]
+	^ self superclass notNil 
+				and: [self superclass definesPoolDictionary: aSymbol]
 ]
 
 { #category : #testing }
@@ -358,11 +376,6 @@ RBAbstractClass >> includesClass: aRBClass [
 	^currentClass = aRBClass
 ]
 
-{ #category : #testing }
-RBAbstractClass >> inheritsPoolDictionaries [
-	^false
-]
-
 { #category : #initialization }
 RBAbstractClass >> initialize [
 	super initialize.
@@ -403,6 +416,11 @@ RBAbstractClass >> isMeta [
 	self subclassResponsibility
 ]
 
+{ #category : #testing }
+RBAbstractClass >> isTrait [
+	^ false
+]
+
 { #category : #'method accessing' }
 RBAbstractClass >> methodFor: aSelector [
 	^ self newMethods
@@ -412,7 +430,10 @@ RBAbstractClass >> methodFor: aSelector [
 			class := self realClass.
 			class ifNil: [ ^ nil ].
 			compiledMethod := class compiledMethodAt: aSelector ifAbsent: [ nil ].
-			compiledMethod ifNotNil: [ modelFactory rbMethod for: self fromMethod: compiledMethod andSelector: aSelector ] ]
+			compiledMethod ifNotNil: [ 
+				compiledMethod isFromTrait 
+					ifTrue: [ (model classNamed: compiledMethod origin name) methodFor: aSelector ]
+					ifFalse: [modelFactory rbMethod for: self fromMethod: compiledMethod andSelector: aSelector ]] ]
 ]
 
 { #category : #accessing }
@@ -493,6 +514,11 @@ RBAbstractClass >> realClass: aClass [
 
 	realClass := aClass.
 	superclass ifNil: [ superclass := LookupSuperclass ]
+]
+
+{ #category : #accessing }
+RBAbstractClass >> realName: arg1 [ 
+	^ self subclassResponsibility
 ]
 
 { #category : #'variable accessing' }
@@ -659,7 +685,6 @@ RBAbstractClass >> whichSelectorsReferToClassVariable: aString [
 RBAbstractClass >> whichSelectorsReferToInstanceVariable: aString [
 
 	| selectors |
-
 	selectors := Set new.
 	newMethods
 		ifNotNil: [ newMethods

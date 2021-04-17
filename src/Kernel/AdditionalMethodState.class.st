@@ -157,6 +157,19 @@ AdditionalMethodState >> copyWithout: aPropertyOrPragma [ "<Association|Pragma>"
 	^copy
 ]
 
+{ #category : #generated }
+AdditionalMethodState >> hasLiteralThorough: literal [
+
+	"Answer true if any literal in these properties is literal,
+	 even if embedded in array structure."
+
+	self
+		deprecated: 'Use #refersToLiteral: instead'
+		transformWith:
+		'`@rec hasLiteralThorough: `@arg' -> '`@rec refersToLiteral: `@arg'.
+	^ self refersToLiteral: literal
+]
+
 { #category : #testing }
 AdditionalMethodState >> includes: aPropertyOrPragma [ "<Association|Pragma>"
 	"Test if the property or pragma is present."

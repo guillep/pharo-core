@@ -41,7 +41,7 @@ ClyManagedProject class >> for: aProject named: aString managedBy: aPackageManag
 		project: aProject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #queries }
 ClyManagedProject class >> prepareClassQueriesFrom: projects in: aNavigationEnvironment [ 
 	^{ClyAllClassesQuery from: ClyProjectScope ofAll: projects in: aNavigationEnvironment }
 ]

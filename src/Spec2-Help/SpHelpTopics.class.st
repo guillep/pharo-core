@@ -48,6 +48,15 @@ OrderedCollection>>inspectorCanvas2
 		canvas: canvas;
 		yourself
 ```
+
+The default behavior of the Spec inspector is to show an evaluation pane. You can remove it by simply defining the method:
+
+```
+OrderedCollection>>inspectorCanvas2Context: aContext
+	aContext withoutEvaluator
+```
+
+This method follow the naming convention. You simple need to use the method name that define the visualization and add `Context:`.
 '
 ]
 

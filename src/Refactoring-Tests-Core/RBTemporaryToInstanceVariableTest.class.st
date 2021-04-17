@@ -5,6 +5,15 @@ Class {
 }
 
 { #category : #running }
+RBTemporaryToInstanceVariableTest >> addClassHierarchy [
+	model 
+		defineClass: 'Foo subclass: #Foo1 instanceVariableNames: ''foo'' classVariableNames: '''' poolDictionaries: '''' category: #''Refactory-Test data'''.
+	(model classNamed: #Foo)
+		compile: 'someMethod | foo | foo := 4. ^foo'
+		classified: #(#accessing).
+]
+
+{ #category : #running }
 RBTemporaryToInstanceVariableTest >> setUp [
 	super setUp.
 	model := self abstractVariableTestData.
@@ -13,13 +22,9 @@ RBTemporaryToInstanceVariableTest >> setUp [
 { #category : #'failure tests' }
 RBTemporaryToInstanceVariableTest >> testHierarchyDefinesVarableNamedAsTemporary [
 	| class |
-	model 
-		defineClass: 'Foo subclass: #Foo1 instanceVariableNames: ''foo'' classVariableNames: '''' poolDictionaries: '''' category: #''Refactory-Test data'''.
+	self addClassHierarchy.
 	class := model classNamed: #Foo.
-	class 
-		compile: 'someMethod | foo | foo := 4. ^foo'
-		classified: #(#accessing).
-	self shouldFail: (RBTemporaryToInstanceVariableRefactoring 
+	self shouldWarn: (RBTemporaryToInstanceVariableRefactoring 
 				class: class
 				selector: #someMethod
 				variable: 'foo')
@@ -69,4 +74,20 @@ RBTemporaryToInstanceVariableTest >> testTemporaryToInstanceVariable [
 								nameStream nextPut: $).
 								^nameStream contents').
 	self assert: (class directlyDefinesInstanceVariable: 'nameStream')
+]
+
+{ #category : #tests }
+RBTemporaryToInstanceVariableTest >> testWhenHierarchyDefinesVariableNamedAsTemporary [
+	| class refactoring |
+	self addClassHierarchy.
+	class := model classNamed: #Foo.
+	refactoring := RBTemporaryToInstanceVariableRefactoring 
+				class: class
+				selector: #someMethod
+				variable: 'foo'.
+	self proceedThroughWarning: [ self executeRefactoring: refactoring ].
+	self assert: (class definesInstanceVariable: 'foo').
+	self deny: ((model classNamed: #Foo1) directlyDefinesInstanceVariable: 'foo').
+	self assert: (class parseTreeFor: #someMethod) equals: (self parseMethod: 'someMethod foo := 4. ^ foo'). 
+	
 ]

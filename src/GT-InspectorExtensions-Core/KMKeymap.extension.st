@@ -3,11 +3,11 @@ Extension { #name : #KMKeymap }
 { #category : #'*GT-InspectorExtensions-Core' }
 KMKeymap >> gtDisplayOn: aStream [
 	aStream 
-		nextPutAll: self name gtDisplayString;
+		nextPutAll: self name displayString;
 		nextPutAll: ' on ';
-		nextPutAll: self shortcut gtDisplayString;
+		nextPutAll: self shortcut displayString;
 		nextPutAll: ' do ' ;
-		nextPutAll: self action gtDisplayString
+		nextPutAll: self action displayString
 ]
 
 { #category : #'*GT-InspectorExtensions-Core' }

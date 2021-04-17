@@ -26,7 +26,7 @@ FuzzyLabelMorph >> alpha: anObject [
 	self changed
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 FuzzyLabelMorph >> drawOn: aCanvas [
 	"Draw based on enablement."
 	
@@ -66,7 +66,7 @@ alpha]
 		color: labelColor
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 FuzzyLabelMorph >> initWithContents: aString font: aFont emphasis: emphasisCode [
 	"Grrr, why do they do basicNew?"
 	
@@ -84,7 +84,7 @@ FuzzyLabelMorph >> initialize [
 	super initialize
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FuzzyLabelMorph >> measureContents [
 	"Add 2 times offset."
 	
@@ -106,7 +106,7 @@ FuzzyLabelMorph >> offset: anObject [
 	self fitContents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 FuzzyLabelMorph >> setWidth: width [
 	"Set the width/extent."
 	

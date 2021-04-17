@@ -10,7 +10,7 @@ Class {
 
 { #category : #private }
 RBRenameClassVariableChange >> addNewVariable [
-	(RBAddClassVariableChange add: newName to: self changeClass)
+	(changeFactory addClassVariable: newName to: self changeClass)
 		execute
 ]
 
@@ -37,8 +37,6 @@ RBRenameClassVariableChange >> printOn: aStream [
 
 { #category : #private }
 RBRenameClassVariableChange >> removeOldVariable [
-	self flag: #todo.
-	"We should use the factory"
-	(RBRemoveClassVariableChange remove: oldName from: self changeClass)
+	(changeFactory removeClassVariable: oldName from: self changeClass)
 		execute
 ]

@@ -25,7 +25,7 @@ ClyAddExecutionCounterCommand >> defaultMenuIconName [
 
 { #category : #accessing }
 ClyAddExecutionCounterCommand >> defaultMenuItemName [
-	^'Add counter'
+	^'Add Counter'
 ]
 
 { #category : #execution }

@@ -25,8 +25,5 @@ StPlaygroundHelpCommand class >> defaultName [
 { #category : #execution }
 StPlaygroundHelpCommand >> execute [ 
 
-	HelpBrowser open selectTopicSatisfying: [:each |
-		each owner notNil 
-			and: [ (each owner key = GTPlaygroundHelp key) 
-			and: [ each title = 'Overview' ] ] ]
+	 
 ]

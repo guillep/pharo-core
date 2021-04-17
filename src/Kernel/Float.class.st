@@ -719,6 +719,20 @@ Float >> asMinimalDecimalFraction [
 ]
 
 { #category : #converting }
+Float >> asScaledDecimal [
+
+	"Answer a scaled decimal number approximating the receiver.
+	
+	IEEE 754 double precision numbers use 53 bits to encode mantissa. This means
+	that the maximum amount of decimal digits that can be represented is log10(2^53).
+	
+	Due to the fact that at least one of the decimal digits has to be placed to 
+	the left of the decimal point, the scale was set to 15 - 1 = 14."
+
+	^ self asScaledDecimal: 14
+]
+
+{ #category : #converting }
 Float >> asTrueFraction [
 	" Answer a fraction that EXACTLY represents self,
 	  a double precision IEEE floating point number.

@@ -3,10 +3,10 @@ Trait {
 	#category : #'Calypso-SystemPlugins-Traits-Queries-Tests-PWithTraits'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ClyTraitRoot1 classSide >> classSideMethodFromRoot1 [
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 ClyTraitRoot1 >> methodFromRoot1 [
 ]

@@ -39,6 +39,7 @@ BaselineOfSUnit >> baseline: spec [
 				package: 'SUnit-Tests';
 				package: 'SUnit-Visitor' with: [ spec requires: #('SUnit-Core') ];
 				package: 'SUnit-Visitor-Tests' with: [ spec requires: #('SUnit-Visitor') ];
+				package: 'SUnit-MockObjects' with: [ spec requires: #('SUnit-Core') ];
 				package: 'SUnit-UI';
 				package: 'SUnit-Support-UITesting-Tests';
 				package: 'SUnit-Support-UITesting';
@@ -47,11 +48,12 @@ BaselineOfSUnit >> baseline: spec [
 				package: 'JenkinsTools-ExtraReports'.
 			spec
 				group: 'Core' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Visitor');
+				group: 'MockObjects' with: #('SUnit-MockObjects');
 				group: 'UI' with: #('SUnit-UI' 'SUnit-Support-UITesting');
 				group: 'Tests' with: #('SUnit-Tests' 'SUnit-Support-UITesting-Tests' 'SUnit-Visitor-Tests');
 				group: 'Help' with: #('SUnit-Help');
 				group: 'JenkinsSupport' with: #('JenkinsTools-Core' 'JenkinsTools-ExtraReports');
-				group: 'default' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Tests' 'JenkinsTools-Core' 'JenkinsTools-ExtraReports') ]
+				group: 'default' with: #('SUnit-Core' 'SUnit-Core-Traits' 'SUnit-Tests' 'JenkinsTools-Core' 'JenkinsTools-ExtraReports' 'SUnit-MockObjects') ]
 ]
 
 { #category : #accessing }

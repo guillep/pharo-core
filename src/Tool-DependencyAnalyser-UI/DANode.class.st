@@ -1,5 +1,5 @@
 "
-A PDNode is an abstract class for to display nodes in a tree.
+This is an abstract class for to display nodes in a tree.
 "
 Class {
 	#name : #DANode,
@@ -11,6 +11,12 @@ Class {
 	],
 	#category : #'Tool-DependencyAnalyser-UI-Nodes'
 }
+
+{ #category : #testing }
+DANode class >> isAbstract [
+
+	^ self == DANode
+]
 
 { #category : #'building-menu' }
 DANode >> addMenuEntriesOn: aMenuGroup [

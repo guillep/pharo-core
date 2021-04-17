@@ -7,9 +7,6 @@ Class {
 	#instVars : [
 		'disk'
 	],
-	#classVars : [
-		'Disks'
-	],
 	#category : #'FileSystem-Disk-Store'
 }
 

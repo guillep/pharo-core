@@ -96,8 +96,8 @@ GTInspector class >> gtInspectorExtensionsIn: composite [
 		title: 'Extensions';
 		display: [ self inspectorExtendingMethods ];
 		showOnly: 50;
-		format: [ :each | each gtDisplayString ];
-		filterOn: [ :text :each | each gtDisplayString includesSubstring: text caseSensitive: false ]
+		format: [ :each | each displayString ];
+		filterOn: [ :text :each | each displayString includesSubstring: text caseSensitive: false ]
 ]
 
 { #category : #settings }
@@ -330,14 +330,7 @@ GTInspector >> compose [
 
 	self title: [:anObject | 'Inspector on ', (self printObjectAsAnItem: anObject)].
 	self titleIcon: (self iconNamed: #smallInspectIt).
-	self act: [:b | b update] icon: GLMUIThemeExtraIcons glamorousRefresh entitled: 'Update'.
-	self act: [:b | 
-		HelpBrowser open selectTopicSatisfying: [:each |
-			each owner notNil and:  [
-			(each owner key = GTInspectorHelp key) and: [
-				each title = 'Overview' ] ] ] ] 
-		icon: GLMUIThemeExtraIcons glamorousHelp 
-		entitled: 'Help'.
+	self act: [:b | b update] icon: GLMUIThemeExtraIcons glamorousRefresh entitled: 'Update'.	 
 	self act: [:b | b presentationFilter changeFilterRequestFor: b ] entitled: 'Filter presentations'.
 	self pager with: [ :browser | 
 		browser fixedSizePanes: self class numberOfInspectorPanes.

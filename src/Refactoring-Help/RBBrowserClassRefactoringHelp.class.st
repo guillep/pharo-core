@@ -73,7 +73,7 @@ The name of the new class needs to be a valid class name, not yet used as any gl
 
 { #category : #accessing }
 RBBrowserClassRefactoringHelp class >> pages [
-	^ #(renameClassRefactoring removeClassRefactoring generateAccessorRefactoring generateSuperclassRefactoring insertSuperclassRefactoring insertSubclassRefactoring generateSubclassRefactoring realizeClassRefactoring splitClassRefactoring)
+	^ #(renameClassRefactoring removeClassRefactoring removeClassKeepingSubclassesRefactoring generateAccessorRefactoring generateSuperclassRefactoring insertSuperclassRefactoring insertSubclassRefactoring generateSubclassRefactoring realizeClassRefactoring splitClassRefactoring)
 ]
 
 { #category : #pages }
@@ -81,6 +81,13 @@ RBBrowserClassRefactoringHelp class >> realizeClassRefactoring [
 	^HelpTopic
 		title: 'Realize'
 		contents: RBRealizeClassRefactoring comment
+]
+
+{ #category : #pages }
+RBBrowserClassRefactoringHelp class >> removeClassKeepingSubclassesRefactoring [
+	^HelpTopic
+		title: 'Remove keeping subclasses'
+		contents: RBRemoveClassKeepingSubclassesRefactoring comment
 ]
 
 { #category : #pages }

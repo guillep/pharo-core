@@ -20,7 +20,7 @@ FFIAlienCallback class >> fromFrontendCallback: aFFICallback [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 FFIAlienCallback >> argumentsFor: stackPointer context: callbackContext [
 
 	| callbackArgumentReader | 

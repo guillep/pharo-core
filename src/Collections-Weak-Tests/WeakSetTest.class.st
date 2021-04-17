@@ -117,7 +117,7 @@ WeakSetTest >> testCollisions [
 	o1 := (2 to: 100) select: [:i | (ws scanFor: 1 / i) = 1].
 	o2 := (2 to: 100) select: [:i | (ws scanFor: 1 / i) = 2].
 	o5 := (2 to: 100) select: [:i | (ws scanFor: 1 / i) = 5].
-	on := (2 to: 100) select: [:i | (ws scanFor: 1 / i) = (ws array size - 1)].
+	on := (2 to: 200) select: [:i | (ws scanFor: 1 / i) = (ws array size - 1)].
 	
 	"Add some fractions to the weak set, and remember a pointer for a few of them"
 	remember := OrderedCollection new.

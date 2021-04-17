@@ -7,17 +7,17 @@ Class {
 	#category : #'Calypso-SystemPlugins-InheritanceAnalysis-Queries-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyClassWhichInheritsAbstractClass >> abstractMethod1 [
 	^#result
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyClassWhichInheritsAbstractClass >> notOverriddenMethod [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyClassWhichInheritsAbstractClass >> overriddenMethod [
 	^#newValue
 ]

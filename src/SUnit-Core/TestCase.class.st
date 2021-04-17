@@ -1,9 +1,82 @@
 "
-A TestCase is an implementation of the Command pattern to run a test.  TestCase instances are created with the class method #selector:, passing the symbol that names the method to be executed when the test case runs.  Various UIs exist to run these instances and they can also be created and run programmatically.
+`TestCase` instances are created with the class method `TestCase class>>#selector:`, passing the symbol that names the method to be executed when the test case runs.  TestCase instances are then executed using the method `TestCase>>#run`. Now usually you do not execute your tests that primitive way
+but tests are grouped in `TestSuite` (a.k.a. a composite of TestCase) and run using a test runner.
+Various UIs exist to run these instances and they can also be created and run programmatically.
 
-When you discover a new fixture, subclass TestCase and create a #test... method for the first test.  As that method develops and more #test... methods are added, you will find yourself refactoring temps into instance variables for the objects in the fixture and overriding #setUp to initialize these variables.  As required, override #tearDown to nil references, release objects and deallocate.
+Each method of a `TestCase` subclass starting with 'test' acts an executable test. When you create a subclass of `TestCase`, the framework automatically builds a test suite from the test methods of such class. 
+The methods `setUp` and `tearDown` are always executed before and after the execution of a test method. You use them to set a specific context in which your test methods are executed. 
+
+### As you go...
+
+When you discover a new fixture (context) for your test, encapsulates it in a specific TestCase subclass. 
+You can create a #test... method for the first test.  As that method develops and more #test... methods are added, you will find yourself refactoring temps into instance variables for the objects in the fixture and overriding #setUp to initialize these variables.  
+As required, override #tearDown to nil references, release objects and deallocate.
+
+### Design Point
+
+A TestCase is an implementation of the Command pattern to run a test. 
+
+### Mini tutorial - step one
+
+Create a specific subclass
+
+```
+TestCase << #MyExampleSetTest
+	package: 'MySetTest'
+```
+
+### Mini tutorial - step two 
+
+Define a test method
+
+```
+MyExampleSetTest >> testIncludes
+	| full empty |
+	full := Set with: 5 with: 6.
+	empty := Set new.
+	self assert: (full includes: 5).
+	self assert: (full includes: 6).
+	self assert: (empty includes: 5) not
+```	
+
+### Mini tutorial - step three
+
+Execute your tests
+
+```
+MyExampleSetTest run: testIncludes 
+```
 
 See my superclass' comment for assertion and logging information.
+
+### Mini tutorial - step four
+
+Create a setUp method (add the empty and full instances to the class)
+
+```
+MyExampleSetTest >> setUp
+	super setUp.
+	empty := Set new.
+	full := Set with: 5 with: 6
+```
+
+Redefine your method to avoid duplicating the setUp logic
+```
+MyExampleSetTest >> testIncludes
+
+	self assert: (full includes: 5).
+	self assert: (full includes: 6).
+	self assert: (empty includes: 5) not
+```	
+
+Run your test!
+
+```
+MyExampleSetTest run: testIncludes 
+```
+
+You are done. Remember tests are your best friends. 
+And enjoy coding in the debugger.
 "
 Class {
 	#name : #TestCase,
@@ -675,6 +748,12 @@ TestCase >> logFailure: aString [
 			nextPutAll: aString; 
 			flush]
 			
+]
+
+{ #category : #accessing }
+TestCase >> nameForReport [
+
+	^ self selector
 ]
 
 { #category : #'CI support' }

@@ -23,6 +23,11 @@ SycRenamePackageCommand class >> canBeExecutedInContext: aToolContext [
 ]
 
 { #category : #accessing }
+SycRenamePackageCommand >> defaultMenuIconName [ 
+	^ #edit
+]
+
+{ #category : #accessing }
 SycRenamePackageCommand >> defaultMenuItemName [
 	^'Rename'
 ]
@@ -30,27 +35,7 @@ SycRenamePackageCommand >> defaultMenuItemName [
 { #category : #execution }
 SycRenamePackageCommand >> execute [
 	
-	package renameTo: newName
-]
-
-{ #category : #accessing }
-SycRenamePackageCommand >> newName [
-	^ newName
-]
-
-{ #category : #accessing }
-SycRenamePackageCommand >> newName: anObject [
-	newName := anObject
-]
-
-{ #category : #accessing }
-SycRenamePackageCommand >> package [
-	^ package
-]
-
-{ #category : #accessing }
-SycRenamePackageCommand >> package: anObject [
-	package := anObject
+	(RBRenamePackageRefactoring rename: package name to: newName) execute
 ]
 
 { #category : #execution }

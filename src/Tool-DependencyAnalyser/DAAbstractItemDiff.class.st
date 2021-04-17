@@ -14,6 +14,12 @@ Class {
 	#category : #'Tool-DependencyAnalyser-Diff'
 }
 
+{ #category : #testing }
+DAAbstractItemDiff class >> isAbstract [
+
+	^self == DAAbstractItemDiff
+]
+
 { #category : #'instance creation' }
 DAAbstractItemDiff class >> newWith: aContent [
 	^ (self new)

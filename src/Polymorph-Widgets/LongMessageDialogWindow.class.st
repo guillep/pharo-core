@@ -26,14 +26,14 @@ LongMessageDialogWindow >> entryText: anObject [
 	self changed: #entryText
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 LongMessageDialogWindow >> isResizeable [
 	"Answer whether we are not we can be resized."
 
 	^true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #building }
 LongMessageDialogWindow >> newContentMorph [
 	"Answer a new content morph."
 
@@ -45,7 +45,7 @@ LongMessageDialogWindow >> newContentMorph [
 			vResizing: #spaceFill)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #building }
 LongMessageDialogWindow >> newTextMorph [
 	"Answer a new text editor morph."
 

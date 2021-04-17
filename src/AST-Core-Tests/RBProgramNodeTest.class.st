@@ -441,6 +441,84 @@ RBProgramNodeTest >> testBestNodeWithMethodSelectorGivesCommentNode [
 	self assert: ast isCommentNode.
 ]
 
+{ #category : #'testing-adding' }
+RBProgramNodeTest >> testCursorAfterArgumentReturnsVariableNode [
+
+	| sourceCode ast bestNode |
+	sourceCode := 'toto: m1
+	               m1 aMessage'.
+	
+	ast := RBParser parseMethod: sourceCode.
+	bestNode := ast bestNodeForPosition: 9.
+	
+	self assert: bestNode isVariable 
+]
+
+{ #category : #'testing-adding' }
+RBProgramNodeTest >> testCursorAfterVariableReturnsVariableNode [
+
+	| sourceCode ast bestNode |
+	sourceCode := 'toto: m1
+	               m1 aMessage'.
+	
+	ast := RBParser parseMethod: sourceCode.
+	bestNode := ast bestNodeForPosition: 28.
+	
+	self assert: bestNode isVariable 
+]
+
+{ #category : #'testing-adding' }
+RBProgramNodeTest >> testCursorBeforeArgumentNextToSelectorReturnsMethodNode [
+
+	| sourceCode ast bestNode |
+	sourceCode := 'toto:m1
+	               m1 aMessage'.
+	
+	ast := RBParser parseMethod: sourceCode.
+	bestNode := ast bestNodeForPosition: 6.
+	
+	self assert: bestNode isMethod 
+]
+
+{ #category : #'testing-adding' }
+RBProgramNodeTest >> testCursorBeforeArgumentReturnsVariableNode [
+
+	| sourceCode ast bestNode |
+	sourceCode := 'toto: m1
+	               m1 aMessage'.
+	
+	ast := RBParser parseMethod: sourceCode.
+	bestNode := ast bestNodeForPosition: 7.
+	
+	self assert: bestNode isVariable 
+]
+
+{ #category : #'testing-adding' }
+RBProgramNodeTest >> testCursorBeforeVariableReturnsVariableNode [
+
+	| sourceCode ast bestNode |
+	sourceCode := 'toto: m1
+	               m1 aMessage'.
+	
+	ast := RBParser parseMethod: sourceCode.
+	bestNode := ast bestNodeForPosition: 26.
+	
+	self assert: bestNode isVariable 
+]
+
+{ #category : #'testing-adding' }
+RBProgramNodeTest >> testCursorInMiddleOfVariableReturnsVariableNode [
+
+	| sourceCode ast bestNode |
+	sourceCode := 'toto: m1
+	               m1 aMessage'.
+	
+	ast := RBParser parseMethod: sourceCode.
+	bestNode := ast bestNodeForPosition: 27.
+	
+	self assert: bestNode isVariable 
+]
+
 { #category : #'testing-properties' }
 RBProgramNodeTest >> testHasProperty [
 	self deny: (self node hasProperty: #foo).

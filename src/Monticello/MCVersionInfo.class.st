@@ -70,6 +70,11 @@ MCVersionInfo >> date [
 	^ date
 ]
 
+{ #category : #printing }
+MCVersionInfo >> displayStringOn: stream [
+	stream nextPutAll: self name
+]
+
 { #category : #private }
 MCVersionInfo >> hasID: aUUID [
 	^ id = aUUID

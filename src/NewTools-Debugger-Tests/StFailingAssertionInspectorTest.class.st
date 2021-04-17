@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #tests }
-StFailingAssertionInspectorTest >> testDiffForNoneStringObjects [
+StFailingAssertionInspectorTest >> testDiffForNonStringObjects [
 	|a e inspector|
 	a := 'a'.
 	e := 1.

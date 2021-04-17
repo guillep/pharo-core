@@ -12,7 +12,7 @@ FillStyle >> asColor [
 	^self subclassResponsibility 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #operating }
 FillStyle >> fillRectangle: aRectangle on: aCanvas [
 	"Fill the given rectangle on the given canvas with the receiver."
 	

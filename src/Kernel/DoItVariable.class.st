@@ -179,6 +179,31 @@ DoItVariable >> key [
 	^self name
 ]
 
+{ #category : #'read/write usage' }
+DoItVariable >> markEscapingRead [
+	"ignored, the escape status of the actualVariable does not change"
+]
+
+{ #category : #'read/write usage' }
+DoItVariable >> markEscapingWrite [
+	"ignored, the escape status of the actualVariable does not change"
+]
+
+{ #category : #'read/write usage' }
+DoItVariable >> markRead [
+	"ignored, the escape status of the actualVariable does not change"
+]
+
+{ #category : #'read/write usage' }
+DoItVariable >> markRepeatedWrite [
+	"ignored, the escape status of the actualVariable does not change"
+]
+
+{ #category : #'read/write usage' }
+DoItVariable >> markWrite [
+	"ignored, the escape status of the actualVariable does not change"
+]
+
 { #category : #printing }
 DoItVariable >> printOn: aStream [ 
 	super printOn: aStream.

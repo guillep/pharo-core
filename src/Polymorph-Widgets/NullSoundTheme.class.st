@@ -7,7 +7,7 @@ Class {
 	#category : #'Polymorph-Widgets-Themes'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 NullSoundTheme class >> themeName [
 	"Answer the friendly name of the theme."
 

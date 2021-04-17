@@ -20,6 +20,7 @@ Class {
 SycRenameMessageCommand >> createRefactoring [
 
 	^ RBRenameMethodRefactoring
+		model: model
 		renameMethod: originalMessage selector 
 		in: (SycMessageOriginHack of: originalMessage) "look at SycMessageOriginHack comment"
 		to: newSignature selector 

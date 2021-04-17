@@ -6,6 +6,6 @@ Class {
 	#category : #'Calypso-SystemPlugins-Traits-Queries-Tests-PWithTraits'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClySubclassWithTraitsOfClassWithTraits >> localMethodFromSubclass [
 ]

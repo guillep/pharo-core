@@ -1,11 +1,11 @@
 "
-I am a class variabke that can initialize itself class creation.
+I am a class variable that can initialize itself class creation.
 
 #name => InitializedClassVariable default: 5.
 
-#name => InitializedClassVariable defaultBlock: [ 'a bloc' ].
+#name => InitializedClassVariable defaultBlock: [ 'a block' ].
 
-#name => InitializedClassVariable defaultBlock: [ :class | 'a bloc, parameter is the class' ].
+#name => InitializedClassVariable defaultBlock: [ :class | 'a block, parameter is the class' ].
 "
 Class {
 	#name : #InitializedClassVariable,

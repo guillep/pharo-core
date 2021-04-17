@@ -42,16 +42,6 @@ SpMethodBrowser class >> title [
 	^ 'Method Browser'
 ]
 
-{ #category : #generated }
-SpMethodBrowser >> acceptBlock: aBlock [
-
-	self
-		deprecated: 'Use #whenSubmitDo: instead'
-		transformWith:
-		'`@rec acceptBlock: `@arg' -> '`@rec whenSubmitDo: `@arg'.
-	^ self whenSubmitDo: aBlock
-]
-
 { #category : #accessing }
 SpMethodBrowser >> action [
 	^ textModel acceptBlock

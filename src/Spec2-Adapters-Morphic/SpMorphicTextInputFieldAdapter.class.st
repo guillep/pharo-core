@@ -20,7 +20,7 @@ SpMorphicTextInputFieldAdapter >> accept: aText notifying: aNotifyier [
 SpMorphicTextInputFieldAdapter >> buildWidget [
 	| newWidget |
 
-	newWidget := (RubTextFieldMorph on: self)
+	newWidget := (SpRubTextFieldMorph on: self)
 		getTextSelector: #getText;
 		setTextSelector: #accept:notifying:;
 		getSelectionSelector: #readSelection;
@@ -50,8 +50,16 @@ SpMorphicTextInputFieldAdapter >> buildWidget [
 		newWidget encrypted: isPassword ].
 	self presenter whenMaxLengthChangedDo: [ :length | 
 		newWidget maxLength: length ].
+	self presenter whenEditableChangedDo: [ :value | 
+		self setEditable: value to: newWidget ].
 
 	^ newWidget
+]
+
+{ #category : #'widget API' }
+SpMorphicTextInputFieldAdapter >> cursorPositionIndex: index [ 
+
+	self widgetDo: [ :w | ^ w textArea editor selectAt: index ]
 ]
 
 { #category : #'widget API' }
@@ -90,6 +98,12 @@ SpMorphicTextInputFieldAdapter >> getPlaceholderText [
 SpMorphicTextInputFieldAdapter >> isPassword [
 	
 	^ self widget font isKindOf: FixedFaceFont
+]
+
+{ #category : #private }
+SpMorphicTextInputFieldAdapter >> setEditable: aBoolean to: aWidget [
+
+	aWidget textArea readOnly: aBoolean not
 ]
 
 { #category : #accessing }

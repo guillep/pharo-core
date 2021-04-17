@@ -140,8 +140,8 @@ SpToolbarMorph >> initialize [
 	self
 		changeTableLayout;
 		listDirection: #leftToRight;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
+		hResizing: #spaceFill;
+		vResizing: #rigid;
 		wrapCentering: #center; 
 		color: self defaultColor;
 		extent: 0@0.

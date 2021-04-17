@@ -12,7 +12,7 @@ Class {
 { #category : #requests }
 CoGlobalVariablesHeuristic >> appliesForNode: aNode inContext: aContext [
 
-	^ aNode isVariable and: [ aNode name first isUppercase ]
+	^ aNode isVariable
 ]
 
 { #category : #requests }

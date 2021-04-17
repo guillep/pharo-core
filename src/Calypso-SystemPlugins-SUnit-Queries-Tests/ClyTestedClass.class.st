@@ -17,14 +17,14 @@ Class {
 	#category : #'Calypso-SystemPlugins-SUnit-Queries-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyTestedClass class >> one: aFirstObject two: aSecondObject [
 	^ self new
 		one: aFirstObject
 		two: aSecondObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyTestedClass class >> untestedOne: aFirstObject two: aSecondObject [
 	^ self new
 		one: aFirstObject;

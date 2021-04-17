@@ -33,14 +33,11 @@ StObjectContextPresenter >> doEvaluateAndGo [
 	| value |
 	
 	activationBlock ifNil: [ ^ self ].
-	
+
 	value := evaluator 
 		evaluate: evaluator selectedTextOrLine
-		ifError: [ :e | 
-			evaluator insertErrorPopover: (SpCodePopoverErrorPresenter 
-				newCode: evaluator 
-				message: e messageText) 
-		atIndex: evaluator selectionInterval last - 1 ].
+		onCompileError: [ ^ self ]
+		onError: [ :e | e pass ].
 	
 	activationBlock value: (StEvaluatedSelectionModel newValue: value)
 ]

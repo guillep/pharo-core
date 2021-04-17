@@ -52,6 +52,12 @@ RBProgramNode class >> formatterClass: aClass [
 		
 ]
 
+{ #category : #testing }
+RBProgramNode class >> isAbstract [
+
+	^ self == RBProgramNode
+]
+
 { #category : #accessing }
 RBProgramNode class >> optimizedSelectors [
 	^ #( and: caseOf: caseOf:otherwise: ifFalse: ifFalse:ifTrue: ifNil: ifNil:ifNotNil: ifNotNil: ifNotNil:ifNil: ifTrue: ifTrue:ifFalse: or: to:by:do: to:do: whileFalse whileFalse: whileTrue whileTrue: )
@@ -192,6 +198,33 @@ RBProgramNode >> bestNodeFor: anInterval [
 		ifFalse: [ (selectedChildren isEmpty and: [ selectedComments size = 1 ])
 							ifTrue: [ selectedComments first ]
 							ifFalse: [ self ] ]
+]
+
+{ #category : #querying }
+RBProgramNode >> bestNodeForPosition: aPosition [
+
+	"aPosition is an integer that represents the position of the caret. 
+	A value of N represents that the caret is between the characters N-1 and N.
+	The position 1 is at beginning of the text.
+	
+	Position Heuristic: If the previous character is not a separator, take selection one position before.
+		This heuristic is for the cases where the caret (|) is:
+		   |self foo  => the caret is before self, do not move
+		   self foo|  => the caret is before foo, interpret is as if we are in foo.
+			self foo | => the caret is before a space, interpret is as if we are in foo.
+
+		This heuristic introduces although an ambiguity when code is not nicely formatted:
+		   self foo:|#bar => Here a user may want foo: or bar.
+		For now we decided to favor foo: to motivate people to indent code correctly	"
+ 
+	| offset position |
+	offset := (aPosition = 1 or: [ (self methodNode sourceCode at: aPosition - 1) isSeparator ])
+		ifTrue: [ 0 ]
+		ifFalse: [ -1 ].
+
+	position := (aPosition + offset) min: self stop.
+
+	^ self bestNodeFor: (position to: position)
 ]
 
 { #category : #querying }
@@ -1063,9 +1096,16 @@ RBProgramNode >> uses: aNode [
 ]
 
 { #category : #querying }
+RBProgramNode >> variableDefinitionNodes [
+	^ self allChildren select: [ :each | 
+		  each isVariable and: [ each isDefinition ] ]
+]
+
+{ #category : #querying }
 RBProgramNode >> variableNodes [
-		^self allChildren select: [:each | 
-			each isVariable and: [each isDefinition not]].
+
+	^ self allChildren select: [ :each | 
+		  each isVariable and: [ each isDefinition not ] ]
 ]
 
 { #category : #querying }

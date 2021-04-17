@@ -385,13 +385,6 @@ SpPresenter >> centered [
 	self withWindowDo: #centered
 ]
 
-{ #category : #TOMOVE }
-SpPresenter >> centeredRelativeTo: aModel [
-
-	self withWindowDo: [ :w | 
-		w centeredRelativeTo: aModel ]
-]
-
 { #category : #initialization }
 SpPresenter >> connectPresenters [
 	"The method connectPresenters defines the interactions between the dif- ferent widgets. By connecting the behaviors of the different widgets it speci- fies the overall presentation, i.e., how the overall UI responds to interactions by the user. Usually this method consists of specifications of actions to per- form when a certain event is received by a widget. The whole interaction flow of the UI then emerges from the propagation of those events."
@@ -458,20 +451,6 @@ SpPresenter >> enabled: aBoolean [
 
 	self presentersDo: [ :each | 
 		each enabled: aBoolean ]
-]
-
-{ #category : #TOMOVE }
-SpPresenter >> ensureExtentFor: widget [
-
-	self extent
-		ifNil: [ self initialExtent
-			ifNotNil: [ :ex | 
-				(widget respondsTo: #extent:)
-					ifTrue: [ widget extent: ex ] ] ]
-		ifNotNil: [ :ex | 
-			(widget respondsTo: #extent:)
-				ifTrue: [ widget extent: ex ] ].
-	
 ]
 
 { #category : #TOREMOVE }
@@ -592,8 +571,7 @@ SpPresenter >> initializePrivateAnnouncements [
 { #category : #'initialization - private' }
 SpPresenter >> initializePrivateAnnouncer [
 
-  announcer := Announcer new.
-
+  announcer := Announcer new
 ]
 
 { #category : #'initialization - private' }
@@ -960,14 +938,6 @@ SpPresenter >> update [
 
 { #category : #initialization }
 SpPresenter >> updatePresenter [
-]
-
-{ #category : #TOMOVE }
-SpPresenter >> updateTitle [
-
-	self flag: #TODO. "To move to WindowPresenter"
-	"Update the window title"
-	self withWindowDo: #updateTitle
 ]
 
 { #category : #api }

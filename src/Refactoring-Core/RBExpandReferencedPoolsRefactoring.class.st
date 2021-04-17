@@ -42,7 +42,6 @@ RBExpandReferencedPoolsRefactoring class >> model: aRBNamespace forMethod: aPars
 RBExpandReferencedPoolsRefactoring >> computePoolsToMove [
 
 	| poolVariables searcher |
-
 	poolVariables := self poolVariableNamesFor: fromClass.
 	pools := Set new.
 	searcher := self parseTreeSearcher.
@@ -87,12 +86,6 @@ RBExpandReferencedPoolsRefactoring >> movePoolVariables [
 		do: [:poolDict | toClasses do: [:each | self movePool: poolDict toClass: each]]
 ]
 
-{ #category : #transforming }
-RBExpandReferencedPoolsRefactoring >> poolVariableNamesIn: poolName [ 
-	^(Smalltalk globals at: poolName ifAbsent: [Dictionary new]) classPool keys 
-		collect: [:name | name asString]
-]
-
 { #category : #preconditions }
 RBExpandReferencedPoolsRefactoring >> preconditions [
 
@@ -105,7 +98,7 @@ RBExpandReferencedPoolsRefactoring >> transform [
 	self hasPoolsToMove 
 		ifTrue: 
 			[self 
-				refactoringWarning: 'This method contains references to pools<n>which may need to be moved.' 
+				refactoringWarning: 'This method contains references to pools<n>which may need to be moved.<n>Proceed anyway?' 
 						expandMacros].
 	self movePoolVariables
 ]

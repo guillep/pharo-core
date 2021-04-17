@@ -82,8 +82,8 @@ RBRefactoring class >> initializeRefactoringOptions [
 		at: #openBrowser
 		put: [ :ref :env |  self error: #openBrowser ];
 		
-		at: #searchInAllHierarchy
-		put: [ self error: #searchInAllHierarchy ]
+		at: #searchInWholeHierarchy
+		put: [ self error: #searchInWholeHierarchy ]
 ]
 
 { #category : #'accessing signal' }
@@ -170,13 +170,13 @@ RBRefactoring >> convertAllReferencesTo: aSymbol of: classes using: searchReplac
 
 { #category : #support }
 RBRefactoring >> convertAllReferencesTo: aSymbol using: searchReplacer [ 
-	self model allReferencesTo: aSymbol
-		do: 
-			[:method | 
+	|aBlock|
+	aBlock := [:method | 
 			self 
 				convertMethod: method selector
 				for: method modelClass
-				using: searchReplacer]
+				using: searchReplacer].
+	self model allReferencesTo: aSymbol do: aBlock
 ]
 
 { #category : #support }
@@ -321,6 +321,15 @@ RBRefactoring >> performCompositeRefactoring: aRefactoring [
 	aRefactoring primitiveExecute
 ]
 
+{ #category : #transforming }
+RBRefactoring >> performCompositeRefactoringThroughWarning: aRefactoring [ 
+	[ aRefactoring copyOptionsFrom: self options.
+	aRefactoring primitiveExecute ]
+	on: RBRefactoringError do: [ :ex | ex resume ]
+
+	
+]
+
 { #category : #utilities }
 RBRefactoring >> poolVariableNamesFor: aClass [ 
 	| pools |
@@ -328,10 +337,14 @@ RBRefactoring >> poolVariableNamesFor: aClass [
 	aClass withAllSuperclasses do: 
 			[:each | 
 			each allPoolDictionaryNames do: 
-					[:pool | 
-					pools addAll: ((Smalltalk globals at: pool asSymbol) classPool keys 
-								collect: [:name | name asString])]].
+					[:pool |
+					pools addAll: (self poolVariableNamesIn: pool asSymbol) ] ].
 	^pools
+]
+
+{ #category : #transforming }
+RBRefactoring >> poolVariableNamesIn: poolName [ 
+	^(model classNamed: poolName) classPool keys
 ]
 
 { #category : #preconditions }

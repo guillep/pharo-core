@@ -37,7 +37,14 @@ ReShouldSendSuperTearDownAsLastMessage class >> superTearDownNotCalledLastIn: aC
 
 { #category : #running }
 ReShouldSendSuperTearDownAsLastMessage >> basicCheck: aMethod [
-	^ (aMethod methodClass inheritsFrom: TestCase) and: [ aMethod selector = #tearDown and: [ self class superTearDownNotCalledLastIn: aMethod ] ]
+
+	^ (self isClassToCheck: aMethod methodClass) and: [ aMethod selector = #tearDown and: [ self class superTearDownNotCalledLastIn: aMethod ] ]
+]
+
+{ #category : #testing }
+ReShouldSendSuperTearDownAsLastMessage >> isClassToCheck: aClass [
+
+	^ { TestCase. TestResource } anySatisfy: [:each | aClass inheritsFrom: each ]
 ]
 
 { #category : #accessing }

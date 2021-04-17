@@ -15,23 +15,6 @@ Class {
 }
 
 { #category : #keymapping }
-RubSmalltalkEditor class >> buildPatchShortcutsForDoItInWindowsOn: aBuilder [
-	"this is because for some reason Ctrl+d means Ctrl+end on Windows"
-	<keymap>
-	(aBuilder shortcut: #doItPatchForWindows) 
-		category: RubSmalltalkEditor name
-		default: Character end ctrl win
-		do: [ :target | target editor doIt: nil ]
-		description: 'Do it'.
-	
-	(aBuilder shortcut: #debugItPatchForWindows) 
-		category: RubSmalltalkEditor name
-		default: Character end shift ctrl win
-		do: [ :target | target editor debugIt: nil ]
-		description: 'Debug it'
-]
-
-{ #category : #keymapping }
 RubSmalltalkEditor class >> buildShortcutsOn: aBuilder [
 	"We are defining the bindings twice because we want to support 
 	both Cmd and meta for Windows and Linux. This should happen at least as long as in the development environment
@@ -377,7 +360,10 @@ RubSmalltalkEditor >> completionAround: aBlock keyDown: anEvent [
 	
 	(completionEngine handleKeyDownBefore: anEvent editor: self) ifTrue:  [^ self ].
 	
-	aBlock value
+	aBlock value.
+	
+	completionEngine handleKeyDownAfter: anEvent editor: self
+
 ]
 
 { #category : #'completion engine' }
@@ -774,7 +760,6 @@ RubSmalltalkEditor >> implementorsOfIt [
 	"Open an implementors browser on the selected selector"
 
 	| aSelector |
-	"self lineSelectAndEmptyCheck: [^ self]."
 	(aSelector := self selectedSelector) ifNil: [^ textArea flash].
 	aSelector isCharacter ifTrue: [^ textArea flash].
 	self implementorsOf: aSelector
@@ -1179,7 +1164,6 @@ RubSmalltalkEditor >> sendersOfIt [
 	"Open a senders browser on the selected selector"
 
 	| selectedSelector syst |
-	"self lineSelectAndEmptyCheck: [ ^ self ]."
 	(selectedSelector := self selectedSelector) ifNil: [ ^ textArea flash ].
 	syst := self model interactionModel systemNavigation.
 	syst browseAllSendersOrUsersOf: selectedSelector

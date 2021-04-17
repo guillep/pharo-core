@@ -4,7 +4,7 @@ Class {
 	#category : #'HeuristicCompletion-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 CoCompletionEngineTest >> doItContext [
 	
 	^ nil

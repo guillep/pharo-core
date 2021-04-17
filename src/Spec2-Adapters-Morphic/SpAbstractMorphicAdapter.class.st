@@ -110,7 +110,7 @@ SpAbstractMorphicAdapter >> applyStyle [
 { #category : #styling }
 SpAbstractMorphicAdapter >> applyStyle: morph [
 	"this will apply general properties to the built morph"
-	
+
 	self style applyTo: morph
 ]
 
@@ -209,24 +209,6 @@ SpAbstractMorphicAdapter >> dragEnabled [
 SpAbstractMorphicAdapter >> dragEnabled: aBoolean [
 
 	self widget ifNotNil: [ :w | w dragEnabled: aBoolean ]
-]
-
-{ #category : #'drag and drop - private' }
-SpAbstractMorphicAdapter >> dragPassengerFor: item inMorph: dragSource [ 
-	
-	^ self dragTransformationBlock cull: item cull: dragSource
-]
-
-{ #category : #'drag and drop - private' }
-SpAbstractMorphicAdapter >> dragPassengersFor: item inMorph: dragSource [ 
-	
-	^ { self dragTransformationBlock cull: item cull: dragSource }
-]
-
-{ #category : #'drag and drop' }
-SpAbstractMorphicAdapter >> dragTransformationBlock [
-
-	^ self model dragTransformationBlock
 ]
 
 { #category : #'drag and drop' }
@@ -606,14 +588,12 @@ SpAbstractMorphicAdapter >> takeKeyboardFocus [
 ]
 
 { #category : #'drag and drop' }
-SpAbstractMorphicAdapter >> transferBlock [
-
-	^ self model transferBlock
-]
-
-{ #category : #'drag and drop - private' }
 SpAbstractMorphicAdapter >> transferFor: passenger from: source [
-	^ (self transferBlock cull: passenger cull: self model) buildWithSpec
+
+	^ SpTransferPresenter new
+		transfer: passenger;
+		from: source;
+		yourself
 ]
 
 { #category : #emulating }
@@ -650,18 +630,6 @@ SpAbstractMorphicAdapter >> vShrinkWrap [
 SpAbstractMorphicAdapter >> vSpaceFill [
 	
 	self widgetDo: [ :w | w vResizing: #spaceFill ]
-]
-
-{ #category : #'drag and drop' }
-SpAbstractMorphicAdapter >> wantDropBlock [
-
-	^ self model wantDropBlock
-]
-
-{ #category : #'drag and drop - private' }
-SpAbstractMorphicAdapter >> wantsDroppedMorph: draggedMorph event: anEvent inMorph: source [
-
-	^ self wantDropBlock cull: draggedMorph cull: anEvent cull:source
 ]
 
 { #category : #protocol }

@@ -14,12 +14,10 @@ ReInstanceVariableCapitalizationRule class >> checksClass [
 
 { #category : #running }
 ReInstanceVariableCapitalizationRule >> check: aClass forCritiquesDo: aCriticBlock [
-	
+
 	aClass instVarNames
 		select: [ :each | each first isUppercase ]
-		thenDo: [ :each |
-			aCriticBlock cull: (
-				self critiqueFor: aClass about: each) ]
+		thenDo: [ :each | aCriticBlock cull: (self critiqueFor: aClass about: each) ]
 ]
 
 { #category : #'running-helpers' }

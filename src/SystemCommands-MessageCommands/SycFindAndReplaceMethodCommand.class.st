@@ -21,10 +21,8 @@ SycFindAndReplaceMethodCommand class >> defaultMenuIconName [
 SycFindAndReplaceMethodCommand class >> methodContextMenuActivation [
 	<classAnnotation>
 	
-	^CmdContextMenuActivation 
-		byItemOf: ClyMoreRefactorsMenuGroup 
-		order: 25 
-		for: ClyMethod asCalypsoItemContext
+	^ SycMethodMenuActivation
+		byRootGroupItemOrder: 25 for: ClyMethod asCalypsoItemContext
 ]
 
 { #category : #execution }
@@ -33,10 +31,12 @@ SycFindAndReplaceMethodCommand >> applyResultInContext: aToolContext [
 
 { #category : #testing }
 SycFindAndReplaceMethodCommand >> createRefactoring [
-	^RBFindAndReplaceRefactoring 
-		find: originalMessage selector 
+
+	^ RBFindAndReplaceRefactoring
+		model: model
+		find: originalMessage selector
 		of: originalMessage contextUser origin
-		inAllHierarchy: (self confirm: 'Do you want to search occurrences in all hierarchy?')
+		inWholeHierarchy: self searchInTheWholeHierarchy
 ]
 
 { #category : #execution }
@@ -52,4 +52,12 @@ SycFindAndReplaceMethodCommand >> isComplexRefactoring [
 { #category : #execution }
 SycFindAndReplaceMethodCommand >> resultMessageSelector [
 	^ nil
+]
+
+{ #category : #testing }
+SycFindAndReplaceMethodCommand >> searchInTheWholeHierarchy [
+
+	^ originalMessage contextUser origin subclasses 
+		ifEmpty: [ false ]
+		ifNotEmpty: [ self confirm: 'Do you want to search occurrences in the whole hierarchy?' ]
 ]

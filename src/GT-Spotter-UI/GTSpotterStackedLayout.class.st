@@ -17,37 +17,37 @@ GTSpotterStackedLayout >> allowedBounds: anObject [
 	allowedBounds := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> cutAllowedBoundsBottom: aBrick [
 
 	self allowedBounds: (self shrinkBottom: self allowedBounds with: aBrick )
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> cutAllowedBoundsTop: aBrick [
 
 	self allowedBounds: (self shrinkTop: self allowedBounds with: aBrick )
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> decreaseZindex: aBrick [
 
 	aBrick layoutProperties zIndex: 1.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> deltaBottom: aBrick [
 
 	^ aBrick globalOuterBounds corner y -  self allowedBounds corner y
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> deltaTop: aBrick [
 
 	^ self allowedBounds origin y - aBrick globalOuterBounds origin y
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> gatherStacked: aBrick [
 	|list|
 	
@@ -56,7 +56,7 @@ GTSpotterStackedLayout >> gatherStacked: aBrick [
 	^ list
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> increaseZindex: aBrick [
 
 	aBrick layoutProperties zIndex: 2.
@@ -111,7 +111,7 @@ GTSpotterStackedLayout >> layout: aBrick in: newBounds [
 	"^ self layoutStacked: aBrick in: newBounds"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> layoutAllowedBottom: aBrick [
 
 	self
@@ -120,7 +120,7 @@ GTSpotterStackedLayout >> layoutAllowedBottom: aBrick [
 		cutAllowedBoundsBottom: aBrick
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> layoutAllowedTop: aBrick [
 
 	self
@@ -129,7 +129,7 @@ GTSpotterStackedLayout >> layoutAllowedTop: aBrick [
 		cutAllowedBoundsTop: aBrick
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> layoutProportional: aCollection in: aBrick position: aSymbol [
 	| fullWidth eachWidth index |
 	aCollection isEmpty ifTrue: [ ^ self ].
@@ -157,7 +157,7 @@ GTSpotterStackedLayout >> layoutProportional: aCollection in: aBrick position: a
 		leftOffset + layoutBounds outerBounds width ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> layoutStacked: aBrick in: newBounds [
 	| origStackedBricks stackedBricks forward stackedTopBricks stackedBottomBricks stackedTopHeight stackedBottomHeight|
 	self flag: 'refactor me'.
@@ -214,13 +214,13 @@ GTSpotterStackedLayout >> layoutStacked: aBrick in: newBounds [
 	^ allowedBounds
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> shrinkBottom: aRectangle with: aBrick [
 
 	^ aRectangle bottom: (aRectangle bottom - aBrick globalOuterBounds height)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GTSpotterStackedLayout >> shrinkTop: aRectangle with: aBrick [
 
 	^ aRectangle top: (aRectangle top + aBrick globalOuterBounds height)

@@ -9,7 +9,6 @@ Class {
 		'text',
 		'toolbar',
 		'statusbar',
-		'bindings',
 		'lineLabel',
 		'toggleLineNumberButton',
 		'page',
@@ -115,14 +114,11 @@ StPlaygroundPagePresenter >> doEvaluateAndGo [
 	| value |
 	
 	activationBlock ifNil: [ ^ self ].
-	
-	value := text
+
+	value := text 
 		evaluate: text selectedTextOrLine
-		ifError: [ :e | 
-			text insertErrorPopover: (SpCodePopoverErrorPresenter 
-				newCode: text 
-				message: e messageText) 
-		atIndex: text selectionInterval last - 1 ].
+		onCompileError: [ ^ self ]
+		onError: [ :e | e pass ].
 	
 	activationBlock value: (StEvaluatedSelectionModel newValue: value)
 ]

@@ -10,6 +10,8 @@ Internal Representation and Key Implementation Points.
 Class {
 	#name : #SycSourceCodeCommand,
 	#superclass : #CmdCommand,
+	#traits : 'TRefactoringCommandSupport',
+	#classTraits : 'TRefactoringCommandSupport classTrait',
 	#instVars : [
 		'method',
 		'sourceNode'
@@ -32,8 +34,10 @@ SycSourceCodeCommand class >> method: aMethod node: aRBProgramNode [
 { #category : #private }
 SycSourceCodeCommand >> executeRefactoring: refactoring [
 
-	NautilusRefactoring new refactoringOptions: refactoring.
-	[ refactoring execute ] on: RBRefactoringError do: [ :e | UIManager default alert: e messageText ].
+	self initializeDefaultOptionsOf: refactoring.
+	[ refactoring execute ]
+		on: RBRefactoringError
+		do: [ :e | UIManager default alert: e messageText ]
 ]
 
 { #category : #accessing }

@@ -31,8 +31,7 @@ Class {
 
 { #category : #accessing }
 SystemVersion class >> current [
-	Current ifNil: [Current := SystemVersion new].
-	^Current
+	^Current ifNil: [Current := self new]
 ]
 
 { #category : #'private - accessing' }

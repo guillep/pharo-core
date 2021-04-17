@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'classes',
 		'methods',
-		'source',
-		'methodFilter'
+		'source'
 	],
 	#category : #'NewTools-Inspector-View'
 }
@@ -14,26 +13,33 @@ Class {
 StMetaBrowser class >> buildCommandsGroupWith: presenter forRoot: aCmCommandsGroup [
 
 	aCmCommandsGroup
-		beDisplayedAsGroup;
-		register: (StInspectorInspectSelectedCommand forSpecContext: presenter);
-		register: (StInspectorBrowseSelectedCommand forSpecContext: presenter)
+		register: ((CmCommandGroup named: 'classes') asSpecGroup
+			beDisplayedAsGroup;
+			register: (StInspectorBrowseSelectedCommand forSpecContext: presenter);
+			yourself);
+		register: ((CmCommandGroup named: 'methods') asSpecGroup
+			beDisplayedAsGroup;
+			register: (StInspectorInspectSelectedCommand forSpecContext: presenter);
+			register: (StInspectorBrowseSelectedCommand forSpecContext: presenter);
+			yourself)
 ]
 
 { #category : #specs }
 StMetaBrowser class >> defaultSpec [
 	
 	^ SpPanedLayout newVertical
-		add: (SpBoxLayout newHorizontal
-			spacing: 2;
+		add: (SpPanedLayout newHorizontal
 			add: #classes;
-			add: (SpBoxLayout newVertical
-				spacing: 2;
-				add: #methods;
-				addLast: #methodFilter expand: false fill: false padding: 0;
-				yourself);
+			add: #methods;
 			yourself);
 		add: #source;
 		yourself
+]
+
+{ #category : #initialization }
+StMetaBrowser >> classListMenu [
+	
+	^ (self rootCommandsGroup / 'classes') asMenuPresenter 
 ]
 
 { #category : #'private actions' }
@@ -64,12 +70,12 @@ StMetaBrowser >> initializePresenters [
 		addColumn: (SpStringTableColumn title: 'Class hierarchy' evaluated: #name);
 		roots: { classHierarchy first };
 		children: [ :aClass | classHierarchy select: [ :subclass | subclass superclass == aClass ] ];
+		contextMenu: [ self classListMenu ];
 		yourself.
-	methods := self newList
+	methods := (self instantiate: SpFilteringListPresenter)
 		display: [ :each | each selector ];	
-		contextMenu: [ self rootCommandsGroup asMenuPresenter ];
+		contextMenu: [ self methodListMenu ];
 		yourself.
-	methodFilter := self newTextInput.
 
 	source := self newCode
 		lineNumbers: StPharoSettings codeShowLineNumbers;
@@ -78,10 +84,19 @@ StMetaBrowser >> initializePresenters [
 		whenResetDo: [ self updateSourceWith: self selectedMethod  ];
 		yourself.
 		
-	classes transmitTo: methods transform: [ :aClass | self methodsOf: aClass ].
-	methods transmitDo: [ :aMethod | self updateSourceWith: aMethod ].
+	classes 
+		transmitTo: methods 
+		transform: [ :aClass | self methodsOf: aClass ].
+	methods 
+		transmitDo: [ :aMethod | self updateSourceWith: aMethod ].
 
 	classes selectPath: (Array new: classHierarchy size withAll: 1)
+]
+
+{ #category : #initialization }
+StMetaBrowser >> methodListMenu [
+	
+	^ (self rootCommandsGroup / 'methods') asMenuPresenter
 ]
 
 { #category : #private }
@@ -101,7 +116,7 @@ StMetaBrowser >> selectedClass [
 { #category : #accessing }
 StMetaBrowser >> selectedMethod [
 
-	^ methods selection selectedItem
+	^ methods selectedItem
 ]
 
 { #category : #accessing }

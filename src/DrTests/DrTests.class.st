@@ -18,7 +18,7 @@ Run and browse buttons behaviour are defined by the current plugin selected.
 "
 Class {
 	#name : #DrTests,
-	#superclass : #AbstractDrTestsUI,
+	#superclass : #AbstractDrTestsPresenter,
 	#instVars : [
 		'pluginsDropList',
 		'packagesList',
@@ -60,7 +60,7 @@ DrTests class >> buildContextualPackageGroupWith: presenterInstance [
 DrTests class >> buildItemsListGroupWith: presenterInstance [
 
 	^ (CmCommandGroup named: 'List items menu') asSpecGroup
-		register: (DTBrowseSelectedItem forSpec context: presenterInstance);
+		register: (DTBrowseSelectedItemCommand forSpec context: presenterInstance);
 		yourself
 ]
 

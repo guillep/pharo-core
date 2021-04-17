@@ -7,7 +7,7 @@ Class {
 	#category : #'Calypso-NavigationModel-Tests'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 ClySortFunctionTestCase class >> isAbstract [
 	^self = ClySortFunctionTestCase
 ]

@@ -69,7 +69,7 @@ GLMCompositeBrick class >> gtExampleListClassMethods [
 			b list
 			title: 'Methods of Object';
 			display: #yourself;
-			format: [ :compiledMethod | compiledMethod gtDisplayString ];
+			format: [ :compiledMethod | compiledMethod displayString ];
 			styled: [ :brick | brick height: 30 ];
 			entity: Object methods ]
 ]

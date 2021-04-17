@@ -46,8 +46,8 @@ RGTraitDescriptionStrategy >> name: aString [
 	super name: aString.
 	
 	usersWithOldDefinition do: [ :assoc |
-		self announcer behaviorDefinitionChangedFrom: assoc value to: assoc key.
-		self announcer behaviorModificationAppliedTo: assoc key. ].		
+		self trait announcer behaviorDefinitionChangedFrom: assoc value to: assoc key.
+		self trait announcer behaviorModificationAppliedTo: assoc key. ].		
 ]
 
 { #category : #variables }

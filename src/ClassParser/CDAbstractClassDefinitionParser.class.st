@@ -48,14 +48,14 @@ CDAbstractClassDefinitionParser >> classNameNodeClass [
 
 { #category : #parsing }
 CDAbstractClassDefinitionParser >> handleClassName: aNode [
-	| className superclassNode |
+	| className classNode |
 	className := (aNode isVariable
 		ifTrue: [ aNode name ]
 		ifFalse: [ aNode value ]) asSymbol.
-	superclassNode := self classNameNodeClass new
+	classNode := self classNameNodeClass new
 		originalNode: aNode;
 		className: className.
-	classDefinition className: className astNode: superclassNode
+	classDefinition className: className astNode: classNode
 ]
 
 { #category : #parsing }
@@ -75,6 +75,23 @@ CDAbstractClassDefinitionParser >> handleInstanceVariablesFromNode: aNode [
 				start: start
 				stop: start + slotName size ].
 	classDefinition slots: slotNodes
+]
+
+{ #category : #parsing }
+CDAbstractClassDefinitionParser >> handleMetaclassName: aNode [
+	| className classNode node |
+	node := aNode receiver. 
+	(node isKindOf: RBMessageNode)
+		ifTrue: [ "we are in situation ClassX class slots: {xxxx} so grab the class"
+			node := node receiver ].
+		
+	className := (node isVariable
+		ifTrue: [ node name ]
+		ifFalse: [ node value ]) asSymbol.
+	classNode := self classNameNodeClass new
+		originalNode: node;
+		className: className.
+	classDefinition className: node astNode: classNode
 ]
 
 { #category : #accessing }

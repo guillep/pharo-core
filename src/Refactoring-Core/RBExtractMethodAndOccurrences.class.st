@@ -40,14 +40,21 @@ RBExtractMethodAndOccurrences >> extract: anInterval from: aSelector in: aClass 
 
 { #category : #transforming }
 RBExtractMethodAndOccurrences >> extractMethod [
+
 	| refactoring |
-	refactoring := RBExtractMethodRefactoring 
-				model: self model
-				extract: extractionInterval
-				from: selector
-				in: class.
+	refactoring := self extractMethodClass
+		               model: self model
+		               extract: extractionInterval
+		               from: selector
+		               in: class.
 	self performCompositeRefactoring: refactoring.
 	^ refactoring newExtractedSelector
+]
+
+{ #category : #transforming }
+RBExtractMethodAndOccurrences >> extractMethodClass [
+
+	^ RBExtractMethodRefactoring
 ]
 
 { #category : #transforming }
@@ -55,28 +62,43 @@ RBExtractMethodAndOccurrences >> findImplementorOf: aSelector [
 	(class directlyDefinesMethod: aSelector) ifTrue: [ ^ true ].
 	class superclass ifNotNil: [
 		class := class superclass.
-		self findImplementorOf: aSelector.
+		^ self findImplementorOf: aSelector.
 	].
 	^ false
 ]
 
 { #category : #transforming }
+RBExtractMethodAndOccurrences >> findOccurrencesClass [
+
+	^ RBFindAndReplaceRefactoring
+]
+
+{ #category : #transforming }
 RBExtractMethodAndOccurrences >> findOccurrencesOf: aSelector [
-	|refactoring|
-	(self findImplementorOf: aSelector) ifTrue: [
-		refactoring := RBFindAndReplaceRefactoring 
-			model: self model 
-			find: aSelector
-			of: class
-			inAllHierarchy: (self options at: #searchInAllHierarchy) value.
-		self performCompositeRefactoring: refactoring.]
-	ifFalse: [ self refactoringWarning: aSelector , ' is not a valid selector name.' ]
+
+	| refactoring |
+	(self findImplementorOf: aSelector)
+		ifTrue: [ 
+			refactoring := self findOccurrencesClass
+				               model: self model
+				               find: aSelector
+				               of: class
+				               inWholeHierarchy: self shouldSearchInHierarchy.
+			self performCompositeRefactoring: refactoring ]
+		ifFalse: [ 
+			self refactoringFailure:
+				aSelector , ' is not a valid selector name.' ]
 ]
 
 { #category : #preconditions }
 RBExtractMethodAndOccurrences >> preconditions [
 
 	^ self emptyCondition
+]
+
+{ #category : #asserting }
+RBExtractMethodAndOccurrences >> shouldSearchInHierarchy [
+	^(self options at: #searchInWholeHierarchy) value: self value: class
 ]
 
 { #category : #printing }

@@ -55,12 +55,6 @@ GTMoldableDebugger class >> enableStackColoring: aBoolean [
 	EnableStackColoring := aBoolean.
 ]
 
-{ #category : #accessing }
-GTMoldableDebugger class >> helpClass [
-
-	self subclassResponsibility
-]
-
 { #category : #'instance creation api' }
 GTMoldableDebugger class >> on: aDebugSession [
 

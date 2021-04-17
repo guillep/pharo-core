@@ -47,8 +47,8 @@ GLMActionButtonBrick class >> gtExample [
 	<label: 'Action button with icon and dynamic background color'>
 	
 	^ self new
-			action: [ :b | b gtDisplayString traceCr ];
-			hoverAction: [ :b | b gtDisplayString traceCr ];
+			action: [ :b | b displayString traceCr ];
+			hoverAction: [ :b | b displayString traceCr ];
 			icon: GLMUIThemeExtraIcons glamorousGrayCircleEmpty;
 			hoverIcon: GLMUIThemeExtraIcons glamorousRedCircle;
 			selectedColor: Color veryVeryLightGray whiter slightlyLighter;

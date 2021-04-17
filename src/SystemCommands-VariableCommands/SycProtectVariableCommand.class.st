@@ -1,3 +1,6 @@
+"
+I am a command to protect given variables
+"
 Class {
 	#name : #SycProtectVariableCommand,
 	#superclass : #SycRefactorVariableCommand,

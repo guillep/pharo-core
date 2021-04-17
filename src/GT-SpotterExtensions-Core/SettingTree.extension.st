@@ -7,13 +7,3 @@ SettingTree class >> gtExampleSettingTree [
 	
 	^ SettingTree new acceptableKeywords: SettingBrowser settingsKeywords
 ]
-
-{ #category : #'*GT-SpotterExtensions-Core' }
-SettingTree >> spotterForSettingsFor: aStep [
-	<spotterOrder: 0>
-	aStep listProcessor
-		title: 'Settings';
-		allCandidates: [ self nodeList ];
-		itemName: [ :each | each spotterLabel ];
-		filter: GTFilterSubstring
-]

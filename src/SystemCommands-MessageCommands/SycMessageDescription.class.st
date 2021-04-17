@@ -104,8 +104,8 @@ SycMessageDescription >> requestNewSignature [
 	dialog cancelled ifTrue: [  CmdCommandAborted signal ].
 	
 	selector = methodName selector & (argumentNames = methodName arguments)
-		ifTrue: [ CmdCommandAborted signal].		
-				
+		ifTrue: [ CmdCommandAborted signal].
+	
 	^(SycMessageDescription fromContextOf: contextUser)
 		selector: methodName selector;
 		argumentNames: methodName arguments

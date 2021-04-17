@@ -88,14 +88,16 @@ OCASTTranslatorForEffect >> visitBlockNode: aBlockNode [
 
 { #category : #'visitor-double dispatching' }
 OCASTTranslatorForEffect >> visitLiteralArrayNode: aLiteralNode [
-	"when visiting a literal array for effect, we could push it and then pop it, but we do nothing"
-	methodBuilder addLiteral: aLiteralNode value
+
+	super visitLiteralArrayNode: aLiteralNode.
+	methodBuilder popTop
 ]
 
 { #category : #'visitor-double dispatching' }
 OCASTTranslatorForEffect >> visitLiteralNode: aLiteralNode [
-	"when visiting a literal for effect, we could push it and then pop it, but we do nothing"
-	methodBuilder addLiteral: aLiteralNode value
+
+	super visitLiteralNode: aLiteralNode.
+	methodBuilder popTop
 ]
 
 { #category : #'visitor-double dispatching' }

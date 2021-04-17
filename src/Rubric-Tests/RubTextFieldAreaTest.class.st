@@ -205,6 +205,31 @@ RubTextFieldAreaTest >> testReplacementWithMaxLength [
 ]
 
 { #category : #tests }
+RubTextFieldAreaTest >> testWhenWeHaveTheRubTextFieldAreaInsideOtherMorphHasToHonorTheExtentAssignedToIt [
+
+	| dropList widthOfButton |
+
+	"The drop list has two morphs inside, one RubTextFieldArea and a Button.
+	The button has a fixed side. 
+	The text field takes all the remaining size."	
+	dropList := DropListMorph new
+		     list: { (String loremIpsum: 100) };
+		     enabled: true;
+		     listSelectionIndex: 1;
+		     yourself.
+
+	dropList extent: 100 @ 18.
+	dropList computeBounds. 
+	
+	self assert: dropList extent x equals: 100.
+
+	widthOfButton := (dropList submorphs at: 2) extent x.
+	
+	"The text area should take the remaining size without overlapping in the button"	
+	self assert: (dropList submorphs at: 1) extent x equals: 74.
+]
+
+{ #category : #tests }
 RubTextFieldAreaTest >> testnewSizeAfterUpdate [
 	| m |
 	" "

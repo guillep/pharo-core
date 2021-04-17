@@ -7,6 +7,27 @@ My preconditions verify that the number of arguments is the same and that the ne
 
 All references in senders of the old method are changed, either the method name only or the order of the supplied arguments.
 
+Example
+--------
+There are two ways to rename a method, one of them is rename all senders of method:
+```
+(RBRenameMethodRefactoring 
+		renameMethod: ('check', 'Class:') asSymbol
+		in: RBBasicLintRuleTestData
+		to: #checkClass1:
+		permutation: (1 to: 1)) execute.
+```
+And the other is rename the method only in specific packages:
+```
+|refactoring|
+refactoring :=RBRenameMethodRefactoring 
+		renameMethod: ('check', 'Class:') asSymbol
+		in: RBBasicLintRuleTestData
+		to: #checkClass1:
+		permutation: (1 to: 1).
+refactoring searchInPackages:  #(#'Refactoring-Tests-Core').
+refactoring execute
+```
 "
 Class {
 	#name : #RBRenameMethodRefactoring,

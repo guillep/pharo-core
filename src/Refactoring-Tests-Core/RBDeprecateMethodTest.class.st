@@ -31,8 +31,8 @@ RBDeprecateMethodTest >> testDeprecateMethodUsingMethodWithSameNumberOfArgs [
 RBDeprecateMethodTest >> testDeprecateMethodUsingMethodWithoutArgs [
 
 	| refactoring class oldSelector newSelector |
-	oldSelector := #called:on:.
-	newSelector := #callFoo.
+	oldSelector := ('called:', 'on:') asSymbol.
+	newSelector := 'callFoo' asSymbol.
 	refactoring := RBDeprecateMethodRefactoring 
 							model: model 
 							deprecateMethod: oldSelector 
@@ -54,8 +54,8 @@ RBDeprecateMethodTest >> testDeprecateMethodUsingMethodWithoutArgs [
 RBDeprecateMethodTest >> testInvalidNumArgsOfSelector [
 
 	| refactoring oldSelector newSelector |
-	oldSelector := #called:on1: .
-	newSelector := #inlineFoo:.
+	oldSelector := ('called:', 'on1:') asSymbol.
+	newSelector := 'inlineFoo:' asSymbol.
 	refactoring := RBDeprecateMethodRefactoring 
 							model: model 
 							deprecateMethod: oldSelector 

@@ -72,6 +72,12 @@ ClyBrowserContext >> copyForBrowserStateSnapshot [
 		yourself
 ]
 
+{ #category : #'accessing context' }
+ClyBrowserContext >> currentMetaLevelOf: aClass [
+	"we do not model class side vs instance side"
+	^aClass
+]
+
 { #category : #helpers }
 ClyBrowserContext >> firstSelectedObjectIn: selectedObjects [
 	^selectedObjects last

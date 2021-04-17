@@ -10,7 +10,7 @@ Class {
 	#category : #'Hermes-Extensions-ClassInstaller'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'instance creation' }
 HEDuplicationModeStrategy class >> forOption: keyword [
 	^ (self allSubclasses
 		detect: [ :e | e keyword = keyword ]

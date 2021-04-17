@@ -32,6 +32,22 @@ SHRBTextStylerTest >> style: aText [
 	^ ast
 ]
 
+{ #category : #'private - utilities' }
+SHRBTextStylerTest >> styleExpression: aText [
+
+	| ast |
+	
+	ast := self class compiler
+		source: aText asString;
+		noPattern: true ;
+		options:  #(+ optionParseErrors + optionSkipSemanticWarnings);
+		requestor: nil;
+		parse.				
+	styler style: aText ast: ast.
+	
+	^ ast
+]
+
 { #category : #running }
 SHRBTextStylerTest >> tearDown [ 
 
@@ -55,6 +71,40 @@ SHRBTextStylerTest >> testArgumentStylingBlock [
 	index2 := 22. "second each"
 	attribute := aText attributesAt: index2.
 	self assert: attribute equals: (SHRBTextStyler  attributesFor: #blockArg pixelHeight: 10)
+]
+
+{ #category : #tests }
+SHRBTextStylerTest >> testArgumentStylingExpressionWithComment [
+	
+	| aText index1 index2 attribute |
+
+	aText := '"comment"3+4.' asText.
+	self styleExpression: aText.
+	
+	index1 := 5. "inside comment"
+	attribute := aText attributesAt: index1.
+	self assert: attribute equals: (SHRBTextStyler  attributesFor: #comment pixelHeight: 10).
+	
+	index2 := 11. "outside the +"
+	attribute := (aText attributesAt: index2) first.
+	self assert: attribute equals: (SHRBTextStyler  attributesFor: #unary pixelHeight: 10) first
+]
+
+{ #category : #tests }
+SHRBTextStylerTest >> testArgumentStylingExpressionWithComment2 [
+	
+	| aText index1 index2 attribute |
+
+	aText := '"comment"3.' asText.
+	self styleExpression: aText.
+	
+	index1 := 5. "inside comment"
+	attribute := aText attributesAt: index1.
+	self assert: attribute equals: (SHRBTextStyler  attributesFor: #comment pixelHeight: 10).
+	
+	index2 := 10. "outside the 3"
+	attribute := (aText attributesAt: index2) first.
+	self assert: attribute equals: (SHRBTextStyler  attributesFor: #integer pixelHeight: 10) first
 ]
 
 { #category : #tests }

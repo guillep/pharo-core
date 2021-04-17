@@ -23,26 +23,31 @@ Class {
 
 { #category : #private }
 SpMorphicPanedLayout >> ensureHeightPosition: aMorph in: aRect [
-	| firstMorph |
+	| firstMorph height |
 
 	self position ifNil: [ ^ self ].
 
 	firstMorph := aMorph submorphs first.
-	firstMorph vResizing = #rigid ifFalse: [ 
-		firstMorph vResizing: #rigid ].
-	firstMorph privateBounds: (firstMorph bounds withHeight: (self heightPositionIn: aRect extent)).
+	firstMorph vResizing = #rigid 
+		ifFalse: [ firstMorph vResizing: #rigid ].
+	height := self heightPositionIn: aRect extent.
+	firstMorph height = height
+		ifFalse: [ firstMorph height: height ]
 ]
 
 { #category : #private }
 SpMorphicPanedLayout >> ensureWidthPosition: aMorph in: aRect [
-	| firstMorph |
+	| firstMorph width |
 
 	self position ifNil: [ ^ self ].
 
 	firstMorph := aMorph submorphs first.
-	firstMorph hResizing = #rigid ifFalse: [ 
-		firstMorph hResizing: #rigid ].
-	firstMorph privateBounds: (firstMorph bounds withWidth: (self widthPositionIn: aRect extent)).
+	firstMorph hResizing = #rigid 
+		ifFalse: [ firstMorph hResizing: #rigid ].
+	width := self widthPositionIn: aRect extent.
+	firstMorph width = width 
+		ifFalse: [ firstMorph width: width ].
+	 
 ]
 
 { #category : #private }

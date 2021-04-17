@@ -9,6 +9,12 @@ Class {
 	#category : #'AST-Core-Visitors'
 }
 
+{ #category : #testing }
+RBProgramNodeVisitor class >> isAbstract [
+
+	^ self == RBProgramNodeVisitor
+]
+
 { #category : #visiting }
 RBProgramNodeVisitor >> visitArgumentNode: anArgumentNode [
 	"Sent *each time* an argument node is found"

@@ -66,15 +66,6 @@ SpStyleGeometry >> applyTo: aMorph [
 ]
 
 { #category : #private }
-SpStyleGeometry >> calculatedExtent [
-
-	self extent ifNotNil: [ :aPoint | ^ aPoint ].
-	self minExtent ifNotNil: [ :aPoint | aPoint ].
-	
-	^ 10@10
-]
-
-{ #category : #private }
 SpStyleGeometry >> geometryValueBetween: baseNumber and: otherNumber [
 
 	^ baseNumber = 0 

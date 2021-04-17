@@ -64,7 +64,7 @@ ClyAddConditionalBreakpointCommand >> conditionBlockProducerMethodAST: condition
 
 { #category : #accessing }
 ClyAddConditionalBreakpointCommand >> defaultMenuItemName [
-	^'Add breakpoint condition..'
+	^'Add Breakpoint condition..'
 ]
 
 { #category : #'block generation' }

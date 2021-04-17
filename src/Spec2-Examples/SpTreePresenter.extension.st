@@ -37,6 +37,18 @@ SpTreePresenter class >> exampleExpandRoots [
 ]
 
 { #category : #'*Spec2-Examples' }
+SpTreePresenter class >> exampleSelectPathByItems [
+	
+	^ self new
+		roots: { Object };
+		children: [ :aClass | aClass subclasses ];
+		displayIcon: [ :aClass | aClass systemIcon ];
+		display: [ :aClass | aClass name ];
+		openWithSpec;
+		selectPathByItems: self withAllSuperclasses reversed allButFirst scrollToSelection: true
+]
+
+{ #category : #'*Spec2-Examples' }
 SpTreePresenter class >> exampleWithContextMenu [
 	<sampleInstance>
 	| tree |

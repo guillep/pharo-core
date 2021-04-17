@@ -95,11 +95,6 @@ RBInlineAllSendersRefactoring >> messagePattern [
 	^'self ' , (self buildSelectorString: selector)
 ]
 
-{ #category : #accessing }
-RBInlineAllSendersRefactoring >> messagesNotReplaced [
-	^numberNotReplaced
-]
-
 { #category : #transforming }
 RBInlineAllSendersRefactoring >> numberOfSelfSendsIn: aParseTree [
 	| search |

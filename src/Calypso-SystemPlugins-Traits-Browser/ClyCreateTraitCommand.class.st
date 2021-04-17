@@ -51,7 +51,7 @@ ClyCreateTraitCommand >> execute [
 	classTag ifNotNil: [ category := category , '-' , classTag ].
 	traitDefinition := ClassDefinitionPrinter new traitDefinitionTemplateInPackage: category.
 	traitDefinition := UIManager default
-		                   multiLineRequest: 'Define trait definition:'
+		                   multiLineRequest: 'Define trait:'
 		                   initialAnswer: traitDefinition
 		                   answerHeight: 250.
 	traitDefinition isEmptyOrNil ifTrue: [ ^ self ].

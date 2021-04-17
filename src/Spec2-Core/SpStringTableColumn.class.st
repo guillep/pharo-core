@@ -164,6 +164,12 @@ SpStringTableColumn >> onAcceptEdition: aBlock [
 ]
 
 { #category : #api }
+SpStringTableColumn >> sortFunction [
+
+	^ super sortFunction ifNil: [ self evaluation ascending ]
+]
+
+{ #category : #api }
 SpStringTableColumn >> sortFunction: aBlockOrSortFunction [
 	"Set the sort function to apply to the values of this column in order to sort elements.
 	 `aBlockOrSortFunction` is a block that receives two arguments to compare or an instace of 

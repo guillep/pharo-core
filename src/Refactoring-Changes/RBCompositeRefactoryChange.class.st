@@ -52,6 +52,11 @@ RBCompositeRefactoryChange >> addInstanceVariable: variableName to: aClass [
 ]
 
 { #category : #'refactory-changes' }
+RBCompositeRefactoryChange >> addPackageNamed: aString [
+	^ self addChange: (changeFactory addPackageNamed: aString)
+]
+
+{ #category : #'refactory-changes' }
 RBCompositeRefactoryChange >> addPool: aPoolVariable to: aClass [ 
 	^ self addChange: (changeFactory addPoolVariable: aPoolVariable to: aClass)
 ]

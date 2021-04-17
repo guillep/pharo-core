@@ -1,14 +1,15 @@
 "
-This test execute 81 different cases. 
-All the combinations in the matrix
+This test executes 81 different cases. 
+All the combinations in the matrix for the `item1`, `item2` and `collectionClass` parameters.
 
+```
 PaSimpleMatrixExampleTest class >> testParameters
 
 	^ ParametrizedTestMatrix new
 		forSelector: #item1 addOptions: { 1. 'a'. $c };
 		forSelector: #item2 addOptions: { 2. 'b'. $d };
 		forSelector: #collectionClass addOptions: 	{ Set. Bag. OrderedCollection }
-			
+```			
 
 "
 Class {

@@ -26,6 +26,7 @@ If applicable, add screenshots to help explain your problem.
 **Version information:**
  - OS: [e.g. iOS]
  - Version: [e.g. 1.6.1]
+ - Pharo Version [e.g 9]
 
 **Additional context**
 Add any other context about the problem here.

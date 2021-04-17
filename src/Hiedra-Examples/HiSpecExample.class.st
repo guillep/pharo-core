@@ -21,16 +21,6 @@ HiSpecExample class >> defaultSpec [
 ]
 
 { #category : #specs }
-HiSpecExample class >> example2870IcebergCommits [
-	^ self openExample: #iceberg_v1_5_6
-]
-
-{ #category : #specs }
-HiSpecExample class >> example493PharoCommits [
-	^ self openExample: #pharo_v60507
-]
-
-{ #category : #specs }
 HiSpecExample class >> example60RandomCommits [
 	^ self openExample: #randomlyGenerated
 ]

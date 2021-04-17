@@ -6,3 +6,11 @@ Slot >> createRefactoring: variableRefactoringClass for: declarationClass [
 			variable: self name
 			class: declarationClass
 ]
+
+{ #category : #'*SystemCommands-VariableCommands' }
+Slot >> createRefactoring: variableRefactoringClass for: declarationClass in: aModel [
+	^variableRefactoringClass 
+			model: aModel
+			variable: self name
+			class: declarationClass
+]

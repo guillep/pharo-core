@@ -83,6 +83,16 @@ KMKeymap >> description: aDescription [
 	description := aDescription asString
 ]
 
+{ #category : #printing }
+KMKeymap >> displayStringOn: aStream [
+	aStream 
+		nextPutAll: self name displayString;
+		nextPutAll: ' on ';
+		nextPutAll: self shortcut displayString;
+		nextPutAll: ' do ' ;
+		nextPutAll: self action displayString
+]
+
 { #category : #executing }
 KMKeymap >> executeActionTargetting: target [
 	^ self action cull: target cull: target

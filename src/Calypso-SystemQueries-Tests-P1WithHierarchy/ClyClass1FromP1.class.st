@@ -8,7 +8,7 @@ Class {
 	#category : #'Calypso-SystemQueries-Tests-P1WithHierarchy'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #protocol }
 ClyClass1FromP1 class >> classSideMethodFromClass1 [
 ]
 

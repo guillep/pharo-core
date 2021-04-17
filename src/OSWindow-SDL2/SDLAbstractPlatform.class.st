@@ -7,6 +7,9 @@ Get the corresponding class to use through
 Class {
 	#name : #SDLAbstractPlatform,
 	#superclass : #Object,
+	#pools : [
+		'SDL2ConstantsHint'
+	],
 	#category : #'OSWindow-SDL2-Bindings'
 }
 

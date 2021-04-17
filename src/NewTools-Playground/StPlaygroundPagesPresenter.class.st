@@ -11,8 +11,6 @@ Class {
 		'parent',
 		'pageList',
 		'pagePreview',
-		'pageListHeader',
-		'pagePreviewHeader',
 		'pageListPanel',
 		'pagePreviewPanel'
 	],

@@ -47,17 +47,15 @@ StDebuggerErrorContextPredicate >> isContextDoesNotUnderstand [
 	^ exception class = MessageNotUnderstood and: [ 
 		  | message |
 		  message := exception message.
-		  exception receiver notNil and: [ 
+		  
 			  (exception receiver respondsTo: message selector) not and: [ 
-				  exception signalerContext method methodClass == Object ] ] ]
+				  exception signalerContext method methodClass == Object ] ]
 ]
 
 { #category : #predicates }
 StDebuggerErrorContextPredicate >> isContextMissingClassException [
 
-	^ exception class == VariableNotDeclared or: [ 
-		  exception receiver isNil and: [ 
-			  exception class == MessageNotUnderstood ] ]
+	^ exception class == VariableNotDeclared
 ]
 
 { #category : #predicates }
@@ -70,12 +68,11 @@ StDebuggerErrorContextPredicate >> isSteppable [
 
 	super isSteppable ifFalse: [ ^ false ].
 
-	exception class = MessageNotUnderstood ifTrue: [ 
+	(exception isKindOf: MessageNotUnderstood) ifTrue: [ 
 		^ self isContextDoesNotUnderstand not and: [ 
 			  self isContextMissingClassException not ] ].
 
-	^ self exceptionWhiteList anySatisfy: [ :class | 
-		  exception isKindOf: class ]
+	^ exception isResumable
 ]
 
 { #category : #printing }
@@ -88,4 +85,10 @@ StDebuggerErrorContextPredicate >> printDescription [
 		 ifTrue: [ context printString ]
 		 ifFalse: [ exception description ]).
 	^ str contents
+]
+
+{ #category : #updating }
+StDebuggerErrorContextPredicate >> updateSessionForModel: aStDebuggerActionModel [
+
+	aStDebuggerActionModel updateDebugSessionException: exception
 ]

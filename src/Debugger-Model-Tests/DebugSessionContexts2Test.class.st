@@ -7,9 +7,9 @@ Class {
 	#category : #'Debugger-Model-Tests-Core'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 DebugSessionContexts2Test class >> debugSession [
-	^ debugSession.
+	^ debugSession
 ]
 
 { #category : #'instance creation' }

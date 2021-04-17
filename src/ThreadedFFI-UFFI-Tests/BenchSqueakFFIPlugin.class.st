@@ -7,7 +7,7 @@ Class {
 	#category : #'ThreadedFFI-UFFI-Tests-Benchs'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 BenchSqueakFFIPlugin >> doCallWith: aFloat another: aDouble [
 
 	^ self ffiCall: #(float sumAFloatAndADouble(float aFloat, double aDouble))
@@ -19,9 +19,9 @@ BenchSqueakFFIPlugin >> ffiLibraryName [
 	^ 'libTestLibrary.dylib'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #running }
 BenchSqueakFFIPlugin >> runCall [
-
+	<script: 'self new runCall'>
 	| return | 
 
 	^ [ return := self doCallWith: 1.0 another: 2.0.

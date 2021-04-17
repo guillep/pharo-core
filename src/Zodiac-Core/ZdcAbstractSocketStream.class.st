@@ -18,6 +18,12 @@ Class {
 	#category : #'Zodiac-Core'
 }
 
+{ #category : #testing }
+ZdcAbstractSocketStream class >> isAbstract [
+
+	^self == ZdcAbstractSocketStream 
+]
+
 { #category : #'instance creation' }
 ZdcAbstractSocketStream class >> on: object [
 	^ (self basicNew)

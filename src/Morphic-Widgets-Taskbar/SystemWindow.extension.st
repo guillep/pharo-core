@@ -153,6 +153,12 @@ SystemWindow >> taskbarButtonMenu: aMenu [
 		icon: self theme windowCloseForm
 		subMenu: submenu.
 	submenu
+		addToggle: 'windows to left' translated
+		target: self
+		selector: #taskbarCloseAllToLeft
+		getStateSelector: nil
+		enablementSelector: true.
+	submenu
 		addToggle: 'windows to right' translated
 		target: self
 		selector: #taskbarCloseAllToRight
@@ -193,7 +199,17 @@ SystemWindow >> taskbarButtonMenu: aMenu [
 { #category : #'*Morphic-Widgets-Taskbar' }
 SystemWindow >> taskbarCloseAllLikeThis [
 
-	(SystemWindow allSubInstances select: [ :w | w model isKindOf: self model class ]) do: [ :w | w delete ].
+	(SystemWindow allSubInstances select: [ :w | w labelString = self labelString]) do: [ :w | w delete ].
+]
+
+{ #category : #'*Morphic-Widgets-Taskbar' }
+SystemWindow >> taskbarCloseAllToLeft [
+	| wasFound |
+	wasFound := false.
+	self worldTaskbar ifNotNil: [ :worldTaskbar |
+		worldTaskbar orderedTasks copy do: [ :task | 
+			(task morph == self) ifTrue: [ ^ self ].
+			task morph delete ] ].
 ]
 
 { #category : #'*Morphic-Widgets-Taskbar' }

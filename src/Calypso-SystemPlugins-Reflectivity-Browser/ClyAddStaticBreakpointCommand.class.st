@@ -21,5 +21,5 @@ ClyAddStaticBreakpointCommand >> applyBreakpointCondition: aBreakpoint [
 
 { #category : #accessing }
 ClyAddStaticBreakpointCommand >> defaultMenuItemName [ 
-	^'Add breakpoint'
+	^'Add Breakpoint'
 ]
