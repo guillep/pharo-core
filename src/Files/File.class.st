@@ -582,10 +582,12 @@ File class >> open: fileName writable: writableFlag [
 
 { #category : #'file creation' }
 File class >> openAndTruncateForWriteFileNamed: aName [
+	self
+		deprecated: 'Please use #truncatedFileNamed: instead'
+		transformWith: '`@receiver openAndTruncateForWriteFileNamed: `@arg' -> '`@receiver truncatedFileNamed: `@arg'.
+	^ self truncatedFileNamed: aName  
 
-	^ (self named: aName)
-		delete;
-		openForWrite
+  
 ]
 
 { #category : #'file creation' }
@@ -1070,6 +1072,14 @@ File class >> truncate: id to: anInteger [
 	<primitive: 'primitiveFileTruncate' module: 'FilePlugin'>
 	self primitiveFailed
 
+]
+
+{ #category : #'file creation' }
+File class >> truncatedFileNamed: aName [
+
+	^ (self named: aName)
+		delete;
+		openForWrite
 ]
 
 { #category : #'primitives-errors' }
