@@ -24,12 +24,17 @@ InstructionStream >> debuggerMap [
 InstructionStream >> firstByte [
 	"Answer the first byte of the current bytecode."
 
-	^self method at: pc
+	^self method at: self method initialPC
 ]
 
 { #category : #'*Debugging-Core' }
 InstructionStream >> followingByte [
-	"Answer the next bytecode."
+	"Answer the next byte.
+	For example for this bytecode 
+	<EB 00> superSend 
+	<D8> pop
+	 If the current byte is EB, the following byte is 00.
+	 It is not the following bytecode, that is D8"
 
 	^self method at: pc + 1
 ]
@@ -49,13 +54,6 @@ InstructionStream >> followingPc [
 ]
 
 { #category : #'*Debugging-Core' }
-InstructionStream >> fourthByte [
-	"Answer the fourth byte of the current bytecode."
-
-	^self method at: pc + 3
-]
-
-{ #category : #'*Debugging-Core' }
 InstructionStream >> interpret [
 	| endPC |
 	endPC := self method endPC.
@@ -72,6 +70,13 @@ InstructionStream >> interpretJump [
 InstructionStream >> interpretJumpIfCond [
 	^ self method encoderClass interpretJumpIfCondIn: self
 
+]
+
+{ #category : #'*Debugging-Core' }
+InstructionStream >> interpretNextInstruction [
+	"Return the next bytecode instruction as a message that an InstructionClient would understand.  This advances the pc by one instruction."
+
+	^ self interpretNextInstructionFor: MessageCatcher new
 ]
 
 { #category : #'*Debugging-Core' }
@@ -253,35 +258,18 @@ InstructionStream >> interpretV3PlusClosureJumpIfCond [
 
 { #category : #'*Debugging-Core' }
 InstructionStream >> nextByte [
-	"Answer the next bytecode."
+	"Answer the next bytecode"
+	self flag: 'Should this method be renamed nextBytecode? Is it possible thta it returns only a byte?'.
 
 	^self method at: pc
 ]
 
 { #category : #'*Debugging-Core' }
-InstructionStream >> nextInstruction [
-	"Return the next bytecode instruction as a message that an InstructionClient would understand.  This advances the pc by one instruction."
-
-	^ self interpretNextInstructionFor: MessageCatcher new
-]
-
-{ #category : #'*Debugging-Core' }
 InstructionStream >> nextPc: currentByte [
-	"Answer the pc of the next bytecode following the current one, given the current bytecode.
+	"Answer the pc of the bytecode following the bytecode currentByte.
 	 Skips the extension bytecodes."
 	
 	^ pc + (self method encoderClass bytecodeSize: currentByte)
-]
-
-{ #category : #'*Debugging-Core' }
-InstructionStream >> peekInstruction [
-	"Return the next bytecode instruction as a message that an InstructionClient would understand.  The pc remains unchanged."
-
-	| currentPc instruction |
-	currentPc := self pc.
-	instruction := self nextInstruction.
-	self pc: currentPc.
-	^ instruction
 ]
 
 { #category : #'*Debugging-Core' }
@@ -305,13 +293,6 @@ InstructionStream >> scanFor: scanBlock [
 			[^true].
 		 pc := pc + (encoderClass bytecodeSize: byte)].
 	^false
-]
-
-{ #category : #'*Debugging-Core' }
-InstructionStream >> secondByte [
-	"Answer the second byte of the current bytecode."
-
-	^self method at: pc + 1
 ]
 
 { #category : #'*Debugging-Core' }

@@ -160,6 +160,12 @@ CompiledCode >> bytecode [
 ]
 
 { #category : #accessing }
+CompiledCode >> bytecodeSizeForPc: pc [
+	"Returns the size of the bytecode at the given pc"
+	^ self encoderClass bytecodeSize: (self at: pc)
+]
+
+{ #category : #accessing }
 CompiledCode >> clearFlag [
 	"Clear the user-level flag bit"
 

@@ -84,6 +84,18 @@ InstructionStreamTest >> testBlockWithASuperWithoutArgumentsSendHasCorrectNumber
 	self assert: operations last equals: { #directSuperSend:numArgs:. #yourself. 0 }
 ]
 
+{ #category : #tests }
+InstructionStreamTest >> testCompiledCode [
+
+	| aMethod aStream |
+	aMethod := self classUnderTest >> #methodWithASuperBlockWithoutArguments.	
+	aStream := InstructionStream on: aMethod.
+	self assert: aStream compiledCode identicalTo: aMethod.
+	self assert: aStream pc equals: aMethod initialPC
+	
+	
+]
+
 { #category : #example }
 InstructionStreamTest >> testSimulatedTerminationOfProcessDoNotCorruptTheContext [
 

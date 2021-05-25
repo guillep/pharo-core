@@ -84,11 +84,11 @@ FBDDecompiler >> decodeConditionalLoop: loop nextLoops: loops [
 	self interpret: loop exitCondition - 1 nextLoops: loops.
 	self doPop.
 	boolean := instructionStream willJumpIfFalse.
-	instructionStream nextInstruction. "skip the conditional jump exiting the loop"
+	instructionStream interpretNextInstruction. "skip the conditional jump exiting the loop"
 	
 	currentSequence := builder codeEmptySequence.
 	self interpret: loop backjump - 1.
-	instructionStream nextInstruction. "skip the backjump"
+	instructionStream interpretNextInstruction. "skip the backjump"
 	
 	simulatedStack addLast:  (builder 
 		codeLoopNode: boolean
@@ -120,7 +120,7 @@ FBDDecompiler >> decodeRepeatLoop: loop nextLoops: loops [
 	
 	currentSequence := builder codeEmptySequence.
 	self interpret: loop backjump - 1 nextLoops: loops.
-	instructionStream nextInstruction. "skip backjump"
+	instructionStream interpretNextInstruction. "skip backjump"
 	
 	simulatedStack addLast:  (builder codeRepeatNode:  currentSequence).
 	currentSequence := pastSequence.
@@ -274,7 +274,7 @@ FBDDecompiler >> generateNativeBoostCallErrorMethodFrom: aCompiledMethod [
 
 { #category : #'data flow instructions' }
 FBDDecompiler >> goToNextInstruction [
-	instructionStream nextInstruction
+	instructionStream interpretNextInstruction
 ]
 
 { #category : #private }
@@ -294,7 +294,7 @@ FBDDecompiler >> initializeErrorCode: cm [
 		ifFalse: [ ^ self ].
 	instructionStream willStore
 		ifFalse: [ ^ self ].
-	index := instructionStream nextInstruction arguments first.
+	index := instructionStream interpretNextInstruction arguments first.
 	currentSequence removeTemporaryNamed: (simulatedStack at: index + 1) name.
 	simulatedStack at: index + 1 put: (builder codeTemp: (self errorCodeNameFor: cm))
 ]
@@ -351,7 +351,7 @@ FBDDecompiler >> interpret: seq1 then: seq2 distance: distance [
 	| hasPopped hasPopped2 jmpSz topValue stackSize |
 	instructionStream willJustPop ifTrue: [ 
 			topValue := simulatedStack removeLast.
-			instructionStream nextInstruction ].
+			instructionStream interpretNextInstruction ].
 	stackSize := simulatedStack size.
 	hasPopped := self interpretSeq: seq1 baseStackSize: stackSize distance: distance - topValue notNil asBit.
 	jmpSz := jumpSize.
@@ -416,7 +416,7 @@ FBDDecompiler >> maybeSkipCallPrimitiveBytecode: aCompiledMethod [
 	"If the method's bytecode set uses the callPrimitive bytecode, ignore it.
 	The primitive is handled specifically before bytecode interpretation."
 	instructionStream nextByte = aCompiledMethod encoderClass callPrimitiveCode 
-		ifTrue: [ instructionStream nextInstruction ]
+		ifTrue: [ instructionStream interpretNextInstruction ]
 ]
 
 { #category : #'instruction decoding forward' }

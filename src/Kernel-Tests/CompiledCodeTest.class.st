@@ -30,6 +30,18 @@ CompiledCodeTest >> testAccessesRef [
 	self assert: (writeMethod accessesRef: classVar).
 ]
 
+{ #category : #'tests - accessing' }
+CompiledCodeTest >> testBytecodeSizeForPc [
+
+	| method |
+	method := self class >> #method1.
+
+	self
+		assert: (method bytecodeSizeForPc: method initialPC)
+		equals:
+		(method encoderClass bytecodeSize: (method at: method initialPC))
+]
+
 { #category : #'tests-literals' }
 CompiledCodeTest >> testHasLiteral [
 
