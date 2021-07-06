@@ -64,6 +64,10 @@ BaselineOfPharo >> baseline: spec [
 
 	spec for: #common do: [
 		spec postLoadDoIt: #'postload:package:'.
+		
+		spec baseline: 'OpalCompilerPlugins' 
+			with: [spec repository: repository; loads: #('core').].
+		
 		spec baseline: 'BaseLibraries' with: [spec repository: repository].
 		
 		spec baseline: 'IDE' with: [spec repository: repository].

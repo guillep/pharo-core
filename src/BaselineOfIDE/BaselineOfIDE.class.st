@@ -100,6 +100,12 @@ BaselineOfIDE >> baseline: spec [
 	repository := self packageRepositoryURL.
 	spec for: #common do: [ 
 		spec postLoadDoIt: #postload:package:.
+		
+		spec baseline: 'OpalCompilerPlugins' with: [
+			spec 
+				repository: repository;
+				loads: #('tests') ].
+		
 		spec baseline: 'BasicTools' with: [ spec repository: repository ].
 		spec baseline: 'Athens' with: [ spec repository: repository ].
 		spec baseline: 'Flashback' with: [ spec repository: repository ].

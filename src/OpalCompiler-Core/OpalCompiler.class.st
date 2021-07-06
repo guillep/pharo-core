@@ -281,6 +281,11 @@ OpalCompiler >> allowParseErrorsNonInteractive [
 	^self compilationContext optionParseErrorsNonInteractiveOnly and: [ self isInteractive not ]
 ]
 
+{ #category : #'as yet unclassified' }
+OpalCompiler >> ast [
+	^ ast
+]
+
 { #category : #accessing }
 OpalCompiler >> bindings: aDictionary [
 	"allows to define additional binding, note: Globals are not shadowed"
@@ -293,6 +298,15 @@ OpalCompiler >> callPlugins [
 	plugins := compilationContext astTransformPlugins ifEmpty: [ ^self ].
 	plugins sort: [:a :b | a priority > b priority]. "priority 0 is sorted last"
 	plugins do: [ :each | ast := each transform: ast]. 
+]
+
+{ #category : #private }
+OpalCompiler >> callPluginsPreSemantic [
+	| plugins  |
+
+	plugins := compilationContext astTransformPlugins ifEmpty: [ ^self ].
+	plugins sort: [:a :b | a priority > b priority]. "priority 0 is sorted last"
+	plugins do: [ :each | ast := each preSemanticAnalysisTransform: ast]. 
 ]
 
 { #category : #accessing }
@@ -527,6 +541,7 @@ OpalCompiler >> parse [
 	[ast := self compilationContext noPattern 
 		ifTrue: [ self parseExpression ]
 		ifFalse: [ self parseMethod ].
+	self callPluginsPreSemantic.
 	ast methodNode compilationContext: self compilationContext.
 	self doSemanticAnalysis]
 	on: ReparseAfterSourceEditing 
@@ -550,6 +565,7 @@ OpalCompiler >> parse: textOrString [
 OpalCompiler >> parseDoIt [
 	"we parse doits without doing name analysis here, it is done in #transformDoit"
 	ast := self parseExpression.
+	self callPluginsPreSemantic.
 	^self transformDoit
 ]
 

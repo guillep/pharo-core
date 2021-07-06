@@ -28,6 +28,12 @@ Class {
 	#category : #'OpalCompiler-Core-Translator'
 }
 
+{ #category : #'instance creation' }
+OCCompilerASTPlugin class >> preSemanticAnalysisTransform: anRBMethodNode [
+
+	^ self new preSemanticAnalysisTransform: anRBMethodNode
+]
+
 { #category : #private }
 OCCompilerASTPlugin class >> priority [
 	self subclassResponsibility
@@ -44,14 +50,23 @@ OCCompilerASTPlugin >> ast: anAst [
 ]
 
 { #category : #api }
+OCCompilerASTPlugin >> preSemanticAnalysisTransform: anRBMethodNode [
+	"My subclasses can perform transformation on the received AST.
+	This method returns the new AST to use in the rest of the process. 
+	The returned AST can be the same transformed or a new one."
+
+	^ anRBMethodNode.
+]
+
+{ #category : #api }
 OCCompilerASTPlugin >> priority [
 	^100 "default. Priority 0 is used by Reflectivity to be the last"
 ]
 
 { #category : #api }
 OCCompilerASTPlugin >> transform [
-	"Plugins override this method. If you modify the AST, make sure to copy it before!"
-	self subclassResponsibility.
+
+	self subclassResponsibility
 ]
 
 { #category : #api }
