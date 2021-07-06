@@ -1197,6 +1197,16 @@ Collection >> select: aBlock [
 ]
 
 { #category : #enumerating }
+Collection >> select: aBlock as: aClass [
+	"Evaluate aBlock with each of the receiver's elements as argument.
+	Collect the elements for which aBlock evaluates to true in an instance of aClass. Answer the resulting collection"
+	
+	| selectedElements |
+	selectedElements := (self select: aBlock).
+	^ (aClass new: selectedElements size) fillFrom: selectedElements with: [ :each | each ] ; yourself
+]
+
+{ #category : #enumerating }
 Collection >> select: selectBlock thenCollect: collectBlock [
 	"Utility method to improve readability."
 

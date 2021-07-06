@@ -83,3 +83,12 @@ CollectionTest >> testGroupedByGroupsOrderWithSortedCollectionOfDates [
 		].
 
 ]
+
+{ #category : #tests }
+CollectionTest >> testSelectAs [
+	| collection result |
+	collection := OrderedCollection new add: 1; add: 3; add: 2; yourself.
+	result  := collection select: [:i | i even not] as: Array.
+	self assert: result class equals: Array.
+	self assert: result equals: #(1 3).
+]

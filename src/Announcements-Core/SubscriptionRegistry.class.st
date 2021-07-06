@@ -133,10 +133,9 @@ SubscriptionRegistry >> subscriptionsForClass: subscriberClass [
 
 { #category : #accessing }
 SubscriptionRegistry >> subscriptionsHandling: anAnnouncement [
-	^ Array streamContents: [ :s|
-			subscriptions do: [:each| 
-				(each handlesAnnouncement: anAnnouncement)
-					ifTrue: [ s nextPut: each ]]]
+	"Returns an Array containing the subscriptions that handle anAnnouncement"
+	
+	^ subscriptions select: [ :subscription | subscription handlesAnnouncement: anAnnouncement ] as: Array
 ]
 
 { #category : #iterating }
