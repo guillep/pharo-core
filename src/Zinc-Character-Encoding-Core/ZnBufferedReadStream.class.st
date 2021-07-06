@@ -314,7 +314,7 @@ ZnBufferedReadStream >> readInto: collection startingAt: offset count: requested
 { #category : #accessing }
 ZnBufferedReadStream >> setToEnd [
 	
-	stream setToEnd
+	self position: stream size
 ]
 
 { #category : #private }
