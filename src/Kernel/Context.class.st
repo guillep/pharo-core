@@ -753,8 +753,8 @@ Context >> evaluateSignal: exception [
 	| value |
 	exception privHandlerContext: self contextTag.
 	value := self exceptionHandlerBlock cull: exception.	
-	"return from self if not otherwise directed in handle block"
-	self return: value
+	"default return if not otherwise directed in handle block"
+	exception return: value
 ]
 
 { #category : #'special context access' }
