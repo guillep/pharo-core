@@ -115,6 +115,14 @@ TraitedClass >> addSelector: selector withRecompiledMethod: compiledMethod [
 	TraitChange addSelector: selector on: self
 ]
 
+{ #category : #accessing }
+TraitedClass >> allInstVarNames [
+
+	"This is an intermdiary fix to issue #8630"
+
+	^ self allSlots collect: [ :each | each names ]
+]
+
 { #category : #querying }
 TraitedClass >> allTraits [
 	^ self traitComposition allTraits
