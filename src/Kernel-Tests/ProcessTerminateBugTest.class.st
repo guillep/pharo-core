@@ -28,6 +28,183 @@ horribly screw up"
 ]
 
 { #category : #tests }
+ProcessTerminateBugTest >> testTerminationDuringNestedUnwindB1 [
+	"Test all nested unwind blocks are correctly unwound; 
+	all unwind blocks halfway 	through their execution should be completed."
+
+	| p x1 x2 x3 semaphore |
+	x1 := x2 := x3 := false.
+	semaphore := Semaphore new.
+	p := 
+		[
+			[
+				[ ] ensure: [
+					[semaphore wait] ensure: [
+						x1 := true]. 
+					x2 := true]
+			] ensure: [
+				x3 := true]
+		] newProcess resume.
+	Processor yield.
+	"make sure p is not suspended and none of the unwind blocks has finished yet;
+	ideally we'd like to make sure p is blocked but isBlocked is not implemented"
+	self deny: p isSuspended.
+	self deny: x1 | x2 | x3.
+	"now terminate the process and make sure all unwind blocks have finished"
+	p terminate.
+	self assert: p isTerminated.
+	self assert: x1 & x2 & x3
+
+]
+
+{ #category : #tests }
+ProcessTerminateBugTest >> testTerminationDuringNestedUnwindB2 [
+	"Test all nested unwind blocks are correctly unwound; 
+	all unwind blocks halfway 	through their execution should be completed."
+
+	| p x1 x2 x3 semaphore |
+	x1 := x2 := x3 := false.
+	semaphore := Semaphore new.
+	p := 
+		[
+			[
+				[ ] ensure: [
+					[ ] ensure: [
+						semaphore wait.
+						x1 := true]. 
+					x2 := true]
+			] ensure: [
+				x3 := true]
+		] newProcess resume.
+	Processor yield.
+	"make sure p is not suspended and none of the unwind blocks has finished yet;
+	ideally we'd like to make sure p is blocked but isBlocked is not implemented"
+	self deny: p isSuspended.
+	self deny: x1 | x2 | x3.
+	"now terminate the process and make sure all unwind blocks have finished"
+	p terminate.
+	self assert: p isTerminated.
+	self assert: x1 & x2 & x3
+
+]
+
+{ #category : #tests }
+ProcessTerminateBugTest >> testTerminationDuringNestedUnwindR1 [
+	"Test all nested unwind blocks are correctly unwound; 
+	all unwind blocks halfway through their execution should be completed."
+
+	| p x1 x2 x3 |
+	x1 := x2 := x3 := false.
+	p := 
+		[
+			[
+				[ ] ensure: [
+					[Processor yield] ensure: [
+						x1 := true]. 
+					x2 := true]
+			] ensure: [
+				x3 := true]
+		] newProcess resume.
+	Processor yield.
+	"make sure p is not suspended and none of the unwind blocks has finished yet;
+	ideally we'd like to make sure p is runnable but isRunnable is not implemented"
+	self deny: p isSuspended.
+	self deny: x1 | x2 | x3.
+	"now terminate the process and make sure all unwind blocks have finished"
+	p terminate.
+	self assert: p isTerminated.
+	self assert: x1 & x2 & x3
+
+]
+
+{ #category : #tests }
+ProcessTerminateBugTest >> testTerminationDuringNestedUnwindR2 [
+	"Test all nested unwind blocks are correctly unwound; 
+	all unwind blocks halfway 	through their execution should be completed."
+
+	| p x1 x2 x3 |
+	x1 := x2 := x3 := false.
+	p := 
+		[
+			[
+				[ ] ensure: [
+					[ ] ensure: [
+						Processor yield. 
+						x1 := true]. 
+					x2 := true]
+			] ensure: [
+				x3 := true]
+		] newProcess resume.
+	Processor yield.
+	"make sure p is not suspended and none of the unwind blocks has finished yet;
+	ideally we'd like to make sure p is runnable but isRunnable is not implemented"
+	self deny: p isSuspended.
+	self deny: x1 | x2 | x3.
+	"now terminate the process and make sure all unwind blocks have finished"
+	p terminate.
+	self assert: p isTerminated.
+	self assert: x1 & x2 & x3
+
+]
+
+{ #category : #tests }
+ProcessTerminateBugTest >> testTerminationDuringNestedUnwindS1 [
+	"Test all nested unwind blocks are correctly unwound; 
+	all unwind blocks halfway through their execution should be completed."
+
+	| p x1 x2 x3 |
+	x1 := x2 := x3 := false.
+	p := 
+		[
+			[
+				[ ] ensure: [
+					[Processor activeProcess suspend] ensure: [
+						x1 := true]. 
+					x2 := true]
+			] ensure: [
+				x3 := true]
+		] newProcess resume.
+	Processor yield.
+	"make sure p is suspended and none of the unwind blocks has finished yet"
+	self assert: p isSuspended.
+	self deny: x1 | x2 | x3.
+	"now terminate the process and make sure all unwind blocks have finished"
+	p terminate.
+	self assert: p isTerminated.
+	self assert: x1 & x2 & x3
+
+]
+
+{ #category : #tests }
+ProcessTerminateBugTest >> testTerminationDuringNestedUnwindS2 [
+	"Test all nested unwind blocks are correctly unwound; 
+	all unwind blocks halfway through their execution should be completed."
+
+	| p x1 x2 x3 |
+	x1 := x2 := x3 := false.
+	p := 
+		[
+			[
+				[ ] ensure: [
+					[ ] ensure: [
+						Processor activeProcess suspend. 
+						x1 := true]. 
+					x2 := true]
+			] ensure: [
+				x3 := true]
+		] newProcess resume.
+	Processor yield.
+	"make sure p is suspended and none of the unwind blocks has finished yet"
+	self assert: p isSuspended.
+	self deny: x1 | x2 | x3.
+	"now terminate the process and make sure all unwind blocks have finished"
+	p terminate.
+	self assert: p isTerminated.
+	self assert: x1 & x2 & x3
+
+]
+
+{ #category : #tests }
 ProcessTerminateBugTest >> testTerminationDuringUnwind [
 	"An illustration of the issue of process termination during unwind.
 	This uses a well-behaved unwind block that we should allow to complete

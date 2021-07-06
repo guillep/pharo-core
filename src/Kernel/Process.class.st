@@ -217,7 +217,7 @@ Process >> doTerminationFromAnotherProcess [
 	Unwind to execute pending ensure:/ifCurtailed: blocks before terminating.
 	It assumes that self is not the active process
 	and the termination is requested from another process"
-	| ctxt oldList |
+	| ctxt oldList outerMost unwindBlock |
 	"Always suspend the process first so it doesn't accidentally get woken up"
 	oldList := self suspend.
 	suspendedContext ifNil: [^self].
@@ -226,26 +226,43 @@ Process >> doTerminationFromAnotherProcess [
 	in Semaphore>>critical:. So if waiting object is interesting on this situation we will ask it to handle it. In case of Semaphore>>critical, Semaphore will pop the suspendedContext so that we leave the ensure: block inside	Semaphore>>critical: without signaling the semaphore.
 	This methods allow to not be restricted only on Semaphore case."
 	suspendedContext := oldList handleProcessTerminationOfWaitingContext: suspendedContext.
-	"If we are terminating a process halfways through an unwind, try to complete that unwind block first."
-	(suspendedContext findNextUnwindContextUpTo: nil) ifNotNil: [:outer |
-		(suspendedContext findContextSuchThat: [ :c | c closure == outer unwindBlock ]) ifNotNil: [ :inner |
-			"This is an unwind block currently under evaluation"
-			suspendedContext runUntilErrorOrReturnFrom: inner ] ].		
-	ctxt := self popTo: suspendedContext bottomContext.
-	[ ctxt == suspendedContext bottomContext ] whileFalse: [
-		"There was a problem during termination. Make the user aware of the problem
-		but ensure that the current process will be properly terminated."
-		| stackCopy |
-		stackCopy := ctxt copyStack.
-		[ UnwindError signalIn: stackCopy ] forkNamed: 'Unwind error during termination'.
-		ctxt terminateTo: ctxt sender.
-		ctxt := self popTo: suspendedContext bottomContext ].
-	"The suspendedContext of process that has never run will have 
-	a pc equal to the startpc. #isTerminate would thus answer false
-	even though the process is dead. To prevent that we set the pc
-	of the suspendedContext to nil (#isDead ---> true)."
-	(suspendedContext notNil and: [ suspendedContext isBottomContext ]) ifTrue: [
-		suspendedContext pc: nil ]
+
+	"If terminating a process halfways through an unwind, try to complete that unwind block first;
+	if there are multiple such nested unwind blocks, try to complete the outer-most one; the inner
+	blocks will be completed in the process."
+	ctxt := suspendedContext.
+	[(ctxt := ctxt findNextUnwindContextUpTo: nil) isNil] whileFalse: 
+		"Contexts under evaluation have already set their complete (tempAt: 2) to true."
+		[ctxt unwindComplete ifNotNil: [outerMost := ctxt]].
+	outerMost ifNotNil: [
+		"This is the outer-most unwind context currently under evaluation;
+		let's find an inner context executing outerMost's argument block (tempAt: 1)"
+		(suspendedContext findContextSuchThat: [:ctx | 
+			ctx closure == outerMost unwindBlock]) ifNotNil: [:inner | 
+				"Let's finish the unfinished unwind context only (i.e. up to inner) and return here"
+				outerMost := (suspendedContext runUntilErrorOrReturnFrom: inner) first.
+				"Update the receiver's suspendedContext (the previous step reset its sender to nil);
+				return, if the execution stack reached its bottom (e.g. in case of non-local returns)."
+				(suspendedContext := outerMost sender) ifNil: [^self]]]. 
+
+	"Now all unwind blocks caught halfway through have been completed; 
+	let's execute the ones still pending. Note: #findNextUnwindContextUpTo: starts
+	searching from the receiver's sender but the receiver itself may be an unwind context."
+	ctxt := suspendedContext.
+	ctxt isUnwindContext ifFalse: [ctxt := ctxt findNextUnwindContextUpTo: nil].
+	[ctxt isNil] whileFalse: [
+		ctxt unwindComplete ifNil: [
+			ctxt unwindComplete: true.
+			unwindBlock := ctxt unwindBlock.
+			"Create a context for the unwind block and execute it on the unwind block's stack. 
+			Note: using #value instead of #runUntilErrorOrReturnFrom: would lead to executing 
+			the unwind on the wrong stack preventing the correct execution of non-local returns."
+			suspendedContext := unwindBlock asContextWithSender: ctxt.
+			suspendedContext runUntilErrorOrReturnFrom: suspendedContext].
+		ctxt := ctxt findNextUnwindContextUpTo: nil].
+
+	"Reset the context's pc and sender to nil for the benefit of isTerminated."
+	suspendedContext terminate
 ]
 
 { #category : #private }
