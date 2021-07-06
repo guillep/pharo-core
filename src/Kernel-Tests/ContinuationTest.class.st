@@ -267,8 +267,6 @@ ContinuationTest >> remove: anObj uptoLastValueLink: aValueLink continuation: sk
 { #category : #tests }
 ContinuationTest >> testBlockEscape [
 	| x |
-	self flag: #flakyTest.
-	self skip.
 	tmp := 0.
 	x := [ tmp := tmp + 1.
 	tmp2 value ].
