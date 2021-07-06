@@ -1282,10 +1282,29 @@ StringTest >> testIncludesSubstring [
 
 	self assert: ('testing this string' includesSubstring: 'ring'). 
 	self assert: ('éèàôüößäóñíá' includesSubstring: '').
+	self assert: ('' includesSubstring: '').
 	self deny: ('éèàôüößäóñíá' includesSubstring: 'a'). 
 	self assert: ('éèàôüößäóñíá' includesSubstring: 'ßä').
 	self deny: ('kjdsnlksjdf' includesSubstring: 'K') 
 
+]
+
+{ #category : #test }
+StringTest >> testIncludesSubstringAt [
+
+	"Test empty strings"
+	self assert: ('' includesSubstring: '' at: 1).
+	self assert: ('test' includesSubstring: '' at: 1).
+	self deny: ('' includesSubstring: 'test' at: 1).
+	"Test out of bounds indexes"
+	self deny: ('test' includesSubstring: 't' at: 0).
+	self deny: ('test' includesSubstring: 't' at: 10).
+	"Test matching substring"
+	self assert: ('test' includesSubstring: 'st' at: 3).
+	"Test partially matching substring"
+	self deny: ('test' includesSubstring: 'sty' at: 3).
+	
+	
 ]
 
 { #category : #tests }
@@ -1778,6 +1797,34 @@ StringTest >> testRomanNumber [
 	self assert: 'DCLXVI' romanNumber equals: 666.
 	self assert: '-V' romanNumber equals: -5.
 	self assert: '-MDCCCXCV' romanNumber equals: -1895.
+]
+
+{ #category : #test }
+StringTest >> testSkipAnySubstringStartingAt [
+	
+	"Simple skip"
+	self assert: ('abcd' skipAnySubstring: #('a') startingAt: 1) equals: 2. 
+	"Test multiple substrings to skip"
+	self assert: ('abcd' skipAnySubstring: #('a' 'b' 'd') startingAt: 1) equals: 3.
+	"Test skip symbol"
+	self assert: ('abcd' skipAnySubstring: #(ab) startingAt: 1) equals: 3.
+	"Test string is full of substrings to skip"
+	self assert: ('abcd' skipAnySubstring: #('ab' 'cd') startingAt: 1) equals: 5. 
+	"Test first substring matches but second substring is larger than entire string"
+	self assert: ('abcd' skipAnySubstring: #('ab' 'abcdefg') startingAt: 1) equals: 3.
+	"Test first substring is larger than entire string, and second substring matches string"
+	self assert: ('abcd' skipAnySubstring: #('abcdefg' 'ab') startingAt: 1) equals: 3.
+	"Test string is empty, return length of string + 1"
+	self assert: ('' skipAnySubstring: #('ab') startingAt: 1) equals: 1.
+	"Test starting at index > 1"
+	self assert: ('abcde' skipAnySubstring: #('cd') startingAt: 3) equals: 5.
+	"Test substring appears multiple times in a row"
+	self assert: ('ababc' skipAnySubstring: #('ab') startingAt: 1) equals: 5.
+	"Test if delimiters is a string it is treated as a collection of characters"
+	self assert: (', ab' skipAnySubstring: ' ,' startingAt: 1) equals: 3.
+	"Test how delimiters order matters: substrings are skipped greedily with no backtracking"
+	self assert: ('abcdefg' skipAnySubstring: #('abcd' 'abc' 'def' 'g') startingAt: 1) equals: 5.
+	self assert: ('abcdefg' skipAnySubstring: #('abc' 'def' 'g' 'abcd') startingAt: 1) equals: 8.
 ]
 
 { #category : #'tests - instance creation' }

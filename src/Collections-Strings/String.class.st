@@ -1639,6 +1639,23 @@ String >> includesSubstring: substring [
 	^ substring isEmpty or: [ (self findString: substring startingAt: 1) > 0 ]
 ]
 
+{ #category : #'finding/searching' }
+String >> includesSubstring: substring at: index [
+
+	"Answer true if the receiver contains the substring str exactly at index, false otherwise."
+
+	"('abcdefgh' includesSubstring: 'de' at: 1) >>> false"
+	"('abcdefgh' includesSubstring: 'de' at: 4) >>> true"
+
+	| pos |
+	pos := index - 1.
+
+	^ index > 0 & (self size - pos >= substring size) and: [ 
+		  substring allSatisfy: [ :char | 
+			  pos := pos + 1.
+			  (self at: pos) = char ] ]
+]
+
 { #category : #testing }
 String >> includesSubstring: aString caseSensitive: caseSensitive [
 	"Returns whether the receiver contains the argument."
@@ -2200,36 +2217,34 @@ String >> sameAs: aString [
 ]
 
 { #category : #accessing }
-String >> skipAnySubstring: delimiters startingAt: start [ 
-	"Answer the index of the last character within the receiver, starting at start, that does NOT match one of the delimiters. delimiters is a Array of substrings (Characters also allowed).  If the receiver is all delimiters, answer size + 1."
+String >> skipAnySubstring: delimiters startingAt: start [
 
-	| any this ind ii |
-	ii := start-1.
-	[(ii := ii + 1) <= self size] whileTrue: [ "look for char that does not match"
-		any := false.
-		delimiters do: [:delim |
-			delim isCharacter 
-				ifTrue: [(self at: ii) == delim ifTrue: [any := true]]
-				ifFalse: ["a substring"
-					delim size > (self size - ii + 1) ifFalse: "Here's where the one-off error was."
-						[ind := 0.
-						this := true.
-						delim do: [:dd | 
-							dd == (self at: ii+ind) ifFalse: [this := false].
-							ind := ind + 1].
-						this ifTrue: [ii := ii + delim size - 1.  any := true]]
-							ifTrue: [any := false] "if the delim is too big, it can't match"]].
-		any ifFalse: [^ ii]].
+	"Skip any of the delimiters found in receiver, from start onwards, until no delimiter substring matches; answer the position reached. delimiters is an array of strings (characters are accepted, but skipDelimiters:startingAt: handles them better). A string coming earlier in the array is skipped with higher priority. If the end of the receiver is reached, answer size + 1."
+
+	| pos |
+	delimiters isString ifTrue: [ 
+		^ self skipDelimiters: delimiters startingAt: start ].
+
+	pos := start.
+	[ pos <= self size ] whileTrue: [ 
+		pos := delimiters
+			       detect: [ :delim | 
+				       delim isCharacter
+					       ifTrue: [ (self at: pos) = delim ]
+					       ifFalse: [ self includesSubstring: delim at: pos ] ]
+			       ifFound: [ :match | pos + match asString size ]
+			       ifNone: [ ^ pos ] ].
 	^ self size + 1
 ]
 
 { #category : #accessing }
-String >> skipDelimiters: delimiters startingAt: start [ 
-	"Answer the index of the character within the receiver, starting at start, that does NOT match one of the delimiters. If the receiver does not contain any of the delimiters, answer size + 1.  Assumes the delimiters to be a non-empty string."
+String >> skipDelimiters: delimiters startingAt: start [
 
-	start to: self size do: [:i |
-		delimiters detect: [:delim | delim = (self at: i)]
-				ifNone: [^ i]].
+	"Answer the index of the first character within the receiver, starting at start, that does NOT match any element of delimiters (a collection of characters). If the end of the receiver is reached, answer size + 1."
+
+	start to: self size do: [ :i | 
+		(delimiters anySatisfy: [ :delim | delim = (self at: i) ]) 
+			ifFalse: [ ^ i ] ].
 	^ self size + 1
 ]
 

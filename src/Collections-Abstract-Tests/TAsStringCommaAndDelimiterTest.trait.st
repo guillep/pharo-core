@@ -95,18 +95,17 @@ TAsStringCommaAndDelimiterTest >> testAsStringOnDelimiterLastEmpty [
 { #category : #'tests - as string comma delimiter sequenceable' }
 TAsStringCommaAndDelimiterTest >> testAsStringOnDelimiterLastMore [
 
-	| delim multiItemStream result last allElementsAsString tmp |
+	| delim multiItemStream result last allElementsAsString |
 	
 	delim := ', '.
 	last := ' and '.
 	result:=''.
-	tmp := self nonEmpty collect: [:each | each asString].
 	multiItemStream := ReadWriteStream on:result.
-	self nonEmpty  asStringOn: multiItemStream delimiter: delim last: last.
+	self nonEmpty asStringOn: multiItemStream delimiter: delim last: last.
 	result := multiItemStream contents.
 	allElementsAsString:=(result findBetweenSubstrings: delim ).
-	tmp do:[:each |
-		self assert: (tmp occurrencesOf: each) = (allElementsAsString occurrencesOf: each)].
+	self nonEmpty do:[:each |
+		self assert: (self nonEmpty occurrencesOf: each) = (allElementsAsString occurrencesOf: each asString)].
 	self assert: ((allElementsAsString at: (allElementsAsString size - 1))=('and'))
 ]
 
@@ -131,19 +130,17 @@ TAsStringCommaAndDelimiterTest >> testAsStringOnDelimiterLastOne [
 { #category : #'tests - as string comma delimiter sequenceable' }
 TAsStringCommaAndDelimiterTest >> testAsStringOnDelimiterMore [
 
-	| delim multiItemStream result allElementsAsString tmp |
-	
-	
+	| delim multiItemStream result allElementsAsString |
+		
 	delim := ', '.
-	result:=''.
-	tmp:= self nonEmpty collect:[:each | each asString].
+	result:= ''.
 	multiItemStream := ReadWriteStream on:result.
-	self nonEmpty  asStringOn: multiItemStream delimiter: delim.
+	self nonEmpty asStringOn: multiItemStream delimiter: delim.
 	result := multiItemStream contents.
 	allElementsAsString := (result findBetweenSubstrings: delim ).
-	tmp do:
+	self nonEmpty do:
 		[:each |
-		self assert: (tmp occurrencesOf: each)=(allElementsAsString occurrencesOf: each).
+		self assert: (self nonEmpty occurrencesOf: each)=(allElementsAsString occurrencesOf: each asString).
 		].
 ]
 
