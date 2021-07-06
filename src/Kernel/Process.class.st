@@ -240,12 +240,10 @@ Process >> doTerminationFromAnotherProcess [
 		[ UnwindError signalIn: stackCopy ] forkNamed: 'Unwind error during termination'.
 		ctxt terminateTo: ctxt sender.
 		ctxt := self popTo: suspendedContext bottomContext ].
-	"The suspendedContext of process that has never run will have 
-	a pc equal to the startpc. #isTerminate would thus answer false
-	even though the process is dead. To prevent that we set the pc
-	of the suspendedContext to nil (#isDead ---> true)."
+
 	(suspendedContext notNil and: [ suspendedContext isBottomContext ]) ifTrue: [
-		suspendedContext pc: nil ]
+		suspendedContext setSender: nil receiver: self method: (Process>>#endProcess) arguments: {}]
+
 ]
 
 { #category : #private }
@@ -254,7 +252,8 @@ Process >> doTerminationFromYourself [
 	Unwind to execute pending ensure:/ifCurtailed: blocks before terminating.
 	It assumes that self is the active process. "		
 	thisContext unwindForTermination.
-	self suspend
+	^self endProcess
+
 ]
 
 { #category : #accessing }
@@ -265,6 +264,18 @@ Process >> effectiveProcess [
 	 debugged process as the effectiveProcess of the process executing the code, preserving process
 	 identity."
 	^effectiveProcess ifNil: [self] 
+]
+
+{ #category : #'changing process state' }
+Process >> endProcess [
+	"When I reach this method, I'm terminated. Suspending or terminating me is harmless."
+
+	<isTerminated>
+	thisContext terminateTo: nil.   "set thisContext sender to nil"
+	self suspend.
+	"the following line commented out because current debugger step over tests fail with this feature"
+	"^thisContext restart"   "restart and suspend again in case of sending resume to a terminated process"
+
 ]
 
 { #category : #private }
@@ -324,17 +335,16 @@ Process >> isSuspended [
 
 { #category : #testing }
 Process >> isTerminated [
+	"Answer if the receiver is terminated, i.e. if the receiver is not active and 
+	one of the following conditions is met:
+	(1) the receiver is a defunct process (suspendedContext = nil or pc = nil)
+	(2) the receiver is suspended within a method with isTerminated pragma"
+
 	self isActiveProcess ifTrue: [ ^ false ].
 	
-	^ suspendedContext isNil or: [
-		"If the suspendedContext is the bottomContext it is the block in Process>>newProcess.
-		If so, and the pc is greater than the startpc, the block has already sent and returned
-		from value and there is nothing more to do."
-		suspendedContext isBottomContext and: [
-			suspendedContext isDead or: [
-				"The pc of the suspendedContext is set to nil in #terminate explicitly.
-				Leaving this line in for safety."
-  	  			suspendedContext pc > suspendedContext startpc ] ] ]
+	^suspendedContext isNil or: [
+		suspendedContext isDead or: [
+			(suspendedContext method hasPragmaNamed: #isTerminated)]]
 
 ]
 
