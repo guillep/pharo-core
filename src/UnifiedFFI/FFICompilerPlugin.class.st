@@ -30,7 +30,7 @@ N.B: Users that redefine the FFI API (like TLGitCalloutTrait >> call:options:) a
 "
 Class {
 	#name : #FFICompilerPlugin,
-	#superclass : #OCCompilerASTPlugin,
+	#superclass : #OCStaticASTCompilerPlugin,
 	#classVars : [
 		'FFICalloutSelectors'
 	],
