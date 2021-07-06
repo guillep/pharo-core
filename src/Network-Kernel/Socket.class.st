@@ -89,13 +89,12 @@ Socket class >> loopbackTest [
 	"100 timesRepeat: [Socket loopbackTest]"
 
 	| sock1 sock2 bytesToSend sendBuf receiveBuf done bytesSent bytesReceived t extraBytes packetsSent packetsRead |
-	Transcript
-		cr;
-		show: 'starting loopback test';
-		cr.
-	Transcript
-		show: '---------- Connecting ----------';
-		cr.
+	self traceCr: (String streamContents: [:stream | stream 
+			cr;
+			nextPutAll: 'starting loopback test';
+			cr;
+			nextPutAll: '---------- Connecting ----------'  
+		]).
 	self initializeNetwork.
 	sock1 := self new.
 	sock2 := self new.
@@ -105,9 +104,7 @@ Socket class >> loopbackTest [
 	sock2 waitForConnectionFor: self standardTimeout.
 	sock1 isConnected ifFalse: [self error: 'sock1 not connected'].
 	sock2 isConnected ifFalse: [self error: 'sock2 not connected'].
-	Transcript
-		show: 'connection established';
-		cr.
+	self traceCr: 'connection established'. 
 	bytesToSend := 5000000.
 	sendBuf := String new: 5000 withAll: $x.
 	receiveBuf := String new: 50000.
@@ -124,35 +121,28 @@ Socket class >> loopbackTest [
 									[packetsRead := packetsRead + 1.
 									bytesReceived := bytesReceived + (sock2 receiveDataInto: receiveBuf)].
 							done := bytesSent >= bytesToSend and: [bytesReceived = bytesSent]]].
-	Transcript
-		show: 'closing connection';
-		cr.
+	self traceCr: 'closing connection'.
 	sock1 waitForSendDoneFor: self standardTimeout.
 	sock1 close.
 	sock2 waitForDisconnectionFor: self standardTimeout.
 	extraBytes := sock2 discardReceivedData.
 	extraBytes > 0 
 		ifTrue: 
-			[Transcript
-				show: ' *** received ' , extraBytes size printString , ' extra bytes ***';
-				cr].
+			[ self traceCr: ' *** received ' , extraBytes size printString , ' extra bytes ***'. ].
 	sock2 close.
 	sock1 waitForDisconnectionFor: self standardTimeout.
 	sock1 isUnconnectedOrInvalid ifFalse: [self error: 'sock1 not closed'].
 	sock2 isUnconnectedOrInvalid ifFalse: [self error: 'sock2 not closed'].
-	Transcript
-		show: '---------- Connection Closed ----------';
-		cr.
+	self traceCr: '---------- Connection Closed ----------'. 
 	sock1 destroy.
 	sock2 destroy.
-	Transcript
-		show: 'loopback test done; time = ' , t printString;
-		cr.
-	Transcript
-		show: (bytesToSend asFloat / t roundTo: 0.01) printString 
-					, '* 1000 bytes/sec';
-		cr.
-	Transcript endEntry
+	self traceCr: (String streamContents: [:stream | stream 
+			nextPutAll: 'loopback test done; time =';
+			print: t printString;
+			cr;
+			print: (bytesToSend asFloat / t roundTo: 0.01) printString ;
+			nextPutAll: ' * 1000 bytes/sec'  
+		]).
 ]
 
 { #category : #utilities }
@@ -330,27 +320,23 @@ Socket class >> sendTest [
 	"Socket sendTest"
 
 	| sock bytesToSend sendBuf bytesSent t serverName serverAddr |
-	Transcript
-		cr;
-		show: 'starting send test';
-		cr.
+	self traceCr: (String streamContents: [:stream | stream 
+			cr;
+			nextPutAll: 'starting send test'
+		]).
 	self initializeNetwork.
 	serverName := UIManager default request: 'What is the destination server?' initialAnswer: 'create.ucsb.edu'.
 	serverAddr := NetNameResolver addressForName: serverName timeout: 10.
 	serverAddr 
 		ifNil: [ ^ self inform: 'Could not find an address for ' , serverName ].
 	sock := self new.
-	Transcript
-		show: '---------- Connecting ----------';
-		cr.
+	self traceCr: '---------- Connecting ----------'.
 	sock connectTo: serverAddr port: 9.
 	sock isConnected
 		ifFalse: [ 
 			sock destroy.
 			^ self inform: 'could not connect' ].
-	Transcript
-		show: 'connection established; sending data';
-		cr.
+	self traceCr: 'connection established; sending data'.
 	bytesToSend := 1000000.
 	sendBuf := String new: 64 * 1024 withAll: $x.
 	bytesSent := 0.
@@ -362,14 +348,15 @@ Socket class >> sendTest [
 						ifTrue: [ bytesSent := bytesSent + (sock sendSomeData: sendBuf) ] ] ].
 	sock waitForSendDoneFor: self standardTimeout.
 	sock destroy.
-	Transcript
-		show: '---------- Connection Closed ----------';
-		cr;
-		show: 'send test done; time = ' , t printString;
-		cr;
-		show: (bytesToSend asFloat / t roundTo: 0.01) printString , ' * 1000 bytes/sec';
-		cr;
-		endEntry
+	self traceCr: (String streamContents: [:stream | stream 
+			nextPutAll: '---------- Connection Closed ----------';
+			cr;
+			nextPutAll: 'send test done; time = ';
+			print: t printString;
+			cr;
+			print: (bytesToSend asFloat / t roundTo: 0.01) printString;
+			nextPutAll: ' * 1000 bytes/sec'  
+		]).
 ]
 
 { #category : #utilities }

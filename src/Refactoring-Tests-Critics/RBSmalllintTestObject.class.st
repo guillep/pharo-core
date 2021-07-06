@@ -482,7 +482,7 @@ RBSmalllintTestObject >> toDoWithIncrement [
 
 { #category : #methods }
 RBSmalllintTestObject >> transcriptMentioned [
-	Transcript show: 'message'
+	self trace: 'message' .
 ]
 
 { #category : #'accessing - good' }

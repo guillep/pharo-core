@@ -16,5 +16,5 @@ Class {
 
 { #category : #registering }
 TranscriptLogger >> nextPut: anAnnouncement [
-	Transcript crShow: anAnnouncement
+	self crTrace: anAnnouncement .
 ]
