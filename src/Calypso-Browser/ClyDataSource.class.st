@@ -530,6 +530,7 @@ ClyDataSource >> wantsDropElements: aPassanger type: type index: rowIndex [
 	self dragTransferType == type ifFalse: [ ^false ].
 	dropTargetItem := self elementAt: rowIndex.		
 	result := queryView wantsDropPassenger: aPassanger at: dropTargetItem.
+	queryView expandForDrag: dropTargetItem.
 	
 	result & dropTargetItem hasChildren ifTrue: [ dropTargetItem expand ].
 	

@@ -114,7 +114,8 @@ Class {
 		'highlighting',
 		'changesWasInitiatedByUser',
 		'navigationSelector',
-		'dataSourceClass'
+		'dataSourceClass',
+		'expandedItemByDrag'
 	],
 	#category : #'Calypso-Browser-Table'
 }
@@ -356,6 +357,21 @@ ClyQueryViewMorph >> ensureVisibleSelection [
 	where browser is just opened and automatic item visibility 
 	can be wrongly computed"
 	UIManager default defer: [self selection ensureVisibleLastItem]
+]
+
+{ #category : #drag }
+ClyQueryViewMorph >> expandForDrag: dropTargetItem [
+	(expandedItemByDrag isNotNil 
+		and: [ expandedItemByDrag ~= dropTargetItem
+		and: [ expandedItemByDrag hasChildren 
+		and: [ expandedItemByDrag isExpanded ]]])
+			ifTrue: [ expandedItemByDrag collapse ].
+	^ expandedItemByDrag := dropTargetItem hasChildren 
+		ifFalse: [ nil ]
+		ifTrue: [
+			dropTargetItem expand.
+			dropTargetItem.
+			]
 ]
 
 { #category : #accessing }
