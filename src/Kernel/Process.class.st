@@ -451,7 +451,9 @@ Process >> priority: anInteger [
 	"Set the receiver's priority to anInteger."
 
 	(anInteger between: Processor lowestPriority and: Processor highestPriority)
-		ifTrue: [ priority := anInteger ]
+		ifTrue: [
+			priority := anInteger.
+			self isActiveProcess ifTrue: [ [self resume] fork. self suspend ] ]
 		ifFalse: [ self error: 'Invalid priority: ' , anInteger printString ]
 ]
 
