@@ -1748,20 +1748,25 @@ Context >> return: value [
 ]
 
 { #category : #controlling }
-Context >> return: value from: aSender [ 
+Context >> return: value from: aSender [
 	"For simulation.  Roll back self to aSender and return value from it.  Execute any unwind blocks on the way.  ASSUMES aSender is a sender of self"
-
 	| newTop context |
 	aSender isDead ifTrue: [
 		^ self send: #cannotReturn: to: self with: {value} super: false ].
 	newTop := aSender sender.
 	context := self findNextUnwindContextUpTo: newTop.
+	(context notNil and: [ context unwindBlock = closureOrNil ]) ifTrue: [
+		"Here the return happens inside the unwind block like in following example: 
+				[ #test ] ensure: [ ^ #returnFromUnwindBlock ]
+		In such cases #findNextUnwindContextUpTo: returns the corresponding #ensure context
+		because it is always a sender of unwind block.
+		Here we detect this case and lookup the next unwind context after the current ensure section (current unwind)"
+		context := context findNextUnwindContextUpTo: newTop ].
 	context ifNotNil: [
-		^ self send: #aboutToReturn:through: to: self with: {value. context} super: false] .
+		^ self send: #aboutToReturn:through: to: self with: {value. context} super: false ].
 	self releaseTo: newTop.
 	newTop ifNotNil: [ newTop push: value ].
 	^ newTop
-
 ]
 
 { #category : #controlling }
