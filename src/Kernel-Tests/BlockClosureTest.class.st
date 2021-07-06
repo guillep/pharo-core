@@ -434,6 +434,16 @@ BlockClosureTest >> testSuppressInformUsingStringMatchOptions [
 ]
 
 { #category : #'tests - evaluating' }
+BlockClosureTest >> testValueAt [
+	| val oldPriority |
+	val := 0.
+	oldPriority := Processor activePriority.
+	[ [ val := 1 ] forkAt: oldPriority + 1 ] valueAt: oldPriority + 2.
+
+	self assert: val equals: 1
+]
+
+{ #category : #'tests - evaluating' }
 BlockClosureTest >> testValueWithArguments [
 
 	self shouldnt: [ aBlockContext valueWithArguments: #() ] raise: ArgumentsCountMismatch.

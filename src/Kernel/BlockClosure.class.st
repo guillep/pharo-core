@@ -724,7 +724,9 @@ BlockClosure >> valueAt: blockPriority [
 	"Yield after restoring lower priority to give the preempted processes a  
 	chance to run."
 	blockPriority > outsidePriority
-		ifTrue: [Processor yield].
+		ifTrue: [
+			[activeProcess resume] fork. 
+			activeProcess suspend].
 	^ result
 ]
 
