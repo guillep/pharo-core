@@ -152,6 +152,35 @@ ReflectiveMethodTest >> testSetLinkOnClassVariableAndUninstall [
 
 ]
 
+{ #category : #tests }
+ReflectiveMethodTest >> testSetLinkOnDynamicArrayArgument [
+
+	| link a b |
+	link := MetaLink new
+		        metaObject: #node;
+		        selector: #tagExecuted;
+		        yourself.
+	(ReflectivityExamples >> #exampleDynamicArrayArgument)
+		compiledMethod recompile.
+	a := ReflectivityExamples new exampleDynamicArrayArgument.
+	(ReflectivityExamples >> #exampleDynamicArrayArgument) ast 
+		nodesDo: [ :n | 
+			n removeProperty: #tagExecuted ifAbsent: [  ].
+			n isDynamicArray ifTrue: [ 
+				n
+					propertyAt: #tagExecuted put: false;
+					link: link ] ].
+	b := [ ReflectivityExamples new exampleDynamicArrayArgument ]
+		     on: Error
+		     do: #yourself.
+	link uninstall.
+	self assert: a equals: b.
+	(ReflectivityExamples >> #exampleDynamicArrayArgument) ast 
+		nodesDo: [ :n | 
+			n isDynamicArray ifTrue: [ 
+				self assert: (n propertyAt: #tagExecuted) ] ]
+]
+
 { #category : #'tests - variables' }
 ReflectiveMethodTest >> testSetLinkOnGlobalVariable [
 	| globalVar link |
@@ -210,6 +239,60 @@ ReflectiveMethodTest >> testSetLinkOnInstanceVariableAndUninstall [
 	self assertEmpty: ivar links
 ]
 
+{ #category : #tests }
+ReflectiveMethodTest >> testSetLinkOnLongNestedLiteralArray [
+
+	| link a b |
+	link := MetaLink new
+		        metaObject: #node;
+		        selector: #tagExecuted;
+		        yourself.
+	(ReflectivityExamples >> #exampleLongNestedLiteralArray)
+		compiledMethod recompile.
+	a := ReflectivityExamples new exampleLongNestedLiteralArray.
+	(ReflectivityExamples >> #exampleLongNestedLiteralArray) ast 
+		nodesDo: [ :n | 
+			n removeProperty: #tagExecuted ifAbsent: [  ].
+			n isLiteralArray ifTrue: [ 
+				n
+					propertyAt: #tagExecuted put: false;
+					link: link ] ].
+	b := [ ReflectivityExamples new exampleLongNestedLiteralArray ]
+		     on: Error
+		     do: #yourself.
+	link uninstall.
+	self assert: a equals: b.
+	(ReflectivityExamples >> #exampleLongNestedLiteralArray) ast 
+		nodesDo: [ :n | 
+			n isLiteralArray ifTrue: [ 
+				self assert: (n propertyAt: #tagExecuted) ] ]
+]
+
+{ #category : #tests }
+ReflectiveMethodTest >> testSetLinkOnPragma [
+
+	| link a b |
+	link := MetaLink new
+		        metaObject: #node;
+		        selector: #tagExecuted;
+		        yourself.
+	(ReflectivityExamples >> #examplePragma) compiledMethod recompile.
+	a := ReflectivityExamples new examplePragma.
+	(ReflectivityExamples >> #examplePragma) ast nodesDo: [ :n | 
+		n removeProperty: #tagExecuted ifAbsent: [  ].
+		n isPragma ifTrue: [ 
+			n
+				propertyAt: #tagExecuted put: false;
+				link: link ] ].
+	b := [ ReflectivityExamples new examplePragma ]
+		     on: Error
+		     do: #yourself.
+	link uninstall.
+	self assert: a equals: b.
+	(ReflectivityExamples >> #examplePragma) ast nodesDo: [ :n | 
+		n isPragma ifTrue: [ self assert: (n propertyAt: #tagExecuted) ] ]
+]
+
 { #category : #'tests - links' }
 ReflectiveMethodTest >> testSetLinkOnPrimitive [
 	| methodNode link |
@@ -227,6 +310,93 @@ ReflectiveMethodTest >> testSetLinkOnPrimitive [
 	self assert: (ReflectivityExamples>>#examplePrimitiveMethod) isRealPrimitive.
 	self assert: (ReflectivityExamples>>#examplePrimitiveMethod) reflectiveMethod isNil.
 	
+]
+
+{ #category : #tests }
+ReflectiveMethodTest >> testSetLinkOnProblematicMessage1 [
+
+	| link a b |
+	link := MetaLink new
+		        metaObject: #node;
+		        selector: #tagExecuted;
+		        yourself.
+	(ReflectivityExamples >> #exampleProblematicMessage1) compiledMethod
+		recompile.
+	a := ReflectivityExamples new exampleProblematicMessage1.
+	(ReflectivityExamples >> #exampleProblematicMessage1) ast nodesDo: [ 
+		:n | 
+		n removeProperty: #tagExecuted ifAbsent: [  ].
+		(n isMessage and: [ n selector = #== ]) ifTrue: [ 
+			n
+				propertyAt: #tagExecuted put: false;
+				link: link ] ].
+	b := [ ReflectivityExamples new exampleProblematicMessage1 ]
+		     on: Error
+		     do: #yourself.
+	link uninstall.
+	self assert: a equals: b.
+	(ReflectivityExamples >> #exampleProblematicMessage1) ast nodesDo: [ 
+		:n | 
+		(n isMessage and: [ n selector = #== ]) ifTrue: [ 
+			self assert: (n propertyAt: #tagExecuted) ] ]
+]
+
+{ #category : #tests }
+ReflectiveMethodTest >> testSetLinkOnProblematicMessage2 [
+
+	| link a b |
+	link := MetaLink new
+		        metaObject: #node;
+		        selector: #tagExecuted;
+		        yourself.
+	(ReflectivityExamples >> #exampleProblematicMessage2) compiledMethod
+		recompile.
+	a := ReflectivityExamples new exampleProblematicMessage2.
+	(ReflectivityExamples >> #exampleProblematicMessage2) ast nodesDo: [ 
+		:n | 
+		n removeProperty: #tagExecuted ifAbsent: [  ].
+		(n isMessage and: [ n selector = #= ]) ifTrue: [ 
+			n
+				propertyAt: #tagExecuted put: false;
+				link: link ] ].
+	b := [ ReflectivityExamples new exampleProblematicMessage2 ]
+		     on: Error
+		     do: #yourself.
+	link uninstall.
+	self assert: a equals: b.
+	(ReflectivityExamples >> #exampleProblematicMessage2) ast nodesDo: [ 
+		:n | 
+		(n isMessage and: [ n selector = #= ]) ifTrue: [ 
+			self assert: (n propertyAt: #tagExecuted) ] ]
+]
+
+{ #category : #tests }
+ReflectiveMethodTest >> testSetLinkOnProblematicMessage3 [
+
+	| link a b |
+	link := MetaLink new
+		        metaObject: #node;
+		        selector: #tagExecuted;
+		        yourself.
+	(ReflectivityExamples >> #exampleProblematicMessage3) compiledMethod
+		recompile.
+	a := ReflectivityExamples new exampleProblematicMessage3.
+	(ReflectivityExamples >> #exampleProblematicMessage3) ast nodesDo: [ 
+		:n | 
+		n removeProperty: #tagExecuted ifAbsent: [  ].
+		(n isMessage and: [ n selector = #> ]) ifTrue: [ 
+			n
+				propertyAt: #tagExecuted put: false;
+				link: link ] ].
+	b := [ ReflectivityExamples new exampleProblematicMessage3 ]
+		     on: Error
+		     do: #yourself.
+	link uninstall.
+	self assert: a equals: b.
+	(ReflectivityExamples >> #exampleProblematicMessage3) ast nodesDo: [ 
+		:n | 
+		(n isMessage and: [ n selector = #> ]) ifTrue: [ 
+			self assert: (n propertyAt: #tagExecuted) ] ]
 ]
 
 { #category : #'tests - links' }
