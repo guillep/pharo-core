@@ -48,12 +48,12 @@ LegacyClassDefinitionPrinterTest >> testByteString [
 
 { #category : #'tests - classes' }
 LegacyClassDefinitionPrinterTest >> testChronologyConstants [
-	
-	self 
-		assert: (self forClass: ChronologyConstants) 
+
+	self
+		assert: (self forClass: ChronologyConstants)
 		equals: 'SharedPool subclass: #ChronologyConstants
 	instanceVariableNames: ''''
-	classVariableNames: ''DayNames DaysInMonth MicrosecondsInDay MonthNames NanosInMillisecond NanosInSecond SecondsInDay SecondsInHour SecondsInMinute SqueakEpoch''
+	classVariableNames: ''DayNames DaysInMonth HoursInDay MicrosecondsInDay MinutesInHour MonthNames NanosInMillisecond NanosInSecond SecondsInDay SecondsInHour SecondsInMinute SqueakEpoch''
 	poolDictionaries: ''''
 	category: ''Kernel-Chronology'''
 ]

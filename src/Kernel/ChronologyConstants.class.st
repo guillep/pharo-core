@@ -7,7 +7,9 @@ Class {
 	#classVars : [
 		'DayNames',
 		'DaysInMonth',
+		'HoursInDay',
 		'MicrosecondsInDay',
+		'MinutesInHour',
 		'MonthNames',
 		'NanosInMillisecond',
 		'NanosInSecond',
@@ -27,6 +29,8 @@ ChronologyConstants class >> initialize [
 	MicrosecondsInDay := SecondsInDay * 1e6.
 	SecondsInHour := 3600.
 	SecondsInMinute := 60.
+	MinutesInHour := 60.
+	HoursInDay := 24.
 	NanosInSecond := 10 raisedTo: 9.
 	NanosInMillisecond := 10 raisedTo: 6.
 	DayNames := #(Sunday Monday Tuesday Wednesday Thursday Friday Saturday).

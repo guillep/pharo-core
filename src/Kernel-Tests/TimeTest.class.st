@@ -302,11 +302,10 @@ TimeTest >> testReadFrom [
 { #category : #'tests - input' }
 TimeTest >> testReadFromWithError [
 		
-	| string |
-	string := 'invalid'.
-	self should: [self timeClass readFrom: string readStream] raise: Error.
-	string := '0:invalid'.
-	self should: [self timeClass readFrom: string readStream] raise: Error
+	#('invalid' '0:invalid' '1 invalid' '1 pm is the afternoon' '1250 Fake St, New York, USA 12345' '13000 AM' '25:69:1239' '1,3,6') do: [ :each | 
+	self should: [self timeClass readFrom: each readStream] raise: Error.]
+
+	
 
 ]
 
