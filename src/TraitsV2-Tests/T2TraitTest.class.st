@@ -259,6 +259,22 @@ T2TraitTest >> testRedefiningATraitAsAClassShouldRaiseError [
 ]
 
 { #category : #tests }
+T2TraitTest >> testRemovingTraitsDoesNotModifiyTraitedSubclasses [
+	| t1 t2 c2 c1 |
+	
+	t1 := self createT1.
+	t2 := self createT2.
+	c1 := self newClass: #C1 with: 'g h' asSlotCollection uses: t1.
+	c2 := self newClass: #C2 superclass: c1 with: '' asSlotCollection uses: t2.
+	
+	c1 := self newClass: #C1 with: 'g h' asSlotCollection uses: {}.		
+
+	self assert: c2 hasTraitComposition.
+	self assert: (c2 traits includes: t2).
+	self assert: (t2 users includes: c2)
+]
+
+{ #category : #tests }
 T2TraitTest >> testRemovingTraitsRemoveTraitedClassMethods [
 	| t1 t2 c1 |
 	
@@ -275,21 +291,23 @@ T2TraitTest >> testRemovingTraitsRemoveTraitedClassMethods [
 
 { #category : #tests }
 T2TraitTest >> testRemovingTraitsRemoveTraitedClassMethodsWithSubclasses [
-	| t1 t2 c2 c1 |
+	| t1 t2 c2 c1 c3 |
 	
 	t1 := self createT1.
 	t2 := self createT2.
 	c1 := self newClass: #C1 with: 'g h' asSlotCollection uses: t1.
 	c2 := self newClass: #C2 superclass: c1 with: '' asSlotCollection uses: t2.
+	c3 := self newClass: #C3 superclass: c1 with: '' asSlotCollection uses: {  }.
 
 	self assert: (c1 class includesSelector: #traits).
 	self deny: (c2 class includesSelector: #traits).
-	
+	self deny: (c2 class includesSelector: #traits).
+		
 	c1 := self newClass: #C1 with: 'g h' asSlotCollection uses: {}.		
 
 	self deny: (c1 class includesSelector: #traits).
 	self assert: (c2 class includesSelector: #traits).
-	
+	self deny: (c3 class includesSelector: #traits)
 ]
 
 { #category : #tests }
@@ -360,6 +378,43 @@ T2TraitTest >> testSettingAClassInAClassTraitCompositionShouldRaiseAnError [
 
 	self should: [ t1 traitComposition: c1 ] raise: Error.
 	self should: [ t1 classTrait traitComposition: c1 ] raise: Error.	
+]
+
+{ #category : #tests }
+T2TraitTest >> testSettingEmptyTraitCompositionDoesNotModifiyTraitedSubclasses [
+	| t1 t2 c2 c1 |
+	
+	t1 := self createT1.
+	t2 := self createT2.
+	c1 := self newClass: #C1 with: 'g h' asSlotCollection uses: t1.
+	c2 := self newClass: #C2 superclass: c1 with: '' asSlotCollection uses: t2.
+	
+	c1 setTraitComposition: {}.		
+
+	self assert: c2 hasTraitComposition.
+	self assert: (c2 traits includes: t2).
+	self assert: (t2 users includes: c2) 
+]
+
+{ #category : #tests }
+T2TraitTest >> testSettingEmptyTraitCompositionUpdatesMetaclass [
+	| t1 t2 c2 c1 c3 |
+	
+	t1 := self createT1.
+	t2 := self createT2.
+	c1 := self newClass: #C1 with: 'g h' asSlotCollection uses: t1.
+	c2 := self newClass: #C2 superclass: c1 with: '' asSlotCollection uses: t2.
+	c3 := self newClass: #C3 superclass: c1 with: '' asSlotCollection uses: {  }.
+
+	self assert: (c1 class includesSelector: #traits).
+	self deny: (c2 class includesSelector: #traits).
+	self deny: (c3 class includesSelector: #traits).
+	
+	c1 setTraitComposition: {}.		
+
+	self deny: (c1 class includesSelector: #traits).
+	self assert: (c2 class includesSelector: #traits).
+	self deny: (c3 class includesSelector: #traits)
 ]
 
 { #category : #tests }
