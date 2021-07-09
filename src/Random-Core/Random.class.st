@@ -184,11 +184,13 @@ Random >> seed [
 
 { #category : #initialization }
 Random >> seed: aNumber [
-	"Refer #privateNextSeed and [1], seed should be positive"
+	"Refer #privateNextSeed and [1], seed should be positive and less than m"
 	| newSeed |
 	newSeed := aNumber.
 	[ newSeed > 0 ] whileFalse: 
 		[ newSeed := newSeed + m ].
+	[ newSeed < m ] whileFalse:
+		[ newSeed := newSeed - m ].
 	seed := newSeed.
 
 ]
