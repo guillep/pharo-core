@@ -388,16 +388,10 @@ SindarinDebuggerTest >> testIsExecutionFinished [
 	| scdbg |
 	scdbg := SindarinDebugger debug: [ self helperMethod16 ].
 	self deny: scdbg isExecutionFinished.
-	scdbg
-		stepOver;
-		step;
-		step;
-		stepOver;
-		step;
-		stepOver;
-		step.
-	"Reached `self isActiveProcess` in Process>>#terminate"
-	self assert: scdbg isExecutionFinished
+	
+	[ scdbg isExecutionFinished ] whileFalse: [ scdbg stepOver ].
+
+	self assert: scdbg currentProcess isTerminated
 ]
 
 { #category : #tests }

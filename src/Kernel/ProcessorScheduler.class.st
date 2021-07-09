@@ -117,12 +117,14 @@ ProcessorScheduler class >> startUp [
 ProcessorScheduler >> activePriority [
 	"Answer the priority level of the currently running Process."
 
-	^activeProcess effectiveProcess priority
+	^self activeProcess priority
 ]
 
 { #category : #accessing }
 ProcessorScheduler >> activeProcess [
-	"Answer the currently running Process."
+	"Answers the currently running Process.
+	It can be just pretending to be the active process
+	(like during the code simulation in the debugger)"
 
 	^activeProcess effectiveProcess
 ]
@@ -224,6 +226,18 @@ ProcessorScheduler >> printOn: aStream [
 	aStream nextPutAll: #Processor
 ]
 
+{ #category : #accessing }
+ProcessorScheduler >> realActiveProcess [
+	"Answers the real currently running Process (ignoring any effective process installed).
+	Method should be used carefully only in specific low level parts of the system.
+	End users should use #activeProcess instead. 
+
+	This method is not debuggable because stepping over it would wrongly return an actual UI process of the debugger instead of a process under the debugger. 
+	But this is the required property for the use cases like debugger requests which must work with real running process (not a simulated one)"
+
+	^activeProcess
+]
+
 { #category : #removing }
 ProcessorScheduler >> remove: aProcess ifAbsent: aBlock [ 
 	"Remove aProcess from the list on which it is waiting for the processor 
@@ -310,7 +324,39 @@ ProcessorScheduler >> tallyCPUUsageFor: seconds every: msec [
 ProcessorScheduler >> terminateActive [
 	"Terminate the process that is currently running."
 
-	activeProcess effectiveProcess terminate
+	self activeProcess doTerminationFromYourself
+]
+
+{ #category : #'process state change' }
+ProcessorScheduler >> terminateRealActive [
+	"IMPORTANT: Do not step over this method in the debugger (normally you will never do it) because it will terminate the UIProcess of the debugger instead of the process under the debugger.
+	Method should not be used by users. It is only for specific low level places of the system like a normal process termination.
+	
+	It terminates the active process that is really currently running despite on any effective process installed. 	
+	It is very critical to ignore the simulation trick of the debugger (the effective process) during the normal completion of the process. This method ensures that every process is able to complete. 
+	Previously #terminateActive was used for the process completion. But #terminateActive targets the effective process which the debugger sets for the stepping over the Processor calls. Debugger resets this value at the end of stepping but there are huge amount of cases where it is impossible to do or due to the bugs in the debugger implementation.
+	The consequences of unreset effective process is inability of the process to finish the execution.
+	The following scenario happens in this case: 
+	- Process completes by ```Processor terminateActive``` call (it is the end of any process). 
+	- #terminateActive can't terminate the real active process because the effective one is used.
+	- Without the stop the #terminateActive continutes the execution to the nil sender (it is nil after the full unwind during Process>>terminate).
+	- The return to nil sender causes the VM fallback logic. It sends #cannotReturn: message to the context.
+	- #cannotReturn: method raises an error which requests the debugger
+	- Debugger is opened in UI process and the current process is suspended to stop the execution.
+	- To suspend the current process the debugger uses ```Processor activeProcess suspend`` 
+	- The active process there is not a real process due to effectiveProcess state.
+	- Suspend is executed over wrong process 
+	- Really running process continues the execution after #suspend.
+	- Execution tries to return from cannotReturn: method to the nil sender.
+	- VM sends again #cannotReturn: message. 
+	- Image hangs due to this infinite recursion triggering new debugger at every step.
+	
+	In other words the effective process trick is very dangerous mechanizm and critical system operations must avoid it. 
+	Therefore this method. It is used only as the last instruction for the process termination. See #newProcess for example: 
+			[ self value, Processor terminateRealActive ]
+	"
+
+	activeProcess doTerminationFromYourself
 ]
 
 { #category : #'priority names' }

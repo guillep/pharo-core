@@ -7,6 +7,36 @@ Class {
 	#category : #'Kernel-Tests-Extended-Processes'
 }
 
+{ #category : #running }
+ProcessTest >> setUp [ 
+	super setUp.
+	
+	self executionProcessMonitor disable
+]
+
+{ #category : #tests }
+ProcessTest >> testActiveProcessFromProcesor [
+	
+	| processFromProcessor activeProcess |
+	activeProcess := [ processFromProcessor := Processor activeProcess ] forkAt: Processor activePriority + 1.
+	
+	self assert: processFromProcessor identicalTo: activeProcess
+]
+
+{ #category : #tests }
+ProcessTest >> testActiveProcessFromProcesorShouldUseInstalledEffectiveProcess [
+	
+	| processFromProcessor activeProcess effectiveProcess |
+	effectiveProcess := [ 10 seconds wait ] forkAt: Processor activePriority + 1.
+	activeProcess := [ processFromProcessor := Processor activeProcess ] newProcess.
+	activeProcess 
+		priority: Processor activePriority + 1;
+		effectiveProcess: effectiveProcess;
+		resume.
+	
+	self assert: processFromProcessor identicalTo: effectiveProcess
+]
+
 { #category : #tests }
 ProcessTest >> testFork [
 
@@ -213,6 +243,53 @@ ProcessTest >> testIsNotSuspendedWhenItIsTerminated [
 ]
 
 { #category : #tests }
+ProcessTest >> testIsNotTerminatedWhenItIsInsideLastTerminationMethod [
+	
+	| process processBody |
+	processBody := [ #test ].
+	process := processBody newProcess.
+	
+	[process step.
+	self deny: process isTerminated.
+	process suspendedContext isBottomContext] whileTrue. 
+	
+	[process step.
+	process suspendedContext isBottomContext] whileFalse: [ 
+		self deny: process isTerminated ].
+	
+	[process step.
+	self deny: process isTerminated.
+	process suspendedContext isBottomContext ] whileTrue.
+	"Notice that stepping delegates terminateRealActive to terminateActive"
+	self assert: process suspendedContext selector equals: #terminateActive. 
+	self deny: process isTerminated
+]
+
+{ #category : #tests }
+ProcessTest >> testIsNotTerminatedWhenItIsJustStartedByEnteringMainBlock [
+	
+	| process processBody |
+	processBody := [ #test ].
+	process := processBody newProcess.
+	
+	[process step.
+	self deny: process isTerminated] 
+		doWhileTrue: [ process suspendedContext isBottomContext ].
+		
+	self assert: process suspendedContext closure identicalTo: processBody.
+	self deny: process isTerminated
+]
+
+{ #category : #tests }
+ProcessTest >> testIsNotTerminatedWhenItIsNotStarted [
+	
+	| process |
+	process := [  ] newProcess.
+	
+	self deny: process isTerminated
+]
+
+{ #category : #tests }
 ProcessTest >> testIsSelfEvaluating [
 	self assert: Processor printString equals: 'Processor'
 ]
@@ -223,6 +300,26 @@ ProcessTest >> testIsSuspendedWhenItIsNotStartedYet [
 	| process |
 	process := [  ] newProcess.
 	self assert: process isSuspended
+]
+
+{ #category : #tests }
+ProcessTest >> testIsTerminatedAfterManualTermination [
+	
+	| process |
+	process := [ 10 seconds wait ] forkAt: Processor activePriority + 1.
+	self deny: process isTerminated.
+	
+	process terminate.
+	self assert: process isTerminated
+]
+
+{ #category : #tests }
+ProcessTest >> testIsTerminatedAfterSelfTermination [
+	
+	| process |
+	process := [  ] forkAt: Processor activePriority + 1.
+	
+	self assert: process isTerminated
 ]
 
 { #category : #'tests - termination' }
@@ -387,6 +484,62 @@ ProcessTest >> testNewProcessWith [
 	
 	"Each element in the collection argument was passed separately to the block"
 	self assert: { receivedArgument1. receivedArgument2 } equals: passedArguments.
+]
+
+{ #category : #tests }
+ProcessTest >> testNormalProcessCompletionWithLeftEffectiveProcess [
+	
+	| effectiveProcess activeProcess |
+	effectiveProcess := [ 10 seconds wait ] forkAt: Processor activePriority + 1.
+	activeProcess := [ Processor activeProcess suspend. ] forkAt: Processor activePriority + 1.
+	activeProcess effectiveProcess: effectiveProcess.
+	
+	activeProcess resume.
+	
+	self assert: activeProcess isTerminated.
+	self deny: effectiveProcess isTerminated.
+	effectiveProcess terminate
+]
+
+{ #category : #tests }
+ProcessTest >> testNormalProcessWithArgsCompletionWithLeftEffectiveProcess [
+	
+	| effectiveProcess activeProcess |
+	effectiveProcess := [ 10 seconds wait ] forkAt: Processor activePriority + 1.
+	activeProcess := [:arg | Processor activeProcess suspend. ] newProcessWith: #(1).
+	activeProcess 
+		priority: Processor activePriority + 1; 
+		resume.
+	activeProcess effectiveProcess: effectiveProcess.
+	
+	activeProcess resume.
+	
+	self assert: activeProcess isTerminated.
+	self deny: effectiveProcess isTerminated.
+	effectiveProcess terminate
+]
+
+{ #category : #tests }
+ProcessTest >> testRealActiveProcessFromProcesor [
+	
+	| processFromProcessor activeProcess |
+	activeProcess := [ processFromProcessor := Processor realActiveProcess ] forkAt: Processor activePriority + 1.
+	
+	self assert: processFromProcessor identicalTo: activeProcess
+]
+
+{ #category : #tests }
+ProcessTest >> testRealActiveProcessFromProcesorShouldIgnoreInstalledEffectiveProcess [
+	
+	| processFromProcessor activeProcess effectiveProcess |
+	effectiveProcess := [ 10 seconds wait ] forkAt: Processor activePriority + 1.
+	activeProcess := [ processFromProcessor := Processor realActiveProcess ] newProcess.
+	activeProcess 
+		priority: Processor activePriority + 1;
+		effectiveProcess: effectiveProcess;
+		resume.
+	
+	self assert: processFromProcessor identicalTo: activeProcess
 ]
 
 { #category : #tests }

@@ -203,3 +203,13 @@ StepOverTest >> testStepOverNonErrorExceptionSignalWithHandlerDeeperInTheContext
 	"The DebugSession jumped to the step1 method call"
 	self assert: session interruptedContext method equals: self class >>#step1
 ]
+
+{ #category : #tests }
+StepOverTest >> testStepOverUntilTermination [ 
+	"Stepping over a message node brings the execution to the next node in the same method."
+	self settingUpSessionAndProcessAndContextForBlock: [ self stepA1 ].
+
+	[ session interruptedProcess isTerminated ] whileFalse: [ session stepOver ].
+
+	self assert: session interruptedProcess isTerminated
+]

@@ -218,6 +218,8 @@ Process >> doTerminationFromAnotherProcess [
 	It assumes that self is not the active process
 	and the termination is requested from another process"
 	| ctxt oldList |
+	self isTerminating ifTrue: [ ProcessAlreadyTerminating signal. ^self ].
+	terminating := true.
 	"Always suspend the process first so it doesn't accidentally get woken up"
 	oldList := self suspend.
 	suspendedContext ifNil: [^self].
@@ -252,7 +254,8 @@ Process >> doTerminationFromAnotherProcess [
 Process >> doTerminationFromYourself [ 
 	"Stop this process forever from the process itself. 
 	Unwind to execute pending ensure:/ifCurtailed: blocks before terminating.
-	It assumes that self is the active process. "		
+	It assumes that self is the active process. "
+	terminating := true.
 	thisContext unwindForTermination.
 	self suspend
 ]
@@ -265,6 +268,11 @@ Process >> effectiveProcess [
 	 debugged process as the effectiveProcess of the process executing the code, preserving process
 	 identity."
 	^effectiveProcess ifNil: [self] 
+]
+
+{ #category : #accessing }
+Process >> effectiveProcess: aProcess [ 
+	effectiveProcess := aProcess
 ]
 
 { #category : #private }
@@ -324,18 +332,9 @@ Process >> isSuspended [
 
 { #category : #testing }
 Process >> isTerminated [
-	self isActiveProcess ifTrue: [ ^ false ].
+	self isActiveProcess ifTrue: [ ^ false ].	
 	
-	^ suspendedContext isNil or: [
-		"If the suspendedContext is the bottomContext it is the block in Process>>newProcess.
-		If so, and the pc is greater than the startpc, the block has already sent and returned
-		from value and there is nothing more to do."
-		suspendedContext isBottomContext and: [
-			suspendedContext isDead or: [
-				"The pc of the suspendedContext is set to nil in #terminate explicitly.
-				Leaving this line in for safety."
-  	  			suspendedContext pc > suspendedContext startpc ] ] ]
-
+	^suspendedContext isNil or: [ suspendedContext isDead ] 
 ]
 
 { #category : #testing }
@@ -380,7 +379,7 @@ Process >> on: exception do: handlerAction [
 	newRoot := [
 			[root insertSender: thisContext.
 			currentContext jump] on: exception do: handlerAction.
-		Processor terminateActive] asContext.
+		Processor terminateRealActive] asContext.
 
 	self isActiveProcess 
 		ifTrue: [ newRoot jump ]
@@ -713,10 +712,6 @@ Process >> suspendingList [
 { #category : #'changing process state' }
 Process >> terminate [ 
 	"Stop the process that the receiver represents forever.  Unwind to execute pending ensure:/ifCurtailed: blocks before terminating."
-	terminating := self isTerminating
-		ifTrue: [ ProcessAlreadyTerminating signal. ^self ]
-		ifFalse: [ true ].
-
 	self isActiveProcess 
 		ifTrue: [ self doTerminationFromYourself ]
 		ifFalse: [ self doTerminationFromAnotherProcess]

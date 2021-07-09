@@ -629,6 +629,14 @@ Context >> doPrimitive: primitiveIndex method: meth receiver: aReceiver args: ar
 			ifFalse: [ ^self send: (arguments at: 2) to: (arguments at: 1) with: (arguments at: 3) lookupIn: (arguments at: 4) ]
 		].
 
+	primitiveIndex = 88 ifTrue: ["Process>>suspend"
+		"Simulation of suspend primitive should do nothing (with receiver return) by two reasons:
+			- if by mistake the receiver is a simulating process itself 
+				the suspend would stop it and the simulation would hang.
+				For example the debugger can hang during stepping over #suspend of real active process.
+			- suspend over already suspended process does nothing anyway. 
+				For example debugger always steps over suspended process"
+		^self push: aReceiver ].
 
 	"Mutex>>primitiveEnterCriticalSection
 	 Mutex>>primitiveTestAndSetOwnershipOfCriticalSection"
@@ -984,9 +992,23 @@ Context >> isContext [
 
 { #category : #testing }
 Context >> isDead [
-	"Has self finished"
+	"Context is dead when
+	- it is self finished (returned to sender) 
+	- it is at the last instruction of process termination (it is unwinded and process is suspended)"
 
-	^ pc isNil
+	^ pc isNil or: [  self isEndOfProcessTermination ]
+]
+
+{ #category : #testing }
+Context >> isEndOfProcessTermination [ 
+	"The normal completion of any process always ends at Process>>doTerminationFromYourself method
+	(see #newProcess and #terminateRealActive).
+	The last instruction is the call to #suspend primitive method 
+	which finally removes the process from the scheduler.
+	This precise criteria of the terminated process is used here" 
+	method selector == #doTerminationFromYourself ifFalse: [ ^false ].
+	method methodClass == Process ifFalse: [ ^false ].	
+	^pc = (self endPC - 1)
 ]
 
 { #category : #testing }
@@ -1894,6 +1916,16 @@ Context >> send: selector to: aReceiver with: arguments super: superFlag [
 		^ self error:
 			  'Simulated message ' , (arguments at: 1) selector
 			  , ' not understood' ].
+
+	(selector == #terminateRealActive and: [ aReceiver == Processor ]) ifTrue: [ 
+		"We should never simulate #terminateRealActive as it will terminate a simulating process 
+		(UI process of debugger) instead of the actual process under simulation.
+		Therefore the simulation always delegates this method to the public one 
+		which explicitly supports the simulation with effective process logic.
+		Notice that #terminateRealActive is a process completion method 
+		and normally users do not step over it"
+		^self send: #terminateActive to: aReceiver with: arguments super: superFlag
+	].
 
 	"failure.. lets activate the method"
 	context := self

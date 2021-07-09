@@ -83,3 +83,13 @@ StepIntoTest >> testStepIntoQuickMethodCallReturnedShouldPushReturnValueToTheSta
 		assert: process suspendedContext top
 		equals: 1.
 ]
+
+{ #category : #tests }
+StepIntoTest >> testStepIntoUntilTermination [ 
+	"Stepping over a message node brings the execution to the next node in the same method."
+	self settingUpSessionAndProcessAndContextForBlock: [ #test ].
+
+	[ session interruptedProcess isTerminated ] whileFalse: [ session stepInto ].
+
+	self assert: session interruptedProcess isTerminated
+]
