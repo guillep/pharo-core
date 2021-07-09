@@ -32,7 +32,7 @@ WidgetExample class >> closeExampleDialogs [
 	"Close the example dialogs."
 	"self closeExampleDialogs"
 	<script>
-	DialogWindow allSubInstances do: [:d | d cancel]
+	DialogWindowMorph allSubInstances do: [:d | d cancel]
 ]
 
 { #category : #examples }

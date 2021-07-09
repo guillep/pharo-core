@@ -446,7 +446,7 @@ IdentifierChooserMorph >> requestor: aTextMorph [
 IdentifierChooserMorph >> scrollPane [
 	"Answer the scroll pane."
 
-	^self findDeeplyA: GeneralScrollPane
+	^self findDeeplyA: GeneralScrollPaneMorph
 ]
 
 { #category : #'event handling' }

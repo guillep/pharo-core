@@ -51,7 +51,7 @@ GLMMorphicVariablePanesFinderRenderer >> render: aBrowser [
 		listDirection: #leftToRight;
 		vResizing: #spaceFill;
 		hResizing: #shrinkWrap.
-	scrollPane := GeneralScrollPane new
+	scrollPane := GeneralScrollPaneMorph new
 		changeScrollerTableLayout;
 		scrollTarget: container;
 		yourself.

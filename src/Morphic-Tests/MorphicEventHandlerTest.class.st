@@ -151,7 +151,7 @@ MorphicEventHandlerTest >> testMouseEnterDraggingFromMorph [
 { #category : #tests }
 MorphicEventHandlerTest >> testMouseEnterEventIsNotDuplicated [
 	| mockObject window evt |
-	mockObject := MockObjectForEventTests new.
+	mockObject := ForEventTestMock new.
 
 	[ window := mockObject stringMorph openInWindow.
 	evt := MouseButtonEvent new

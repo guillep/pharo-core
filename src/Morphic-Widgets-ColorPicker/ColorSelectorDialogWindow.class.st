@@ -3,7 +3,7 @@ Standard dialog for selecting a colour by HSVA colour selector, picking from the
 "
 Class {
 	#name : #ColorSelectorDialogWindow,
-	#superclass : #DialogWindow,
+	#superclass : #DialogWindowMorph,
 	#instVars : [
 		'selectedColor',
 		'hsvaMorph'

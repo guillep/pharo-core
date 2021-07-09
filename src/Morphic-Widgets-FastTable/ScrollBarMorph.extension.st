@@ -1,29 +1,29 @@
-Extension { #name : #ScrollBar }
+Extension { #name : #ScrollBarMorph }
 
 { #category : #'*Morphic-Widgets-FastTable' }
-ScrollBar >> canScrollDown [
+ScrollBarMorph >> canScrollDown [
 
 	^value < 1
 ]
 
 { #category : #'*Morphic-Widgets-FastTable' }
-ScrollBar >> canScrollUp [
+ScrollBarMorph >> canScrollUp [
 
 	^value > 0
 ]
 
 { #category : #'*Morphic-Widgets-FastTable' }
-ScrollBar >> pageDelta [
+ScrollBarMorph >> pageDelta [
 	^ pageDelta
 ]
 
 { #category : #'*Morphic-Widgets-FastTable' }
-ScrollBar >> scrollDownByPageDelta [
+ScrollBarMorph >> scrollDownByPageDelta [
 	self scrollDown: self pageDelta
 ]
 
 { #category : #'*Morphic-Widgets-FastTable' }
-ScrollBar >> scrollRestrictedDown: aValue [
+ScrollBarMorph >> scrollRestrictedDown: aValue [
 
 	"only scroll if the scrollbar is not at its end yet"
 
@@ -33,7 +33,7 @@ ScrollBar >> scrollRestrictedDown: aValue [
 ]
 
 { #category : #'*Morphic-Widgets-FastTable' }
-ScrollBar >> scrollRestrictedUp: aValue [
+ScrollBarMorph >> scrollRestrictedUp: aValue [
 
 	"only scroll if the scrollbar is not at its end yet"
 
@@ -43,6 +43,6 @@ ScrollBar >> scrollRestrictedUp: aValue [
 ]
 
 { #category : #'*Morphic-Widgets-FastTable' }
-ScrollBar >> scrollUpByPageDelta [
+ScrollBarMorph >> scrollUpByPageDelta [
 	self scrollUp: self pageDelta
 ]

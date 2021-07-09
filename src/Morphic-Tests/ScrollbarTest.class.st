@@ -7,7 +7,7 @@ Class {
 { #category : #helpers }
 ScrollbarTest >> createSlider [
 
-	^ ScrollBar new
+	^ ScrollBarMorph new
 		extent: 240 @ 8;
 		yourself
 ]

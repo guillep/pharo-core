@@ -15,7 +15,7 @@ RBMethodArgumentsSelector
 "
 Class {
 	#name : #RBMethodArgumentsSelector,
-	#superclass : #DialogWindow,
+	#superclass : #DialogWindowMorph,
 	#instVars : [
 		'arguments',
 		'values',

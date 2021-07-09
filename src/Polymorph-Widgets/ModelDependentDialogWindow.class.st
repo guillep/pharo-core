@@ -3,7 +3,7 @@ DialogWindow that updates content based upon its model.
 "
 Class {
 	#name : #ModelDependentDialogWindow,
-	#superclass : #DialogWindow,
+	#superclass : #DialogWindowMorph,
 	#category : #'Polymorph-Widgets-Windows'
 }
 

@@ -4,7 +4,7 @@ A SpecDialogWindow is a window made for embedding Spec models into dialog window
 "
 Class {
 	#name : #SpecDialogWindow,
-	#superclass : #DialogWindow,
+	#superclass : #DialogWindowMorph,
 	#instVars : [
 		'specWidget',
 		'toolbar'

@@ -1,7 +1,7 @@
-Extension { #name : #MorphTreeColumnButton }
+Extension { #name : #TreeColumnButtonMorph }
 
 { #category : #'*Polymorph-Widgets' }
-MorphTreeColumnButton >> themeChanged [
+TreeColumnButtonMorph >> themeChanged [
 	self fillStyle: (self theme morphTreeColumnFillStyleFor: self).
 	self borderStyle: (self theme morphTreeColumnBorderStyleFor: self).
 	super themeChanged

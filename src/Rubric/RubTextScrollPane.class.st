@@ -3,7 +3,7 @@ I am a text morph with a scrollbar
 "
 Class {
 	#name : #RubTextScrollPane,
-	#superclass : #GeneralScrollPane,
+	#superclass : #GeneralScrollPaneMorph,
 	#instVars : [
 		'drawFocusBorder'
 	],

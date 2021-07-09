@@ -5,7 +5,7 @@ The attribute onlyActiveOnTop, if set to true (and any call to activate will set
 "
 Class {
 	#name : #SystemWindow,
-	#superclass : #MorphicModel,
+	#superclass : #ModelMorphic,
 	#instVars : [
 		'labelString',
 		'stripes',

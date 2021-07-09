@@ -339,7 +339,7 @@ FTTableMorph >> enableFilterWithAction: aBlock [
 FTTableMorph >> enableFilterWithAction: aBlock named: aString [
 	"Enables filtering and add an Action button. Not compatible with the search. If I am use, the function must be explicit."
 
-	function := FTFilterFunctionWithAction table: self action: aBlock named: aString.
+	function := FTWithActionFilterFunction table: self action: aBlock named: aString.
 	self explicitFunction
 ]
 
@@ -574,7 +574,7 @@ FTTableMorph >> initializeKeyBindings [
 
 { #category : #initialization }
 FTTableMorph >> initializeScrollBars [
-	verticalScrollBar := ScrollBar new 
+	verticalScrollBar := ScrollBarMorph new 
 		model: self; 
 		setValueSelector: #verticalScrollBarValue:;
 		yourself.
@@ -583,7 +583,7 @@ FTTableMorph >> initializeScrollBars [
 	"introducing horizontal scrolling gradually: 
 	enable the feature only when the var is set during initialization"
 	horizontalScrollBar ifNotNil: [ 	
-		horizontalScrollBar := ScrollBar new 
+		horizontalScrollBar := ScrollBarMorph new 
 			model: self; 
 			setValueSelector: #horizontalScrollBarValue:;
 			yourself.

@@ -357,7 +357,7 @@ PopupChoiceDialogWindow >> rootMenu [
 PopupChoiceDialogWindow >> scrollPane [
 	"Answer the scroll pane."
 
-	^self findDeeplyA: GeneralScrollPane
+	^self findDeeplyA: GeneralScrollPaneMorph
 ]
 
 { #category : #actions }

@@ -3,7 +3,7 @@ I am a scroll bar
 "
 Class {
 	#name : #RubScrollBar,
-	#superclass : #GeneralScrollBar,
+	#superclass : #GeneralScrollBarMorph,
 	#category : #'Rubric-Editing-Widgets'
 }
 

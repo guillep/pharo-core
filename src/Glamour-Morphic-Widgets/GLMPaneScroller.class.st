@@ -78,7 +78,7 @@ GLMPaneScroller >> initialize [
 
 { #category : #initialization }
 GLMPaneScroller >> initializeScrollbar [
-	scrollBar := ScrollBar new 
+	scrollBar := ScrollBarMorph new 
 		model: self;
 		setValueSelector: #scrollBarValue:;
 		yourself.

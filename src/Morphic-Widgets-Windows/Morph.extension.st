@@ -23,7 +23,7 @@ Morph >> containingWindow [
 Morph >> dialogWindow [
 	"Answer the receiver's dialog window."
 
-	^self ownerThatIsA: DialogWindow
+	^self ownerThatIsA: DialogWindowMorph
 ]
 
 { #category : #'*Morphic-Widgets-Windows' }

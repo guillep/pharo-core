@@ -3,7 +3,7 @@ Row of tabs for a TabGroupMorph.
 "
 Class {
 	#name : #TabSelectorMorph,
-	#superclass : #MorphicModel,
+	#superclass : #ModelMorphic,
 	#instVars : [
 		'selectedIndex',
 		'visibleTabRange',
@@ -261,7 +261,7 @@ TabSelectorMorph >> leftButtonLabel [
 	"Answer the label for a button for scrolling left."
 
 	^AlphaImageMorph new image: (
-		ScrollBar
+		ScrollBarMorph
 			arrowOfDirection: #left
 			size: self controlButtonWidth - (3* self displayScaleFactor)
 			color: self paneColor darker)
@@ -424,7 +424,7 @@ TabSelectorMorph >> rightButtonLabel [
 	"Answer the label for a button for scrolling right."
 
 	^AlphaImageMorph new image: (
-		ScrollBar
+		ScrollBarMorph
 			arrowOfDirection: #right
 			size: self controlButtonWidth - (3 * self displayScaleFactor)
 			color: self paneColor darker)

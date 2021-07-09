@@ -20,7 +20,7 @@ GLMMorphicExpanderRenderer >> renderWithExpanders: aBrowser [
 		changeTableLayout;
 		layoutInset: 2;
 		cellInset: 2.
-	scroll := GeneralScrollPane new.
+	scroll := GeneralScrollPaneMorph new.
 	scroll 
 		changeScrollerTableLayout;
 		scrollTarget: panel.

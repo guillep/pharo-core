@@ -12,7 +12,7 @@ I use a semaphore in order to let a delay before I filter the table. With this t
 "
 Class {
 	#name : #FTFilterFunction,
-	#superclass : #FTFunctionWithField,
+	#superclass : #FTWithFieldFunction,
 	#instVars : [
 		'initialDataSource',
 		'pattern',

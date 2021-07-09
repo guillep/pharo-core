@@ -3,7 +3,7 @@ A find/replace dialog window for editors
 "
 Class {
 	#name : #EditorFindReplaceDialogWindow,
-	#superclass : #DialogWindow,
+	#superclass : #DialogWindowMorph,
 	#instVars : [
 		'state',
 		'textFieldMorph'

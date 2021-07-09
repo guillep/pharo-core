@@ -3,7 +3,7 @@ Displays a colour with alpha against a white, hatched and black background.
 "
 Class {
 	#name : #ColorPresenterMorph,
-	#superclass : #MorphicModel,
+	#superclass : #ModelMorphic,
 	#instVars : [
 		'contentMorph',
 		'labelMorph',

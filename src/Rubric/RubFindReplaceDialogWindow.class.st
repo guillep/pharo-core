@@ -3,7 +3,7 @@ I am the window to find and replace text in a text area
 "
 Class {
 	#name : #RubFindReplaceDialogWindow,
-	#superclass : #DialogWindow,
+	#superclass : #DialogWindowMorph,
 	#instVars : [
 		'findTextField'
 	],

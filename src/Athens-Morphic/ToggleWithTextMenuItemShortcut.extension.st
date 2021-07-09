@@ -1,7 +1,7 @@
-Extension { #name : #ToggleMenuItemShortcutWithText }
+Extension { #name : #ToggleWithTextMenuItemShortcut }
 
 { #category : #'*Athens-Morphic' }
-ToggleMenuItemShortcutWithText >> drawOnAthensCanvas: aCanvas [
+ToggleWithTextMenuItemShortcut >> drawOnAthensCanvas: aCanvas [
 	| keyBounds |
 	
 	keyBounds := self boundsForKeyText: self keyText font: self owner fontToUse.

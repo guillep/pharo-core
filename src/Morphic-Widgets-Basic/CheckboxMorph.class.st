@@ -3,7 +3,7 @@ Checkbox with box button and label with enablement support.
 "
 Class {
 	#name : #CheckboxMorph,
-	#superclass : #MorphicModel,
+	#superclass : #ModelMorphic,
 	#traits : 'TEnableOnHaloMenu',
 	#classTraits : 'TEnableOnHaloMenu classTrait',
 	#instVars : [

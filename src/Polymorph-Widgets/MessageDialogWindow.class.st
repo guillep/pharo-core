@@ -3,7 +3,7 @@ Dialog window displaying a message with a single OK button. Escape/return will c
 "
 Class {
 	#name : #MessageDialogWindow,
-	#superclass : #DialogWindow,
+	#superclass : #DialogWindowMorph,
 	#instVars : [
 		'textMorph',
 		'textFont',

@@ -3,7 +3,7 @@ A pluggable slider (rather than one that auto-generates access selectors). Needs
 "
 Class {
 	#name : #PluggableSliderMorph,
-	#superclass : #Slider,
+	#superclass : #SliderMorph,
 	#instVars : [
 		'getValueSelector',
 		'getEnabledSelector',

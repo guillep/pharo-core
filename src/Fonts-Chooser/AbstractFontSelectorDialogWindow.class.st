@@ -3,7 +3,7 @@ Dialog based font chooser with preview.
 "
 Class {
 	#name : #AbstractFontSelectorDialogWindow,
-	#superclass : #DialogWindow,
+	#superclass : #DialogWindowMorph,
 	#instVars : [
 		'fontFamilies',
 		'selectedFont',

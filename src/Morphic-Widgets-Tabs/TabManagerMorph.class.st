@@ -23,7 +23,7 @@ TabManagerMorph >> addLastTabContents: aTab among: size delta: delta [
 	| process |
 	
 	process := aTab retrieveMorph: [ :contents | 
-		contents ifNil: [ TabWithNoContents signalTab: aTab ].
+		contents ifNil: [ TabWithNoContentsMorph signalTab: aTab ].
 		contentsWrapper
 			addMorph: contents
 			fullFrame:
@@ -68,9 +68,9 @@ TabManagerMorph >> addSplitterOn: tabs delta: delta [
 	| leftProcess rightProcess |
 	tabs overlappingPairsWithIndexDo: [ :left :right :index | 
 		leftProcess := left retrieveMorph: [ :leftContents | 
-			leftContents ifNil: [ TabWithNoContents signalTab: left ].
+			leftContents ifNil: [ TabWithNoContentsMorph signalTab: left ].
 			rightProcess := right retrieveMorph: [ :rightContents || splitter |
-				rightContents ifNil: [ TabWithNoContents signalTab: right ].
+				rightContents ifNil: [ TabWithNoContentsMorph signalTab: right ].
 				
 				splitter := ProportionalSplitterMorph new
 					addLeftOrTop: leftContents;
@@ -103,7 +103,7 @@ TabManagerMorph >> addTabContents: tab at: index delta: delta [
 		retrieveMorph:
 			[ :contents | 
 			| leftOffset |
-			contents ifNil: [ TabWithNoContents signalTab: tab ].
+			contents ifNil: [ TabWithNoContentsMorph signalTab: tab ].
 			leftOffset := index = 1
 				ifTrue: [ 0 ]
 				ifFalse: [ 2 ].
@@ -336,7 +336,7 @@ TabManagerMorph >> setTabContentFrom: aTab [
 	self cleanProcesses.
 
 	process := aTab retrieveMorph: [ :contents |
-		contents ifNil: [ TabWithNoContents signalTab: aTab ].
+		contents ifNil: [ TabWithNoContentsMorph signalTab: aTab ].
 		contentsWrapper addMorph: contents fullFrame: LayoutFrame identity.
 		"contents takeKeyboardFocus" "it should be managed better and not stale focus from another active windows/widgets. It should only forse focus on content when user focused on tabs but it is not clean how to detect it"
 	].

@@ -92,7 +92,7 @@ EmbeddedMenuMorph >> keyboardFocusChange: aBoolean [
 
 	super keyboardFocusChange: aBoolean.
 	aBoolean
-		ifTrue: [(self ownerThatIsA: GeneralScrollPane) ifNotNil: [:sp |
+		ifTrue: [(self ownerThatIsA: GeneralScrollPaneMorph) ifNotNil: [:sp |
 					sp scrollToShow: self bounds]]
 		ifFalse: [self selectItem: nil event: nil]
 ]

@@ -3,7 +3,7 @@ Morph with an inset border by default and theme access.
 "
 Class {
 	#name : #ComposableMorph,
-	#superclass : #MorphicModel,
+	#superclass : #ModelMorphic,
 	#traits : 'TEasilyThemed',
 	#classTraits : 'TEasilyThemed classTrait',
 	#category : #'Polymorph-Widgets-Base'

@@ -21,7 +21,7 @@ SliderTest >> assertSameValueAfter: aBlock [
 { #category : #helpers }
 SliderTest >> createSlider [
 
-	^ Slider new
+	^ SliderMorph new
 		extent: 240 @ 16;
 		yourself
 ]

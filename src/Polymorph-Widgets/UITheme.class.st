@@ -85,7 +85,7 @@ UITheme class >> current: aUITheme [
 
 	Current := aUITheme.
 	SystemProgressMorph reset. "reset to use new fill styles"
-	ScrollBar initializeImagesCache. "reset to use new arrows"
+	ScrollBarMorph initializeImagesCache. "reset to use new arrows"
 
 	self class environment at: #SHPreferences ifPresent: [ :shPreferences |
 		shPreferences setStyleTable: aUITheme shStyleTable ].
@@ -2102,7 +2102,7 @@ UITheme >> dropListButtonLabelFor: aDropList [
 	"Answer the label for the button of the given drop list."
 
 	^AlphaImageMorph new
-		image: (ScrollBar
+		image: (ScrollBarMorph
 			arrowOfDirection: #bottom
 			size: aDropList buttonWidth - 3
 			color: aDropList paneColor darker);
@@ -4160,7 +4160,7 @@ UITheme >> newScrollBarUpButtonFor: aScrollbar [
 UITheme >> newScrollPaneIn: aThemedMorph for: aMorph [
 	"Answer a new GeneralScrollPane with given content morph."
 
-	^GeneralScrollPane new
+	^GeneralScrollPaneMorph new
 		scrollTarget: aMorph;
 		yourself
 ]

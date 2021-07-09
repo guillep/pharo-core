@@ -129,7 +129,7 @@ MorphTreeColumn >> header: aMorph [
 
 { #category : #'column drawing' }
 MorphTreeColumn >> headerButton [
-	self header: ((MorphTreeColumnButton new) 
+	self header: ((TreeColumnButtonMorph new) 
 		layoutPolicy: RowLayout new; 
 		listDirection: #leftToRight; 
 		wrapCentering: #center;

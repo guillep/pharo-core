@@ -3,7 +3,7 @@ Groupbox with title with a vertical layout. Appears in a lighter colour than the
 "
 Class {
 	#name : #GroupboxMorph,
-	#superclass : #MorphicModel,
+	#superclass : #ModelMorphic,
 	#instVars : [
 		'contentMorph',
 		'labelMorph',

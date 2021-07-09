@@ -220,7 +220,7 @@ GLMMorphicWidgetRenderer >> renderer: anObject [
 
 { #category : #private }
 GLMMorphicWidgetRenderer >> scrollMorphFor: aMorph [
-	^ GeneralScrollPane new
+	^ GeneralScrollPaneMorph new
 			changeScrollerTableLayout;
 			scrollTarget: aMorph;
 			layoutFrame: (LayoutFrame identity topOffset: 25);

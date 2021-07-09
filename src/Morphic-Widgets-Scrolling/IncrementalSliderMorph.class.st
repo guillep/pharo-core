@@ -1,6 +1,6 @@
 Class {
 	#name : #IncrementalSliderMorph,
-	#superclass : #MorphicModel,
+	#superclass : #ModelMorphic,
 	#instVars : [
 		'sliderMorph',
 		'getValueSelector',
@@ -201,7 +201,7 @@ IncrementalSliderMorph >> newButtonLabel: direction ofSize: size [
 	"Answer a new label for an inc/dec button."
 
 	^AlphaImageMorph new
-		image: (ScrollBar
+		image: (ScrollBarMorph
 				arrowOfDirection: direction
 				size: size
 				color: self paneColor darker)

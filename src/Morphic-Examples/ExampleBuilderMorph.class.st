@@ -3,7 +3,7 @@ Morph with an inset border by default and theme access. Overrides openModal: to 
 "
 Class {
 	#name : #ExampleBuilderMorph,
-	#superclass : #MorphicModel,
+	#superclass : #ModelMorphic,
 	#traits : 'TEasilyThemed',
 	#classTraits : 'TEasilyThemed classTrait',
 	#category : #'Morphic-Examples-Widgets'

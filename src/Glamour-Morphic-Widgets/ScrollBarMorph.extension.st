@@ -1,7 +1,7 @@
-Extension { #name : #ScrollBar }
+Extension { #name : #ScrollBarMorph }
 
 { #category : #'*glamour-morphic-widgets' }
-ScrollBar >> glmAnimateValue: aNumber duration: anInteger [
+ScrollBarMorph >> glmAnimateValue: aNumber duration: anInteger [
 "	aNumber = value ifTrue: [^ self ]."
 	anInteger <= 0 
 		ifTrue: [ self setValue: aNumber ]
@@ -18,7 +18,7 @@ ScrollBar >> glmAnimateValue: aNumber duration: anInteger [
 ]
 
 { #category : #'*glamour-morphic-widgets' }
-ScrollBar >> setOptimalResizing [
+ScrollBarMorph >> setOptimalResizing [
 	self hResizing: #rigid.
 	self vResizing: #rigid
 ]

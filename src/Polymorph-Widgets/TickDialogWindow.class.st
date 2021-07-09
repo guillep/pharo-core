@@ -5,7 +5,7 @@ See self example
 "
 Class {
 	#name : #TickDialogWindow,
-	#superclass : #DialogWindow,
+	#superclass : #DialogWindowMorph,
 	#instVars : [
 		'defaultValue',
 		'itemsHeaderName',

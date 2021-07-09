@@ -7,7 +7,7 @@ Basic clue about utilization of the ScrollPane class is given in:
 "
 Class {
 	#name : #ScrollPane,
-	#superclass : #MorphicModel,
+	#superclass : #ModelMorphic,
 	#instVars : [
 		'scrollBar',
 		'scroller',
@@ -535,10 +535,10 @@ ScrollPane >> initialize [
 ScrollPane >> initializeScrollBars [
 	"initialize the receiver's scrollBar"
 
-	(scrollBar := ScrollBar new model: self; setValueSelector: #vScrollBarValue:)
+	(scrollBar := ScrollBarMorph new model: self; setValueSelector: #vScrollBarValue:)
 		borderWidth: 1;
 		borderColor: Color black.
-	(hScrollBar := ScrollBar new model: self; setValueSelector: #hScrollBarValue:)
+	(hScrollBar := ScrollBarMorph new model: self; setValueSelector: #hScrollBarValue:)
 		borderWidth: 1;
 		borderColor: Color black.
 	self initializeScroller.

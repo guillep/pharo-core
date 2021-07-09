@@ -6,7 +6,7 @@ A MethodNameEditor is an editor to set the name of a method.
 "
 Class {
 	#name : #RBMethodNameEditor,
-	#superclass : #DialogWindow,
+	#superclass : #DialogWindowMorph,
 	#instVars : [
 		'argumentIndex',
 		'labelMorph',

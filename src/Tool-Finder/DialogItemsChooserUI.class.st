@@ -5,7 +5,7 @@ selectItems is the list of the selected items
 "
 Class {
 	#name : #DialogItemsChooserUI,
-	#superclass : #DialogWindow,
+	#superclass : #DialogWindowMorph,
 	#instVars : [
 		'dialogItemsChooser',
 		'selectedItems',

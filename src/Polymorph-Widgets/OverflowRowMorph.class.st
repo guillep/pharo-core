@@ -169,7 +169,7 @@ OverflowRowMorph >> moreButtonLabel [
 	"Answer the label for the more button."
 
 	^AlphaImageMorph new image: (
-		ScrollBar
+		ScrollBarMorph
 			arrowOfDirection: #right
 			size: self buttonWidth
 			color: self paneColor darker)
