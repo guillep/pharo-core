@@ -143,6 +143,9 @@ RubTextEditor >> addDeleteSelectionUndoRecord [
 { #category : #'typing support' }
 RubTextEditor >> addString: aString [
 	"Think of a better name"
+	self hasSelection 
+		ifTrue: [self addDeleteSelectionUndoRecord].
+	self openTypeIn.
 	self zapSelectionWith: (Text string: aString attributes: self emphasisHere)
 ]
 
@@ -257,6 +260,7 @@ RubTextEditor >> backWord: aKeyboardEvent [
 { #category : #'typing/selecting keys' }
 RubTextEditor >> backspace: aKeyboardEvent [
 	| result startIndex |
+	self closeTypeIn.
 	result := aKeyboardEvent shiftPressed
 		ifTrue: [ self backWord: aKeyboardEvent keyCharacter ]
 		ifFalse: [ 
@@ -273,7 +277,6 @@ RubTextEditor >> backspace: aKeyboardEvent [
 					startIndex := 1 max: startIndex - 1.
 					self backTo: startIndex ].
 			false ].
-	self closeTypeIn.
 	^ result
 ]
 
@@ -1459,7 +1462,6 @@ RubTextEditor >> keystroke: aKeyboardEvent [
 	textArea announce: ((RubKeystroke with: aKeyboardEvent) morph: self).
 	self normalCharacter: aKeyboardEvent.
 	"normal character"
-	self openTypeIn.
 	self hasSelection
 		ifTrue: [ 
 			"save highlighted characters"
@@ -1644,8 +1646,6 @@ RubTextEditor >> noop: aKeyboardEvent [
 RubTextEditor >> normalCharacter: aKeyboardEvent [ 
 	"A nonspecial character is to be added to the stream of characters."
 
-	self hasSelection 
-		ifTrue: [self addDeleteSelectionUndoRecord].
 	self addString: aKeyboardEvent keyCharacter asString.
 	^false
 ]
