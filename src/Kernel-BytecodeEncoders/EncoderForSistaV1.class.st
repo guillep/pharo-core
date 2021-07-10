@@ -287,10 +287,10 @@ EncoderForSistaV1 class >> bindingReadScanBlockFor: litVarIndex using: scanner [
 	extension := 0.
 	^[:b| | prevext |
 	   prevext := extension.
-	   extension := b = 224 ifTrue: [scanner followingByte bitShift: 8] ifFalse: [0].
+	   extension := b = 224 ifTrue: [scanner secondByte bitShift: 8] ifFalse: [0].
 	   (b < 32 and: [b >= 16 and: [b - 16 = litVarIndex]])
 	    or: [b = 227
-			and: [scanner followingByte + prevext = litVarIndex]]]
+			and: [scanner secondByte + prevext = litVarIndex]]]
 ]
 
 { #category : #'compiled method support' }
@@ -306,9 +306,9 @@ EncoderForSistaV1 class >> bindingWriteScanBlockFor: litVarIndex using: scanner 
 	extension := 0.
 	^[:b| | prevext |
 	   prevext := extension.
-	   extension := b = 224 ifTrue: [scanner followingByte bitShift: 8] ifFalse: [0].
+	   extension := b = 224 ifTrue: [scanner secondByte bitShift: 8] ifFalse: [0].
 	   (b = 241 or: [b = 244])
-	   and: [scanner followingByte + prevext = litVarIndex]]
+	   and: [scanner secondByte + prevext = litVarIndex]]
 ]
 
 { #category : #'block closure support' }
@@ -390,10 +390,10 @@ EncoderForSistaV1 class >> instVarReadScanBlockFor: varIndexCode using: scanner 
 	extension := 0.
 	^[:b| | prevext |
 	   prevext := extension.
-	   extension := b = 224 ifTrue: [scanner followingByte bitShift: 8] ifFalse: [0].
+	   extension := b = 224 ifTrue: [scanner secondByte bitShift: 8] ifFalse: [0].
 	   (b < 16 and: [b = varIndexCode])
 	    or: [b = 226
-			and: [scanner followingByte + prevext = varIndexCode]]]
+			and: [scanner secondByte + prevext = varIndexCode]]]
 ]
 
 { #category : #'compiled method support' }
@@ -410,24 +410,12 @@ EncoderForSistaV1 class >> instVarWriteScanBlockFor: varIndexCode using: scanner
 	extension := 0.
 	^[:b| | prevext |
 	   prevext := extension.
-	   extension := b = 224 ifTrue: [scanner followingByte bitShift: 8] ifFalse: [0].
+	   extension := b = 224 ifTrue: [scanner secondByte bitShift: 8] ifFalse: [0].
 	   (b >= 200
 	    and: [b < 208
 	    and: [b - 200 = varIndexCode]])
 	   or: [(b = 240 or: [b = 243])
-		  and: [scanner followingByte + prevext = varIndexCode]]]
-]
-
-{ #category : #'instruction stream support' }
-EncoderForSistaV1 class >> interpretJumpIfCondIn: anInstructionStream [
-	"Double-dispatch through the encoder to select the correct conditional jump decoder for the instruction set."
-	^anInstructionStream interpretSistaV1JumpIfCond
-]
-
-{ #category : #'instruction stream support' }
-EncoderForSistaV1 class >> interpretJumpIn: anInstructionStream [
-	"Double-dispatch through the encoder to select the correct unconditional jump decoder for the instruction set."
-	^anInstructionStream interpretSistaV1Jump
+		  and: [scanner secondByte + prevext = varIndexCode]]]
 ]
 
 { #category : #'instruction stream support' }
@@ -722,7 +710,7 @@ EncoderForSistaV1 class >> method: method refersInBytecodeToLiteral: aLiteral sp
 				[:b|
 				(b = 232
 				 and: [extended not
-				 and: [scanner followingByte = aLiteral]])
+				 and: [scanner secondByte = aLiteral]])
 				or: [extended := b = 225.
 					false]]].
 		 byte := (aLiteral bitShift: -8) bitAnd: 255.
@@ -730,8 +718,8 @@ EncoderForSistaV1 class >> method: method refersInBytecodeToLiteral: aLiteral sp
 			[:b|
 			(b = 232
 			 and: [extended
-			 and: [scanner followingByte = (aLiteral bitAnd: 255)]])
-			or: [extended := b = 225 and: [scanner followingByte = byte].
+			 and: [scanner secondByte = (aLiteral bitAnd: 255)]])
+			or: [extended := b = 225 and: [scanner secondByte = byte].
 				false]]].
 	aLiteral isCharacter ifTrue:
 		[aLiteral asciiValue <= 65535 ifFalse: [^false].
@@ -741,7 +729,7 @@ EncoderForSistaV1 class >> method: method refersInBytecodeToLiteral: aLiteral sp
 				[:b|
 				(b = 233
 				 and: [extended not
-				 and: [scanner followingByte = aLiteral]])
+				 and: [scanner secondByte = aLiteral]])
 				or: [extended := b = 225.
 					false]]].
 		 byte := (aLiteral bitShift: -8) bitAnd: 255.
@@ -749,8 +737,8 @@ EncoderForSistaV1 class >> method: method refersInBytecodeToLiteral: aLiteral sp
 			[:b|
 			(b = 233
 			 and: [extended
-			 and: [scanner followingByte = (aLiteral bitAnd: 255)]])
-			or: [extended := b = 225 and: [scanner followingByte = byte].
+			 and: [scanner secondByte = (aLiteral bitAnd: 255)]])
+			or: [extended := b = 225 and: [scanner secondByte = byte].
 				false]]].
 	aLiteral == nil ifTrue:
 		[^(InstructionStream on: method) scanFor: [:b| b = 79 or: [b = 91 or: b = 93]]].
@@ -869,8 +857,7 @@ EncoderForSistaV1 class >> sendsToSuperFor: compiledMethod [
 	"Answer whether the receiver sends any message to super."
 	| scanner |
 	scanner := InstructionStream on: compiledMethod.
-	^ scanner scanFor: 
-		[:instr |  instr = 235 ]
+	^ scanner scanFor: [:instr |  instr = 235 ]
 ]
 
 { #category : #'bytecode decoding' }

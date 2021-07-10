@@ -72,8 +72,7 @@ SymbolicBytecodeBuilder >> decode [
 	scanner := InstructionStream on: method.
 	end := method endPC.
 	oldPC := scanner pc.
-	[scanner pc <= end] whileTrue:
-		[scanner interpretNextInstructionFor: self].
+	scanner interpretWithClient: self.
 	^symbolicBytecodes
 ]
 

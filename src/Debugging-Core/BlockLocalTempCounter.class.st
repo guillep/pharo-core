@@ -214,9 +214,9 @@ BlockLocalTempCounter >> tempCountForBlockAt: pc in: method [
 	scanner interpretNextInstructionFor: self.
 	blockEnd ifNil:
 		[self error: 'pc is not that of a block'].
-	scanner nextByte = method encoderClass pushNilByte ifTrue:
-		[joinOffsets := Dictionary new.
-		 [scanner pc < blockEnd] whileTrue:
-			[scanner interpretNextInstructionFor: self]].
+	scanner peekByte = method encoderClass pushNilByte ifTrue: [
+		joinOffsets := Dictionary new.
+		[scanner pc < blockEnd] whileTrue: [
+			scanner interpretNextInstructionFor: self ] ].
 	^stackPointer
 ]

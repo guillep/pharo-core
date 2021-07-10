@@ -287,9 +287,9 @@ DebugSession >> recompileMethodTo: text inContext: aContext notifying: aNotifyer
 		ifFalse: [ (self confirm: 'Can not rewind post mortem context for new method.\ Accept anyway ?' withCRs) or: [ ^ false ] ].
 	newMethod := (self createModelForContext: recompilationContext) recompileCurrentMethodTo: text notifying: aNotifyer.
 	newMethod ifNil: [ ^ false ].
-	newMethod isQuick
-		ifTrue: [ recompilationContext := self downInContext: recompilationContext.
-			recompilationContext jump: recompilationContext previousPc - recompilationContext pc ].
+	newMethod isQuick ifTrue: [
+		recompilationContext := self downInContext: recompilationContext.
+		recompilationContext pc: recompilationContext previousPc ].
 	(self isContextPostMortem: self interruptedContext)
 		ifFalse: [ self rewindContextToMethod: newMethod fromContext: recompilationContext ].
 

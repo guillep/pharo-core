@@ -43,7 +43,7 @@ OCSourceCode2BytecodeTest >> testDoDup [
 	selector := method selector.
 	scanner := InstructionStream on:  method.
 	1
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self assert: scanner peekInstruction selector == #doDup description: 'Failed ' , selector
 ]
 
@@ -53,7 +53,7 @@ OCSourceCode2BytecodeTest >> testDoPop [
 	selector := (method := self compile2method: 'popStackBytecode 3 + 4') selector.
 	scanner := InstructionStream on:  method.
 	3
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self assert: scanner peekInstruction selector == #doPop description: 'Failed ' , selector
 ]
 
@@ -63,7 +63,7 @@ OCSourceCode2BytecodeTest >> testPrimAdd [
 	selector := (method := self compile2method: 'bytecodePrimAdd 3 + 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#+. false. 1}])
@@ -76,7 +76,7 @@ OCSourceCode2BytecodeTest >> testPrimAt [
 	selector := (method := self compile2method: 'bytecodePrimAt self at: 3') selector.
 	scanner := InstructionStream on: method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#at:. false. 1}])
@@ -89,7 +89,7 @@ OCSourceCode2BytecodeTest >> testPrimAtEnd [
 	selector := (method := self compile2method: 'bytecodePrimSize self atEnd') selector.
 	scanner := InstructionStream on:  method.
 	1
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#atEnd. false. 0}])
@@ -102,7 +102,7 @@ OCSourceCode2BytecodeTest >> testPrimAtPut [
 	selector := (method := self compile2method: 'bytecodePrimAtPut self at: 3 put: 4') selector.
 	scanner := InstructionStream on:  method.
 	3
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#at:put:. false. 2}])
@@ -115,7 +115,7 @@ OCSourceCode2BytecodeTest >> testPrimBitAnd [
 	selector := (method := self compile2method: 'bytecodePrimBitAnd 3 bitAnd: 4') selector.
 	scanner := InstructionStream on: method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#bitAnd:. false. 1}])
@@ -128,7 +128,7 @@ OCSourceCode2BytecodeTest >> testPrimBitOr [
 	selector := (method := self compile2method: 'bytecodePrimBitOr 3 bitOr: 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#bitOr:. false. 1}])
@@ -141,7 +141,7 @@ OCSourceCode2BytecodeTest >> testPrimBitShift [
 	selector := (method := self compile2method: 'bytecodePrimBitShift 3 bitShift: 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#bitShift:. false. 1}])
@@ -154,7 +154,7 @@ OCSourceCode2BytecodeTest >> testPrimDivide [
 	selector := (method := self compile2method: 'bytecodePrimDivide 3 / 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#/. false. 1}])
@@ -167,7 +167,7 @@ OCSourceCode2BytecodeTest >> testPrimDoWith [
 	selector := (method := self compile2method: 'bytecodeDoWith self do: #something') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#do:. false. 1}])
@@ -180,7 +180,7 @@ OCSourceCode2BytecodeTest >> testPrimEqual [
 	selector := (method  := self compile2method: 'bytecodePrimEqual 3 = 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#'='. false. 1}])
@@ -193,7 +193,7 @@ OCSourceCode2BytecodeTest >> testPrimGreaterOrEqual [
 	selector := (method := self compile2method: 'bytecodePrimGreaterOrEqual 3 >= 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#'>='. false. 1}])
@@ -206,7 +206,7 @@ OCSourceCode2BytecodeTest >> testPrimGreaterThan [
 	selector := (method := self compile2method: 'bytecodePrimGreaterThan 3 > 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#>. false. 1}])
@@ -219,7 +219,7 @@ OCSourceCode2BytecodeTest >> testPrimIdentity [
 	selector := (method := self compile2method: 'bytecodePrimIdentity 3 == 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#==. false. 1}])
@@ -232,7 +232,7 @@ OCSourceCode2BytecodeTest >> testPrimLessOrEqual [
 	selector := (method := self compile2method: 'bytecodePrimLessOrEqual 3 <= 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#<=. false. 1}])
@@ -245,7 +245,7 @@ OCSourceCode2BytecodeTest >> testPrimLessThan [
 	selector := (method := self compile2method: 'bytecodePrimLessThan 3 < 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#<. false. 1}])
@@ -258,7 +258,7 @@ OCSourceCode2BytecodeTest >> testPrimMakePoint [
 	selector := (method := self compile2method: 'bytecodePrimMakePoint 3 @ 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#'@'. false. 1}])
@@ -271,7 +271,7 @@ OCSourceCode2BytecodeTest >> testPrimMod [
 	selector := (method := self compile2method: 'bytecodePrimMod 3 \\ 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#\\. false. 1}])
@@ -284,7 +284,7 @@ OCSourceCode2BytecodeTest >> testPrimMultiply [
 	selector := (method := self compile2method: 'bytecodePrimMultiply 3 * 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#'*'. false. 1}])
@@ -297,7 +297,7 @@ OCSourceCode2BytecodeTest >> testPrimNew [
 	selector := (method := self compile2method: 'bytecodePrimNew super new') selector.
 	scanner := InstructionStream on:  method.
 	1
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#new. true. 0}])
@@ -310,7 +310,7 @@ OCSourceCode2BytecodeTest >> testPrimNewWith [
 	selector := (method := self compile2method: 'bytecodeNewWith self new: 3') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#new:. false. 1}])
@@ -323,7 +323,7 @@ OCSourceCode2BytecodeTest >> testPrimNext [
 	selector := (method := self compile2method: 'bytecodePrimSize self next') selector.
 	scanner := InstructionStream on:  method.
 	1
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#next. false. 0}])
@@ -336,7 +336,7 @@ OCSourceCode2BytecodeTest >> testPrimNextPut [
 	selector := (method := self compile2method: 'bytecodePrimNextPut self nextPut: 3') selector.
 	scanner := InstructionStream on: method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#nextPut:. false. 1}])
@@ -349,7 +349,7 @@ OCSourceCode2BytecodeTest >> testPrimNotEqual [
 	selector := (method := self compile2method: 'bytecodePrimNotEqual 3 ~= 4') selector.
 	scanner := InstructionStream on: method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#~=. false. 1}])
@@ -362,7 +362,7 @@ OCSourceCode2BytecodeTest >> testPrimPointX [
 	selector := (method := self compile2method: 'bytecodePrimPointX self x') selector.
 	scanner := InstructionStream on: method.
 	1
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#x. false. 0}])
@@ -375,7 +375,7 @@ OCSourceCode2BytecodeTest >> testPrimPointY [
 	selector := (method := self compile2method: 'bytecodePrimPointY self y') selector.
 	scanner := InstructionStream on: method.
 	1
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#y. false. 0}])
@@ -388,7 +388,7 @@ OCSourceCode2BytecodeTest >> testPrimQuo [
 	selector := (method := self compile2method: 'bytecodePrimQuo 3 // 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#//. false. 1}])
@@ -401,7 +401,7 @@ OCSourceCode2BytecodeTest >> testPrimSize [
 	selector := (method := self compile2method: 'bytecodePrimSize self size') selector.
 	scanner := InstructionStream on: method.
 	1
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#size. false. 0}])
@@ -414,7 +414,7 @@ OCSourceCode2BytecodeTest >> testPrimSubtract [
 	selector := (method := self compile2method: 'bytecodePrimSubtract 3 - 4') selector.
 	scanner := InstructionStream on:  method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#-. false. 1}])
@@ -427,7 +427,7 @@ OCSourceCode2BytecodeTest >> testPrimValue [
 	selector := (method := self compile2method: 'bytecodePrimValue self value') selector.
 	scanner := InstructionStream on:  method.
 	1
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#value. false. 0}])
@@ -440,7 +440,7 @@ OCSourceCode2BytecodeTest >> testPrimValueWith [
 	selector := (method := self compile2method: 'bytecodeValueWith self value: 3') selector.
 	scanner := InstructionStream on: method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#value:. false. 1}])
@@ -589,7 +589,7 @@ OCSourceCode2BytecodeTest >> testReturnFalseBytecode [
 	selector := (method := self compile2method: 'returnFalseBytecode 3 + 4. ^ false') selector.
 	scanner := InstructionStream on: method.
 	4
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #methodReturnConstant:
 				and: [did arguments first not])
@@ -602,7 +602,7 @@ OCSourceCode2BytecodeTest >> testReturnNilBytecode [
 	selector := (method := self compile2method: 'returnNilBytecode 3 + 4. ^ nil') selector.
 	scanner := InstructionStream on: method.
 	4
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #methodReturnConstant:
 				and: [did arguments first isNil])
@@ -615,7 +615,7 @@ OCSourceCode2BytecodeTest >> testReturnReceiver [
 	selector := (method := self compile2method: 'returnReceiver 3 + 4. ^ self') selector.
 	scanner := InstructionStream on: method.
 	4
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self assert: scanner peekInstruction selector == #methodReturnReceiver
 		description: 'Failed ' , selector
 ]
@@ -629,7 +629,7 @@ OCSourceCode2BytecodeTest >> testReturnTopFromBlock [
 	
 	selector := (method := self compile2method: 'returnTopFromBlock |ia| ^[ia]') selector.
 	scanner := InstructionStream on: method.
-	3 timesRepeat: [scanner nextInstruction].
+	3 timesRepeat: [scanner decodeNextInstruction].
 	self assert: scanner peekInstruction selector == #blockReturnTop
 		description: ('Failed ' , selector)
 ]
@@ -640,7 +640,7 @@ OCSourceCode2BytecodeTest >> testReturnTopFromMethod [
 	selector := (method := self compile2method: 'returnTopFromMethod ^ 3 + 4') selector.
 	scanner := InstructionStream on: method.
 	3
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self assert: scanner peekInstruction selector == #methodReturnTop
 		description: 'Failed ' , selector
 ]
@@ -651,7 +651,7 @@ OCSourceCode2BytecodeTest >> testReturnTrueBytecode [
 	selector := (method := self compile2method: 'returnTrueBytecode 3 + 4. ^ true') selector.
 	scanner := InstructionStream on: method.
 	4
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #methodReturnConstant:
 				and: [did arguments first])
@@ -664,7 +664,7 @@ OCSourceCode2BytecodeTest >> testStoreAndPopLiteralVariableBytecode [
 	selector := (method := self compile2method: 'storeAndPopLiteralVariableBytecode ClassVar := nil') selector.
 	scanner := InstructionStream on: method.
 	self
-		assert: (did := scanner nextInstruction; peekInstruction) selector == #popIntoLiteralVariable:
+		assert: (did := scanner decodeNextInstruction; peekInstruction) selector == #popIntoLiteralVariable:
 		description: 'Failed ' , selector
 ]
 
@@ -674,7 +674,7 @@ OCSourceCode2BytecodeTest >> testStoreAndPopReceiverVariableBytecode [
 	selector := (method := self compile2method: 'storeAndPopReceiverVariableBytecode instVar := self') selector.
 	scanner := InstructionStream on: method.
 	self
-		assert: ((did := scanner nextInstruction; peekInstruction) selector == #popIntoReceiverVariable:
+		assert: ((did := scanner decodeNextInstruction; peekInstruction) selector == #popIntoReceiverVariable:
 				and: [did arguments first == 3])
 		description: 'Failed ' , selector
 ]
@@ -685,7 +685,7 @@ OCSourceCode2BytecodeTest >> testStoreAndPopTemporaryVariableBytecode [
 	selector := (method:= self compile2method: 'storeAndPopTemporaryVariableBytecode | t0 t1 | t1 := t0') selector.
 	scanner := InstructionStream on: method.
 	self
-		assert: ((did := scanner nextInstruction; peekInstruction) selector == #popIntoTemporaryVariable:
+		assert: ((did := scanner decodeNextInstruction; peekInstruction) selector == #popIntoTemporaryVariable:
 				and: [did arguments first == 1])
 		description: 'Failed ' , selector
 ]
@@ -696,7 +696,7 @@ OCSourceCode2BytecodeTest >> testStoreIntoLiteralVariableBytecode [
 	selector := (method := self compile2method: 'storeIntoLiteralVariableBytecode ^ (ClassVar := nil)') selector.
 	scanner := InstructionStream on: method.
 	self
-		assert: (did := scanner nextInstruction; peekInstruction) selector == #storeIntoLiteralVariable:
+		assert: (did := scanner decodeNextInstruction; peekInstruction) selector == #storeIntoLiteralVariable:
 		description: 'Failed ' , selector
 ]
 
@@ -706,7 +706,7 @@ OCSourceCode2BytecodeTest >> testStoreIntoReceiverVariableBytecode [
 	selector := (method := self compile2method: 'storeIntoReceiverVariableBytecode ^ (instVar := self)') selector.
 	scanner := InstructionStream on: method.
 	self
-		assert: ((did := scanner nextInstruction; peekInstruction) selector == #storeIntoReceiverVariable:
+		assert: ((did := scanner decodeNextInstruction; peekInstruction) selector == #storeIntoReceiverVariable:
 				and: [did arguments first == 3])
 		description: 'Failed ' , selector
 ]
@@ -717,7 +717,7 @@ OCSourceCode2BytecodeTest >> testStoreIntoTemporaryVariableBytecode [
 	selector := (method := self compile2method: 'storeIntoTemporaryVariableBytecode | t0 t1 | ^ (t1 := t0)') selector.
 	scanner := InstructionStream on: method.
 	self
-		assert: ((did := scanner nextInstruction; peekInstruction) selector == #storeIntoTemporaryVariable:
+		assert: ((did := scanner decodeNextInstruction; peekInstruction) selector == #storeIntoTemporaryVariable:
 				and: [did arguments first == 1])
 		description: 'Failed ' , selector
 ]
@@ -728,7 +728,7 @@ OCSourceCode2BytecodeTest >> testSuperSend [
 	selector := (method := self compile2method: 'bytecodeSuperSend super yourself') selector.
 	scanner := InstructionStream on: method.
 	1
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#yourself. true. 0}])
@@ -741,7 +741,7 @@ OCSourceCode2BytecodeTest >> testSuperSendWith [
 	selector := (method := self compile2method: 'bytecodeSuperSendWith super new: 0') selector.
 	scanner := InstructionStream on: method.
 	2
-		timesRepeat: [scanner nextInstruction].
+		timesRepeat: [scanner decodeNextInstruction].
 	self
 		assert: ((did := scanner peekInstruction) selector == #send:super:numArgs:
 				and: [did arguments = {#new:. true. 1}])

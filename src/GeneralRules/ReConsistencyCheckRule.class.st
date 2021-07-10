@@ -32,5 +32,5 @@ ReConsistencyCheckRule >> initialize [
 
 { #category : #accessing }
 ReConsistencyCheckRule >> name [
-	^ 'Uses "size = 0" instead of "isEmpty"'
+	^ 'Checks for empty collection using #size instead of #isEmpty" or #isNotEmpty'
 ]

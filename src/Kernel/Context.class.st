@@ -17,9 +17,11 @@ MethodContexts must only be created using the method newForMethod:.  Note that i
 "
 Class {
 	#name : #Context,
-	#superclass : #InstructionStream,
 	#type : #variable,
+	#superclass : #Object,
 	#instVars : [
+		'sender',
+		'pc',
 		'stackp',
 		'method',
 		'closureOrNil',
@@ -82,6 +84,12 @@ Context class >> carefullyPrint: anObject on: aStream [
 	aStream nextPutAll: ([anObject printString]
 		on: Error
 		do: ['unprintable ' , anObject class name])
+]
+
+{ #category : #compiler }
+Context class >> compiler [
+	"The JIT compiler needs to trap all reads to instance variables of contexts. As this check is costly, it is only done in the long form of the bytecodes, which are not used often. In this hierarchy we force the compiler to alwasy generate long bytecodes"
+	^super compiler options: #(+ optionLongIvarAccessBytecodes)
 ]
 
 { #category : #'special context creation' }
@@ -163,11 +171,6 @@ Context class >> initializeTryNamedPrimitiveTemplateMethod [
 
 
 	
-]
-
-{ #category : #testing }
-Context class >> isContextClass [
-	^true
 ]
 
 { #category : #'instance creation' }
@@ -856,31 +859,6 @@ Context >> findNextUnwindContextUpTo: aContext [
 		context isUnwindContext
 			ifTrue: [ ^context ]].
 	^nil
-]
-
-{ #category : #query }
-Context >> findSecondToOldestSimilarSender [
-	"Search the stack for the second-to-oldest occurance of self's method.  Very useful for an infinite recursion.  Gets back to the second call so you can see one complete recursion cycle, and how it was called at the beginning."
-
-	| secondContext context lastContext |
-	secondContext := self.
-	context := self.
-	[	lastContext := context findSimilarSender.
-		lastContext isNil
-	] whileFalse: [
-		secondContext := context.
-		context := lastContext.
-	].
-	^ secondContext
-
-]
-
-{ #category : #query }
-Context >> findSimilarSender [
-	"Return the closest sender with the same method, return nil if none found"
-
-	^ self sender findContextSuchThat: [ :context | 
-		context compiledCode == method ]
 ]
 
 { #category : #'private - exceptions' }
@@ -1812,15 +1790,6 @@ Context >> runUntilErrorOrReturnFrom: aSender [
 
 ]
 
-{ #category : #query }
-Context >> secondFromBottom [
-	"Return the second from bottom of my sender chain"
-
-	self sender ifNil: [ ^ nil ].
-	^ self findContextSuchThat: [ :context |
-		context sender sender isNil]
-]
-
 { #category : #'debugger access' }
 Context >> selector [
 	"Answer the selector of the method that created the receiver."
@@ -2071,8 +2040,11 @@ Context >> startpc [
 Context >> step [
 	"Simulate the execution of the receiver's next bytecode. Answer the 
 	context that would be the active context after this bytecode."
-
-	^self interpretNextInstructionFor: self
+	| stream result |
+	stream := InstructionStream on: method pc: pc.
+	result := stream interpretNextInstructionFor: self.
+	pc ifNotNil: [ pc := stream pc ].
+	^ result
 ]
 
 { #category : #'debugger access' }

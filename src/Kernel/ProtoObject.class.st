@@ -249,7 +249,8 @@ ProtoObject >> mustBeBooleanIn: context [
 
 	| proceedValue |
 	
-	context skipBackBeforeJump.
+	"Set the pc back to the point just before the conditional jump that set off the must be boolean"
+	context pc: context previousPc.
 	proceedValue := NonBooleanReceiver new
 		object: self;
 		signal: 'proceed for truth.'.

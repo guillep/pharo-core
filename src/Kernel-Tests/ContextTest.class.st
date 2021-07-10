@@ -181,13 +181,6 @@ ContextTest >> testMethodContextPrintDetails [
 ]
 
 { #category : #tests }
-ContextTest >> testMethodIsBottomContext [
-	self
-		assert: aMethodContext bottomContext equals: aSender;
-		assert: aMethodContext secondFromBottom equals: aMethodContext
-]
-
-{ #category : #tests }
 ContextTest >> testNoStepIntoQuickMethod [
 
 	|newContext |

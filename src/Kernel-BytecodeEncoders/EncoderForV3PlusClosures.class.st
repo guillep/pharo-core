@@ -34,10 +34,10 @@ EncoderForV3PlusClosures class >> bindingReadScanBlockFor: litIndex using: scann
 				ifTrue: [b - 64 = litIndex]
 				ifFalse:
 					[b = 128
-						ifTrue: [scanner followingByte - 192 = litIndex]
+						ifTrue: [scanner secondByte - 192 = litIndex]
 						ifFalse:
 							[b = 132
-							 and: [(scanner followingByte between: 128 and: 159)
+							 and: [(scanner secondByte between: 128 and: 159)
 							 and: [scanner thirdByte = litIndex]]]]]]
 ]
 
@@ -48,10 +48,10 @@ EncoderForV3PlusClosures class >> bindingWriteScanBlockFor: litVarIndex using: s
 	 N.B. Don't assume the compiler uses the most compact encoding available."
 	^ [:b|
 		(b = 129 or: [b = 130])
-			ifTrue: [scanner followingByte - 192 = litVarIndex]
+			ifTrue: [scanner secondByte - 192 = litVarIndex]
 			ifFalse:
 				[b = 132
-				 and: [scanner followingByte >= 224
+				 and: [scanner secondByte >= 224
 				 and: [scanner thirdByte = litVarIndex]]]]
 ]
 
@@ -99,10 +99,10 @@ EncoderForV3PlusClosures class >> instVarReadScanBlockFor: varIndexCode using: s
 			ifTrue: [b = varIndexCode]
 			ifFalse:
 				[b = 128
-					ifTrue: [scanner followingByte = varIndexCode and: [varIndexCode <= 63]]
+					ifTrue: [scanner secondByte = varIndexCode and: [varIndexCode <= 63]]
 					ifFalse:
 						[b = 132
-						 and: [(scanner followingByte between: 64 and: 95)
+						 and: [(scanner secondByte between: 64 and: 95)
 						 and: [scanner thirdByte = varIndexCode]]]]]
 ]
 
@@ -117,23 +117,11 @@ EncoderForV3PlusClosures class >> instVarWriteScanBlockFor: varIndexCode using: 
 				ifTrue: [b - 96 = varIndexCode]
 				ifFalse:
 					[(b = 129 or: [b = 130])
-						ifTrue: [scanner followingByte = varIndexCode and: [varIndexCode <= 63]]
+						ifTrue: [scanner secondByte = varIndexCode and: [varIndexCode <= 63]]
 						ifFalse:
 							[b = 132
-							 and: [(scanner followingByte between: 160 and: 223)
+							 and: [(scanner secondByte between: 160 and: 223)
 							 and: [scanner thirdByte = varIndexCode]]]]]]
-]
-
-{ #category : #'instruction stream support' }
-EncoderForV3PlusClosures class >> interpretJumpIfCondIn: anInstructionStream [
-	"Double-dispatch through the encoder to select the correct conditional jump decoder for the instruction set."
-	^anInstructionStream interpretV3PlusClosureJumpIfCond
-]
-
-{ #category : #'instruction stream support' }
-EncoderForV3PlusClosures class >> interpretJumpIn: anInstructionStream [
-	"Double-dispatch through the encoder to select the correct unconditional jump decoder for the instruction set."
-	^ anInstructionStream interpretV3PlusClosureJump
 ]
 
 { #category : #'instruction stream support' }
@@ -347,8 +335,7 @@ EncoderForV3PlusClosures class >> readsSelfFor: compiledMethod [
 	"Answer whether compiledMethod reads self"
 	| scanner |
 	scanner := InstructionStream on: compiledMethod.
-	^ scanner scanFor: 
-		[:instr |  instr = 112 ]
+	^ scanner scanFor: [:instr | instr = 112 ]
 ]
 
 { #category : #'compiled method support' }
@@ -356,8 +343,7 @@ EncoderForV3PlusClosures class >> readsThisContextFor: compiledMethod [
 	"Answer whether compiledMethod reads thisContext"
 	| scanner |
 	scanner := InstructionStream on: compiledMethod.
-	^ scanner scanFor: 
-		[:instr |  instr = 137 ]
+	^ scanner scanFor: [:instr | instr = 137 ]
 ]
 
 { #category : #'instruction stream support' }
@@ -394,9 +380,8 @@ EncoderForV3PlusClosures class >> sendsToSuperFor: compiledMethod [
 	"Answer whether the receiver sends any message to super."
 	| scanner |
 	scanner := InstructionStream on: compiledMethod.
-	^ scanner scanFor: 
-		[:instr |  instr = 16r85 or: [instr = 16r84
-						and: [scanner followingByte between: 16r20 and: 16r3F]]]
+	^ scanner scanFor: [:instr |
+			instr = 16r85 or: [instr = 16r84 and: [scanner secondByte between: 16r20 and: 16r3F ] ] ]
 ]
 
 { #category : #'bytecode decoding' }

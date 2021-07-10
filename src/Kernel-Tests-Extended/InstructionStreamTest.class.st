@@ -7,37 +7,43 @@ Class {
 	#category : #'Kernel-Tests-Extended-Methods'
 }
 
-{ #category : #testing }
+{ #category : #helpers }
+InstructionStreamTest >> blockReturnTop [
+	
+		operations add: { #blockReturnTop }
+]
+
+{ #category : #helpers }
 InstructionStreamTest >> classUnderTest [ 
 
 	^ ClassUsedInInstructionStreamTest
 ]
 
-{ #category : #testing }
+{ #category : #helpers }
 InstructionStreamTest >> directedSuperSend: aString numArgs: anInteger [ 
 	
 	operations add: { #directSuperSend:numArgs:. aString. anInteger }
 ]
 
-{ #category : #testing }
+{ #category : #helpers }
 InstructionStreamTest >> pushConstant: anInteger [ 
 
 	operations add: { #pushConstant. anInteger }
 ]
 
-{ #category : #testing }
+{ #category : #helpers }
 InstructionStreamTest >> pushLiteralVariable: aLiteralVariable [ 
 
 	operations add: { #pushConstant. aLiteralVariable }
 ]
 
-{ #category : #testing }
+{ #category : #helpers }
 InstructionStreamTest >> pushReceiver [
 	
 	operations add: {#pushReceiver}
 ]
 
-{ #category : #testing }
+{ #category : #helpers }
 InstructionStreamTest >> send: aString super: aBoolean numArgs: anInteger [ 
 
 	operations add: { #send:super:numArgs:. aString. aBoolean. anInteger }
@@ -61,10 +67,9 @@ InstructionStreamTest >> testBlockWithASuperSendHasCorrectNumberOfArguments [
 	
 	aStream := InstructionStream on: aCompiledBlock.
 
-	[ aCompiledBlock endPC > aStream pc ]
-		whileTrue: [aStream interpretNextInstructionFor: self].
+	aStream interpretWithClient: self.
 		
-	self assert: operations last equals: { #directSuperSend:numArgs:. #aSuperMethod:with:. 2 }
+	self assert: operations fifth equals: { #directSuperSend:numArgs:. #aSuperMethod:with:. 2 }
 ]
 
 { #category : #tests }
@@ -78,10 +83,9 @@ InstructionStreamTest >> testBlockWithASuperWithoutArgumentsSendHasCorrectNumber
 	
 	aStream := InstructionStream on: aCompiledBlock.
 
-	[ aCompiledBlock endPC > aStream pc ]
-		whileTrue: [aStream interpretNextInstructionFor: self].
+	aStream interpretWithClient: self.
 		
-	self assert: operations last equals: { #directSuperSend:numArgs:. #yourself. 0 }
+	self assert: operations third equals: { #directSuperSend:numArgs:. #yourself. 0 }
 ]
 
 { #category : #'tests - example' }

@@ -20,6 +20,31 @@ Context >> callPrimitive: primNumber [
 ]
 
 { #category : #'*Debugging-Core' }
+Context >> findSecondToOldestSimilarSender [
+	"Search the stack for the second-to-oldest occurance of self's method.  Very useful for an infinite recursion.  Gets back to the second call so you can see one complete recursion cycle, and how it was called at the beginning."
+
+	| secondContext context lastContext |
+	secondContext := self.
+	context := self.
+	[	lastContext := context findSimilarSender.
+		lastContext isNil
+	] whileFalse: [
+		secondContext := context.
+		context := lastContext.
+	].
+	^ secondContext
+
+]
+
+{ #category : #'*Debugging-Core' }
+Context >> findSimilarSender [
+	"Return the closest sender with the same method, return nil if none found"
+
+	^ self sender findContextSuchThat: [ :context | 
+		context compiledCode == method ]
+]
+
+{ #category : #'*Debugging-Core' }
 Context >> lookupTempVar: aSymbol [
 	| var |
 	var := self lookupVar: aSymbol.
@@ -330,18 +355,22 @@ Context >> stepToSendOrReturn [
 
 { #category : #'*Debugging-Core' }
 Context class >> tallyInstructions: aBlock [
-	"This method uses the simulator to count the number of occurrences of
-	each of the Smalltalk instructions executed during evaluation of aBlock.
-	Results appear in order of the byteCode set."
+	"
+	Count the occurrences of each bytecode during the execution of aBlock.
+	Return a Array of associations using the byte as key and the occurrences as values sorted by the instruction opcode numeric values.
+	
+	This method uses the in-image bytecode interpreter to evaluate and count the instructions.
+	
+	(Context tallyInstructions: [3.14159 printString]) size >>> 122
+	"
+	
 	| tallies |
 	tallies := Bag new.
 	thisContext sender
 		runSimulated: aBlock
 		contextAtEachStep:
-			[:current | tallies add: current nextByte].
+			[:current | tallies add: current peekByte ].
 	^tallies sortedElements
-
-	"Context tallyInstructions: [3.14159 printString]"
 ]
 
 { #category : #'*Debugging-Core' }
