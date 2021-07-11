@@ -1,5 +1,5 @@
 "
-When defining a description of a setting, you don't need to translate it, and this will be done by the setting itself.
+When defining a description of a setting, you don't need to translate it. It will be done by the setting itself.
 "
 Class {
 	#name : #SettingDontTranslateDescriptionRule,

@@ -1,5 +1,5 @@
 "
-Morph and Model subclasses methods should access GUI theme via 'self theme' and not 'Smalltalk ui theme'.
+Morph and Model subclasses methods should access GUI theme via 'self theme' instead of 'Smalltalk ui theme'.
 "
 Class {
 	#name : #ReThemeAccessRule,
