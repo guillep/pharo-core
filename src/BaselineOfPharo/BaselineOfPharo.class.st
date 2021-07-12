@@ -13,7 +13,7 @@ BaselineOfPharo class >> icebergRepository [
 { #category : #versions }
 BaselineOfPharo class >> icebergVersion [
 
-	^ 'dev-2.0'
+	^ 'v2.0.4'
 ]
 
 { #category : #versions }
