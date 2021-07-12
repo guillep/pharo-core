@@ -17,6 +17,12 @@ SDL_KeyUpEvent >> accept: aVisitor [
 	^ aVisitor visitKeyUpEvent: self
 ]
 
+{ #category : #testing }
+SDL_KeyUpEvent >> isKeyUpEvent [
+
+	^ true
+]
+
 { #category : #'accessing - structure variables' }
 SDL_KeyUpEvent >> keysym [
 	"This method was automatically generated"

@@ -70,6 +70,14 @@ SDL_KeyboardEvent >> padding3: anObject [
 	handle unsignedByteAt: OFFSET_PADDING3 put: anObject
 ]
 
+{ #category : #printing }
+SDL_KeyboardEvent >> printOn: aStream [
+
+	super printOn: aStream.
+	
+	aStream print: { self timestamp. self keysym. self type. self windowID. self state }.
+]
+
 { #category : #'accessing - structure variables' }
 SDL_KeyboardEvent >> repeat [
 	"This method was automatically generated"

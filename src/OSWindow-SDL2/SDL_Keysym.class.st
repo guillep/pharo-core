@@ -38,6 +38,13 @@ SDL_Keysym >> mod: anObject [
 	handle unsignedShortAt: OFFSET_MOD put: anObject
 ]
 
+{ #category : #printing }
+SDL_Keysym >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream print: { self mod. self scancode. self sym }.
+]
+
 { #category : #'accessing - structure variables' }
 SDL_Keysym >> scancode [
 	"This method was automatically generated"

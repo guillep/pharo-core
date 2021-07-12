@@ -17,6 +17,21 @@ SDL_KeyDownEvent >> accept: aVisitor [
 	^ aVisitor visitKeyDownEvent: self
 ]
 
+{ #category : #testing }
+SDL_KeyDownEvent >> isKeyDownEvent [
+
+	^ true
+]
+
+{ #category : #testing }
+SDL_KeyDownEvent >> isUserInterrupt [
+
+	^ ((self keysym mod bitAnd: 16r200) = 0) "ignore all if AltGr is pressed" 
+		and: [(self keysym mod anyMask: 1344) 
+			and: [ self keysym scancode = 55 ] ]
+	
+]
+
 { #category : #'accessing - structure variables' }
 SDL_KeyDownEvent >> keysym [
 	"This method was automatically generated"

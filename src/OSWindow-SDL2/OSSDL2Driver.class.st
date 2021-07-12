@@ -6,8 +6,8 @@ Class {
 	#superclass : #OSWindowDriver,
 	#instVars : [
 		'inputSemaphore',
-		'eventQueue',
-		'globalListeners'
+		'globalListeners',
+		'eventFilter'
 	],
 	#classVars : [
 		'EventLoopProcess',
@@ -66,22 +66,6 @@ OSSDL2Driver >> closeRemovedJoystick: index [
 	self traceCr: ('Joystick <1s> removed' expandMacrosWith: index)
 ]
 
-{ #category : #'events-processing' }
-OSSDL2Driver >> convertEvent: sdlEvent [
-	| mappedEvent window |
-	
-	mappedEvent := sdlEvent mapped ifNil: [ ^ nil ].
-	mappedEvent windowID ifNil: [ ^ self sendEventWithoutWindow: mappedEvent ].
-	
-	WindowMapMutex critical: [ 
-		window := WindowMap at: mappedEvent windowID ifAbsent: [ ^ nil ].
-	].
-
-	^ window handleNewSDLEvent: mappedEvent.
-	
-	
-]
-
 { #category : #'window creation and deletion' }
 OSSDL2Driver >> createWindowWithAttributes: attributes osWindow: osWindow [
 	| flags handle aBackendWindow glAttributes x y |
@@ -134,15 +118,31 @@ OSSDL2Driver >> createWindowWithAttributes: attributes osWindow: osWindow [
 ]
 
 { #category : #'events-processing' }
+OSSDL2Driver >> dispatchEvent: mappedEvent [
+
+	| window |
+
+	mappedEvent windowID ifNil: [ ^ self sendEventWithoutWindow: mappedEvent ].
+	
+	WindowMapMutex critical: [ 
+		window := WindowMap at: mappedEvent windowID ifAbsent: [ ^ nil ] ].
+
+	^ window handleNewSDLEvent: mappedEvent.
+	
+	
+]
+
+{ #category : #'events-processing' }
 OSSDL2Driver >> evaluateUserInterrupt: anSDLEvent [
 
-	anSDLEvent ifNil: [ ^ self ].
-
-	((anSDLEvent isKindOf: SDL_KeyDownEvent)
-		and: [ ((anSDLEvent keysym mod bitAnd: 16r200) = 0) "ignore all if AltGr is pressed" 
-		and: [(anSDLEvent keysym mod anyMask: 1344) 
-		and: [ anSDLEvent keysym scancode = 55 ] ]])
+	anSDLEvent isUserInterrupt
 		ifTrue: [ UserInterruptHandler new handleUserInterrupt ]
+]
+
+{ #category : #accessing }
+OSSDL2Driver >> eventFilter [
+
+	^ eventFilter ifNil: [ eventFilter := OSSDLPasteEventFilter new next: self; yourself ]
 ]
 
 { #category : #'events-processing' }
@@ -197,7 +197,6 @@ OSSDL2Driver >> eventLoopProcessWithoutPlugin [
 { #category : #initialization }
 OSSDL2Driver >> initialize [
 	inputSemaphore := Semaphore new.
-	eventQueue := AtomicSharedQueue new.
 	globalListeners := WeakSet new.
 	self
 		initializeWindowMap;
@@ -268,12 +267,12 @@ OSSDL2Driver >> primitiveSetVMSDL2Input: semaIndex [
 
 { #category : #'events-processing' }
 OSSDL2Driver >> processEvent: sdlEvent [
-	| event |
+	| mappedEvent |
 			
-	[  
-		event := self convertEvent: sdlEvent.	
-		self evaluateUserInterrupt: sdlEvent mapped.
-		event ifNotNil: [ eventQueue nextPut: event ].
+	[ 
+		mappedEvent := sdlEvent mapped.
+		self evaluateUserInterrupt: mappedEvent.
+		self eventFilter dispatchEvent: mappedEvent
 	] on: Error do: [ :err | 
 		"It is critical, that event handling keep running despite errors.
 		Normally, any errors in event handling requires immediate attention and fixing"

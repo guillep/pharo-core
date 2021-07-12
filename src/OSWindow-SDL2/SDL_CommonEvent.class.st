@@ -28,6 +28,13 @@ SDL_CommonEvent >> accept: aVisitor [
 ]
 
 { #category : #'accessing - structure variables' }
+SDL_CommonEvent >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream print: { self timestamp }.
+]
+
+{ #category : #'accessing - structure variables' }
 SDL_CommonEvent >> timestamp [
 	"This method was automatically generated"
 	^handle unsignedLongAt: OFFSET_TIMESTAMP

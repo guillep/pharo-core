@@ -37,6 +37,8 @@ SDL_Event >> initialize [
 
 { #category : #accessing }
 SDL_Event >> mapped [
+	"This method converts a raw event in a mapped event.
+	It should always return an event. Nil is not a valid return object"
 	^ (EventTypeMap at: self type ifAbsent: [ ^ self unknownEvent ]) fromSdlEvent: self
 ]
 
