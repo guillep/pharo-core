@@ -19,6 +19,11 @@ STONWriteReadTest >> materialize: string [
 		next
 ]
 
+{ #category : #options }
+STONWriteReadTest >> reader: string [
+	^ STON reader on: string readStream
+]
+
 { #category : #private }
 STONWriteReadTest >> serialize: anObject [
 	^ String streamContents: [ :stream |
@@ -51,6 +56,21 @@ STONWriteReadTest >> serializeJson: anObject [
 		STON jsonWriter 
 			on: stream;
 			nextPut: anObject ]
+]
+
+{ #category : #tests }
+STONWriteReadTest >> testAlternativeRepresentation [
+	| testObject resultObject |
+	testObject := STONAlternativeRepresentationTestObject example.
+	"See the class comment of STONAlternativeRepresentationTestObject
+	for a description of how the internal and external representation differ.
+	See also STONAlternativeRepresentationTestObject>>#stonOn:
+	and STONAlternativeRepresentationTestObject>>#fromSton:"
+	resultObject := self materialize: (self serialize: testObject).
+	self assert: resultObject id equals: testObject id.
+	self assert: resultObject time equals: testObject time.
+	self assert: (resultObject gridReference x closeTo: testObject gridReference x).
+	self assert: (resultObject gridReference y closeTo: testObject gridReference y).
 ]
 
 { #category : #tests }
@@ -198,11 +218,9 @@ STONWriteReadTest >> testFloats [
 	serialization := self serialize: floats.
 	materialization := self materialize: serialization.
 	self assert: floats size equals: materialization size.
-	1 to: floats size do: [ :index | 
-		| float |
-		float := floats at: index.
+	floats with: materialization do: [ :float :materializedFloat |
 		"Use #closeTo: instead of #= to increase portability"
-		self assert: (float closeTo: (materialization at: index)) ]
+		self assert: float closeTo: materializedFloat ]
 ]
 
 { #category : #tests }
@@ -343,6 +361,22 @@ STONWriteReadTest >> testSmallIntegers [
 ]
 
 { #category : #tests }
+STONWriteReadTest >> testSortedCollections [
+	| collections |
+	collections := STON listClass withAll: {
+		SortedCollection new.
+		SortedCollection new: 0.
+		#(5 3 7 2 1 4 10 9 8 6) asSortedCollection.
+		#(5 3 7 2 1 4 10 9 8 6) asSortedCollection: #yourself ascending.
+		#(5 3 7 2 1 4 10 9 8 6) asSortedCollection: #yourself descending.
+		#('****' '*' '*****' '**' '***') asSortedCollection: #size ascending.
+		#('****' '*' '*****' '**' '***') asSortedCollection: #size descending.
+		#(5 3 7 2 1 4 10 nil 9 8 6) asSortedCollection: #yourself ascending undefinedFirst.
+		#(5 3 7 2 1 4 10 nil 9 8 6) asSortedCollection: #yourself ascending reversed undefinedLast }.
+	self serializeAndMaterialize: collections
+]
+
+{ #category : #tests }
 STONWriteReadTest >> testSpecialCharacters [
 	| primitives |
 	primitives := STON listClass withAll: { 
@@ -352,6 +386,24 @@ STONWriteReadTest >> testSpecialCharacters [
 		'Düsseldorf Königsallee'.
 		#(1 10 20 30 127 140 150 160 200 255) collect: #asCharacter as: String }.
 	self serializeAndMaterialize: primitives
+]
+
+{ #category : #tests }
+STONWriteReadTest >> testSpecialClassNames [
+	| specialClass key specialInstance ston reader object |
+	specialClass := LookupKey newAnonymousSubclass.
+	specialClass setName: #'STONTest_Lärm'.
+	key := 999 atRandom asString asSymbol.
+	specialInstance := specialClass key: key.
+	ston := self serialize: specialInstance.
+	reader := self reader: ston.
+	(reader instVarNamed: #classes) 
+		at: specialClass name 
+		put: specialClass.
+	object := reader next.
+	self assert: object equals: specialInstance.
+	self assert: object class equals: specialClass.
+	self assert: object key equals: key
 ]
 
 { #category : #tests }

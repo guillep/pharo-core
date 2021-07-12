@@ -13,6 +13,13 @@ STONWriteReadCommentsTest >> materialize: string [
 ]
 
 { #category : #private }
+STONWriteReadCommentsTest >> reader: string [
+	^ STON reader
+		on: (STONCStyleCommentsSkipStream on: string readStream);
+		yourself
+]
+
+{ #category : #private }
 STONWriteReadCommentsTest >> serialize: anObject [
 	^ String streamContents: [ :stream |
 		stream << '/* initial comment */'.

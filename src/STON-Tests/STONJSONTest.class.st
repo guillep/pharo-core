@@ -7,6 +7,11 @@ Class {
 	#category : #'STON-Tests-Facade'
 }
 
+{ #category : #accessing }
+STONJSONTest >> environment [
+	^ Smalltalk globals
+]
+
 { #category : #tests }
 STONJSONTest >> testBooleans [
 	self assert: (STONJSON toString: true) equals: 'true'.
@@ -79,7 +84,7 @@ STONJSONTest >> testNull [
 { #category : #tests }
 STONJSONTest >> testOrderedDictionary [
 	| odictClass odict json dict |
-	odictClass := Smalltalk at: #OrderedDictionary ifAbsent: [ ^ self skip ].
+	odictClass := self environment at: #OrderedDictionary ifAbsent: [ ^ self skip ].
 
 	odict := odictClass newFrom: {('a' -> 42) . ('b' -> 1) . ('aa' -> 4) . ('c' -> 23)}.
 

@@ -106,12 +106,12 @@ STONReader >> initialize [
 
 { #category : #private }
 STONReader >> isClassChar: char [
-	^ 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_' includes: char
+	^ char isAlphaNumeric or: [ char = $_ ]
 ]
 
 { #category : #private }
 STONReader >> isClassStartChar: char [
-	^ 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' includes: char
+	^ char isLetter and: [ char isUppercase ]
 ]
 
 { #category : #private }

@@ -94,6 +94,17 @@ STONReaderTest >> testColor [
 ]
 
 { #category : #tests }
+STONReaderTest >> testColorBackwardsCompatibility [
+	"ensure the older Color representation still works"
+	self 
+		assert: (self materialize: 'Color{#rgb:1072693248}')
+		equals: Color red.
+	self 
+		assert: (self materialize: 'Color{#rgb:1072693248}')
+		equals: (self materialize: 'Color[#red]').
+]
+
+{ #category : #tests }
 STONReaderTest >> testConvertingNewLines [
 	| input result output |
 	input := '''line ending with CR', String cr, 
@@ -226,6 +237,25 @@ STONReaderTest >> testError [
 			should: [ self materialize: each ] 
 			raise: STONReaderError ]
 
+]
+
+{ #category : #tests }
+STONReaderTest >> testFileReferenceBackwardsCompatibility [
+	"we now have FILE, make sure that we support the old generic format"
+	| fs |
+	fs := STON toString: FileSystem disk.
+	self 
+		assert: (self materialize: 'FileReference{#path:RelativePath[],#filesystem:', fs, '}')
+		equals: FileLocator workingDirectory.
+	self 
+		assert: (self materialize: 'FileReference{#path:RelativePath[],#filesystem:', fs, '}')
+		equals: (self materialize: 'FILE[''.'']').
+	self 
+		assert: (self materialize: 'FileReference{#path:AbsolutePath[''tmp'',''foo.txt''],#filesystem:', fs, '}')
+		equals: '/tmp/foo.txt' asFileReference.
+	self 
+		assert: (self materialize: 'FileReference{#path:AbsolutePath[''tmp'',''foo.txt''],#filesystem:', fs, '}')
+		equals: (self materialize: 'FILE[''/tmp/foo.txt'']').
 ]
 
 { #category : #tests }
@@ -474,8 +504,8 @@ STONReaderTest >> testString [
 
 { #category : #tests }
 STONReaderTest >> testSymbol [
-	self assert: (self materialize: '#''foo''') equals: #foo.
-	self assert: (self materialize: '#foo') equals: #foo
+	self assert: (self materialize: '#''foo''') identicalTo: #foo.
+	self assert: (self materialize: '#foo') identicalTo: #foo
 ]
 
 { #category : #tests }
@@ -546,6 +576,17 @@ STONReaderTest >> testWhitespace [
 
 { #category : #tests }
 STONReaderTest >> testWideSymbol [
-	self assert: (self materialize: '#''яблоко''') equals: #яблоко.
-	self assert: (self materialize: '#яблоко') equals: #яблоко
+	self assert: (self materialize: '#''яблоко''') identicalTo: #яблоко.
+	self assert: (self materialize: '#яблоко') identicalTo: #яблоко
+]
+
+{ #category : #tests }
+STONReaderTest >> testZnUrlBackwardsCompatibility [
+	"We now have URL, make sure we still support the old format"
+	self 
+		assert: (self materialize: 'ZnUrl{#scheme:#https,#host:''pharo.org'',#segments:OrderedCollection[''files'', ''pharo.png'']}') 
+		equals: 'https://pharo.org/files/pharo.png' asUrl.
+	self 
+		assert: (self materialize: 'ZnUrl{#scheme:#file,#segments:OrderedCollection[''tmp'', ''foo.txt'']}') 
+		equals: 'file:///tmp/foo.txt' asUrl.
 ]
