@@ -68,7 +68,7 @@ Class {
 { #category : #configure }
 ClassDefinitionPrinter class >> displayEmptySlots [
 
-	^ DisplayEmptySlots ifNil: [ DisplayEmptySlots := false ]
+	^ DisplayEmptySlots ifNil: [ DisplayEmptySlots := true ]
 ]
 
 { #category : #configure }

@@ -17,7 +17,7 @@ CommonClassDefinitionPrinterTest >> setUp [
 	super setUp.
 	slotUse := ClassDefinitionPrinter showFluidClassDefinition.
 	slotDisplay := ClassDefinitionPrinter displayEmptySlots.
-	
+	ClassDefinitionPrinter displayEmptySlots: false
 ]
 
 { #category : #running }
